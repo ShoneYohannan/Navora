@@ -1,0 +1,13 @@
+fastapi
+uvicorn
+langgraph
+langchain
+langchain-community
+langchain-groq
+motor
+python-dotenv
+requests
+fpdf2
+pydantic
+pydantic-settings
+jinja2
