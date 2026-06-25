@@ -2,8 +2,9 @@ import React from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Home from './pages/Home'
 import CreateTrip from './pages/CreateTrip'
-import Itinerary from './pages/Itinerary'
-import Dashboard from './pages/Dashboard'
+import LoadingScreen from './pages/LoadingScreen'
+import TravelDashboard from './pages/TravelDashboard'
+import SavedTrips from './pages/SavedTrips'
 import Navbar from './components/Navbar'
 
 function App() {
@@ -15,12 +16,13 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/create" element={<CreateTrip />} />
-            <Route path="/trip/:id" element={<Itinerary />} />
-            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/loading" element={<LoadingScreen />} />
+            <Route path="/dashboard/:id" element={<TravelDashboard />} />
+            <Route path="/saved-trips" element={<SavedTrips />} />
           </Routes>
         </main>
-        <footer className="py-8 bg-slate-900 border-t border-slate-800 text-center text-slate-400">
-          <p>© 2026 TravelMind AI. Your Intelligent Travel Companion.</p>
+        <footer className="py-8 bg-slate-900 border-t border-slate-800 text-center text-slate-400 text-sm">
+          <p>© 2026 Navora AI. Your Multi-Agent Travel Intelligence System.</p>
         </footer>
       </div>
     </Router>

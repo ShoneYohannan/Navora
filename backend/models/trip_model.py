@@ -17,15 +17,18 @@ class TripRequest(BaseModel):
 class TripModel(BaseModel):
     id: Optional[str] = Field(None, alias="_id")
     destination: str
-    duration: int
+    days: int
     budget: float
-    travelers: int
+    travelers: Optional[int] = 1
     interests: List[str]
     weather_info: Optional[Dict[str, Any]]
     nearby_attractions: List[Dict[str, Any]]
     malls: List[Dict[str, Any]]
     restaurants: List[Dict[str, Any]]
+    movie_theatres: List[Dict[str, Any]] = []
+    local_events: List[Dict[str, Any]] = []
     movie_recommendations: List[Dict[str, Any]]
+
     itinerary: Dict[str, Any]
     budget_breakdown: Dict[str, Any]
     packing_checklist: List[str]

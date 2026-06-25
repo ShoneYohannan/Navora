@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { travelApi } from '../services/api';
-import { Trash2, ExternalLink, Calendar, MapPin, Loader2 } from 'lucide-react';
+import { Trash2, ExternalLink, Calendar, MapPin, Loader2, Award } from 'lucide-react';
 
-const Dashboard = () => {
+const SavedTrips = () => {
   const [trips, setTrips] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -35,28 +35,31 @@ const Dashboard = () => {
   if (loading) return (
      <div className="flex flex-col items-center justify-center min-h-[60vh]">
       <Loader2 className="animate-spin text-sky-500 mb-4" size={48} />
-      <p className="text-slate-400">Accessing archives...</p>
+      <p className="text-slate-400">Accessing Navora archives...</p>
     </div>
   );
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-12">
       <div className="flex justify-between items-center mb-12">
-        <h1 className="text-4xl font-bold">Trip Intelligence History</h1>
-        <Link to="/create" className="px-6 py-3 bg-sky-500 hover:bg-sky-400 text-white rounded-2xl font-bold transition-all">
+        <div>
+          <h1 className="text-4xl font-extrabold text-gradient">Saved Intelligence Reports</h1>
+          <p className="text-slate-400 mt-2">Manage your generated multi-agent travel plans.</p>
+        </div>
+        <Link to="/create" className="px-6 py-3 bg-sky-500 hover:bg-sky-400 text-white rounded-2xl font-bold transition-all shadow-lg shadow-sky-500/20 hover:scale-105">
           New Analysis
         </Link>
       </div>
 
       {trips.length === 0 ? (
-        <div className="text-center py-20 bg-slate-900 shadow-xl rounded-3xl border border-white/5">
-          <p className="text-slate-400 mb-6">No saved travel reports found.</p>
+        <div className="text-center py-20 bg-slate-900/40 shadow-xl rounded-3xl border border-white/5 max-w-2xl mx-auto">
+          <p className="text-slate-400 mb-6">No saved travel reports found in database.</p>
           <Link to="/create" className="text-sky-400 font-bold hover:underline">Generate your first report now →</Link>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {trips.map((trip) => (
-            <div key={trip._id} className="glass rounded-3xl overflow-hidden border border-white/5 group hover:border-sky-500/50 transition-all flex flex-col">
+            <div key={trip._id} className="glass rounded-3xl overflow-hidden border border-white/5 group hover:border-sky-500/50 transition-all flex flex-col hover:shadow-xl hover:shadow-sky-500/5">
               <div className="p-8 flex-grow">
                 <div className="flex justify-between items-start mb-6">
                   <div className="p-3 bg-sky-500/10 rounded-2xl">
@@ -75,18 +78,18 @@ const Dashboard = () => {
                 <div className="space-y-3 mb-8">
                   <div className="flex items-center gap-2 text-slate-400 text-sm">
                     <Calendar size={16} />
-                    <span>{trip.duration} Days • {trip.travelers} Persons</span>
+                    <span>{trip.days} Days • {trip.travelers || 1} Persons</span>
                   </div>
                   <div className="flex items-center gap-2 text-slate-400 text-sm">
-                    <span className="font-bold text-sky-400">{trip.travel_quality_score}%</span>
-                    <span>Quality Score</span>
+                    <Award size={16} className="text-sky-400" />
+                    <span>Quality Score: <span className="font-bold text-sky-400">{trip.travel_quality_score}%</span></span>
                   </div>
                 </div>
               </div>
               
               <Link 
-                to={`/trip/${trip._id}`}
-                className="w-full py-4 bg-white/5 hover:bg-sky-500 text-center font-bold flex items-center justify-center gap-2 transition-all border-t border-white/5"
+                to={`/dashboard/${trip._id}`}
+                className="w-full py-4 bg-white/5 hover:bg-sky-500 hover:text-white text-center font-bold flex items-center justify-center gap-2 transition-all border-t border-white/5 text-slate-300"
               >
                 View Intelligence Report <ExternalLink size={18} />
               </Link>
@@ -98,4 +101,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default SavedTrips;

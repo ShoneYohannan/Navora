@@ -5,6 +5,8 @@ from state import TravelState
 from langchain_groq import ChatGroq
 from prompts.planner_prompt import PLANNER_PROMPT
 from dotenv import load_dotenv
+from utils.helpers import safe_json_loads
+from utils.config import Config
 
 load_dotenv()
 
@@ -12,37 +14,46 @@ class PlannerAgent:
     def __init__(self):
         self.llm = ChatGroq(
             model="llama-3.3-70b-versatile",
-            api_key=os.getenv("GROQ_API_KEY"),
+            api_key=Config.GROQ_API_KEY,
             temperature=0.3
         )
 
     def run(self, state: TravelState) -> Dict[str, Any]:
         print(f"--- Planning: {state['destination']} ---")
         
+        # Format feedback context if we are running in a loop
+        feedback_context = ""
+        feedback = state.get("evaluator_feedback")
+        if feedback:
+            feedback_context = f"""
+=========================================
+WARNING: PREVIOUS EVALUATION FAILED OR REQUIRES CORRECTIONS
+Evaluator Feedback: {feedback}
+Please revise the itinerary and budget breakdown to address these concerns specifically.
+=========================================
+"""
+
         prompt = PLANNER_PROMPT.format(
             destination=state["destination"],
-            duration=state["duration"],
+            days=state["days"],
             budget=state["budget"],
             travelers=state["travelers"],
             interests=", ".join(state["interests"]),
-            weather=json.dumps(state["weather_info"]),
-            attractions=json.dumps(state["nearby_attractions"]),
-            restaurants=json.dumps(state["restaurants"]),
-            malls=json.dumps(state["malls"]),
-            movies=json.dumps(state["movie_recommendations"])
+            weather=json.dumps(state.get("weather_info", {})),
+            attractions=json.dumps(state.get("nearby_attractions", [])),
+            restaurants=json.dumps(state.get("restaurants", [])),
+            malls=json.dumps(state.get("malls", [])),
+            theatres=json.dumps(state.get("movie_theatres", [])),
+            events=json.dumps(state.get("local_events", [])),
+            movies=json.dumps(state.get("movie_recommendations", [])),
+            feedback_context=feedback_context
         )
         
         try:
             response = self.llm.invoke(prompt)
             content = response.content
             
-            # Clean JSON if it contains markdown markers
-            if "```json" in content:
-                content = content.split("```json")[1].split("```")[0].strip()
-            elif "```" in content:
-                content = content.split("```")[1].split("```")[0].strip()
-                
-            data = json.loads(content)
+            data = safe_json_loads(content, fallback={})
             
             return {
                 "itinerary": data.get("itinerary"),
@@ -59,4 +70,5 @@ class PlannerAgent:
                 "packing_checklist": [],
                 "alternate_activities": []
             }
+
         
