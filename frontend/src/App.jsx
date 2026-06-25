@@ -1,30 +1,36 @@
-import React from 'react'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import Home from './pages/Home'
-import CreateTrip from './pages/CreateTrip'
-import Itinerary from './pages/Itinerary'
-import Dashboard from './pages/Dashboard'
-import Navbar from './components/Navbar'
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Home from './pages/Home';
+import Results from './pages/Results';
+import PlaceDetails from './pages/PlaceDetails';
+import Itinerary from './pages/Itinerary';
+import SavedTrips from './pages/SavedTrips';
+import Assistant from './pages/Assistant';
+import Navbar from './components/Navbar';
+import Footer from './components/Footer';
 
 function App() {
   return (
     <Router>
-      <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col">
+      <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-[#090d16] dark:text-slate-100 flex flex-col transition-colors duration-300">
         <Navbar />
-        <main className="flex-grow">
+        
+        {/* Main Content Area */}
+        <main className="flex-grow w-full">
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/create" element={<CreateTrip />} />
-            <Route path="/trip/:id" element={<Itinerary />} />
-            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/results" element={<Results />} />
+            <Route path="/place/:id" element={<PlaceDetails />} />
+            <Route path="/itinerary" element={<Itinerary />} />
+            <Route path="/saved-trips" element={<SavedTrips />} />
+            <Route path="/assistant" element={<Assistant />} />
           </Routes>
         </main>
-        <footer className="py-8 bg-slate-900 border-t border-slate-800 text-center text-slate-400">
-          <p>© 2026 TravelMind AI. Your Intelligent Travel Companion.</p>
-        </footer>
+        
+        <Footer />
       </div>
     </Router>
-  )
+  );
 }
 
-export default App
+export default App;
