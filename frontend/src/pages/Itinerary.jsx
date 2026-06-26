@@ -28,6 +28,7 @@ const Itinerary = () => {
   const [expandedDays, setExpandedDays] = useState({ 0: true });
   const [showEditModal, setShowEditModal] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [downloading, setDownloading] = useState(false);
 
   const [editForm, setEditForm] = useState({
     destination: 'kochi',
@@ -130,10 +131,26 @@ const Itinerary = () => {
   };
 
   const handleDownload = async () => {
-    if (!trip) return;
+    if (!trip || downloading) return;
+    setDownloading(true);
 
     try {
-      const id = trip._id || trip.id || tripId;
+      // Resolve the trip ID — if missing (session-only trip), save it first
+      let id = trip._id || trip.id || tripId;
+
+      if (!id || id === 'undefined') {
+        try {
+          const saveResponse = await saveTrip(trip);
+          id = saveResponse.data.id;
+          // Update URL so future downloads skip the save step
+          navigate(`/itinerary?id=${id}`, { replace: true });
+        } catch (saveErr) {
+          console.warn('Could not save trip before PDF export:', saveErr);
+          alert('Unable to generate PDF: trip could not be saved. Please try regenerating the trip.');
+          setDownloading(false);
+          return;
+        }
+      }
 
       const response = await API.post(
         `/trip/${id}/export-pdf`,
@@ -141,17 +158,21 @@ const Itinerary = () => {
         { responseType: 'blob' }
       );
 
-      const url = window.URL.createObjectURL(new Blob([response.data]));
+      // Ensure the blob has the correct MIME type
+      const blob = new Blob([response.data], { type: 'application/pdf' });
+      const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
-
       link.href = url;
-      link.setAttribute('download', `${trip.destination}_itinerary.pdf`);
+      link.setAttribute('download', `${trip.destination || 'navora'}_itinerary.pdf`);
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
     } catch (error) {
-      console.error(error);
-      alert('Failed to download PDF summary');
+      console.error('PDF download failed:', error);
+      alert('Failed to generate PDF. Please ensure the backend is running and try again.');
+    } finally {
+      setDownloading(false);
     }
   };
 
@@ -281,9 +302,20 @@ const Itinerary = () => {
 
           <button
             onClick={handleDownload}
-            className="flex items-center gap-1.5 px-5 py-2.5 bg-gradient-accent text-white rounded-2xl text-xs font-bold shadow-lg shadow-sky-500/10 hover:scale-105 active:scale-95 transition-all"
+            disabled={downloading}
+            className="flex items-center gap-1.5 px-5 py-2.5 bg-gradient-accent text-white rounded-2xl text-xs font-bold shadow-lg shadow-sky-500/10 hover:scale-105 active:scale-95 transition-all disabled:opacity-70 disabled:cursor-not-allowed disabled:scale-100"
           >
-            <Download size={15} /> Download PDF
+            {downloading ? (
+              <>
+                <svg className="animate-spin h-3.5 w-3.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
+                </svg>
+                Generating PDF…
+              </>
+            ) : (
+              <><Download size={15} /> Download PDF</>
+            )}
           </button>
         </div>
       </div>
@@ -672,28 +704,49 @@ const Itinerary = () => {
           </div>
 
           <div className="glass p-6 rounded-3xl border border-slate-200 dark:border-slate-800 space-y-4">
-            <h3 className="font-bold text-slate-800 dark:text-white flex items-center gap-2">
-              <Film size={18} className="text-sky-500" /> Movie Recommendations
-            </h3>
+            <div className="flex items-center justify-between">
+              <h3 className="font-bold text-slate-800 dark:text-white flex items-center gap-2">
+                <Film size={18} className="text-sky-500" /> Now Playing in Theaters
+              </h3>
+              <span className="text-[9px] font-extrabold px-2 py-0.5 rounded-full bg-rose-500/10 text-rose-500 border border-rose-400/20 uppercase tracking-wide">
+                🎬 Live
+              </span>
+            </div>
 
             <div className="space-y-4">
               {(trip.movie_recommendations || []).map((movie, idx) => (
-                <div key={idx} className="flex gap-3 items-center group">
+                <div key={idx} className="flex gap-3 items-start group">
                   <div className="w-12 h-16 rounded-lg overflow-hidden bg-slate-100 dark:bg-slate-900 flex-shrink-0 border border-slate-200 dark:border-slate-800">
                     <img
                       src={
                         movie.poster_path ||
-                        'https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=100&q=80'
+                        'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=100&q=80'
                       }
                       alt={movie.title}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                      onError={(e) => {
+                        e.target.src = 'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=100&q=80';
+                      }}
                     />
                   </div>
 
-                  <div className="min-w-0">
-                    <h4 className="text-xs font-bold leading-tight truncate text-slate-800 dark:text-white group-hover:text-sky-500 transition-colors">
+                  <div className="min-w-0 flex-1">
+                    <h4 className="text-xs font-bold leading-tight text-slate-800 dark:text-white group-hover:text-sky-500 transition-colors">
                       {movie.title}
                     </h4>
+
+                    <div className="flex items-center gap-2 mt-0.5">
+                      {movie.rating && (
+                        <span className="text-[9px] font-bold text-amber-500 flex items-center gap-0.5">
+                          <Star size={8} className="fill-amber-500" /> {movie.rating}/10
+                        </span>
+                      )}
+                      {movie.release_date && (
+                        <span className="text-[9px] text-slate-400 font-medium">
+                          {movie.release_date}
+                        </span>
+                      )}
+                    </div>
 
                     <p className="text-[10px] text-slate-400 line-clamp-2 mt-1 leading-normal">
                       {movie.overview}
