@@ -416,7 +416,9 @@ const Itinerary = () => {
                               </div>
                             )}
                             {day.activities?.map((act, actIdx) => {
-                              const time = `${9 + actIdx * 2}:00`;
+                              const actName = typeof act === 'string' ? act : act?.name || '';
+                              const actCost = typeof act === 'object' && act !== null ? act.estimated_cost : null;
+                              const currSymbol = getCurrencySymbol(trip?.currency || editForm?.currency || 'USD');
                               const showTransit = actIdx < day.activities.length - 1;
 
                               return (
@@ -424,14 +426,22 @@ const Itinerary = () => {
                                   <div className="flex gap-4 relative z-10 items-start">
                                     <div className="w-4 h-4 bg-white dark:bg-slate-950 border-4 border-sky-500 rounded-full flex-shrink-0 mt-1.5 ml-[18px]" />
 
-                                    <div className="space-y-1">
-                                      <span className="text-[10px] font-bold text-sky-500 tracking-wide uppercase">
-                                        {time}
-                                      </span>
-
-                                      <p className="text-xs text-slate-700 dark:text-slate-300 font-semibold leading-relaxed">
-                                        {act}
-                                      </p>
+                                    <div className="flex-1 space-y-1">
+                                      <div className="flex items-center justify-between gap-2 flex-wrap">
+                                        <p className="text-xs text-slate-700 dark:text-slate-300 font-semibold leading-relaxed flex-1">
+                                          {actName}
+                                        </p>
+                                        {actCost !== null && actCost !== undefined && (
+                                          <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold flex-shrink-0 ${
+                                            actCost === 0
+                                              ? 'bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-400 border border-emerald-300/40'
+                                              : 'bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 border border-amber-300/40'
+                                          }`}>
+                                            <Wallet size={9} />
+                                            {actCost === 0 ? 'Free' : `${currSymbol}${actCost.toLocaleString()}`}
+                                          </span>
+                                        )}
+                                      </div>
                                     </div>
                                   </div>
 

@@ -22,6 +22,10 @@ class AlternateOptions(BaseModel):
     reason: str = Field(description="Reason for alternate options (e.g. rain predicted or clear weather)")
     options: List[AlternateOption] = Field(description="List of 2-3 alternative options")
 
+class Activity(BaseModel):
+    name: str = Field(description="Activity description including time, e.g. '09:00 – Visit Fort Kochi'")
+    estimated_cost: Optional[float] = Field(None, description="Estimated cost for this activity in the trip's currency. 0 for free activities.")
+
 class ItineraryDay(BaseModel):
     day: int = Field(description="Day number (1, 2, 3, etc.)")
     date: str = Field(description="Date in YYYY-MM-DD format")
@@ -29,7 +33,7 @@ class ItineraryDay(BaseModel):
     weather_forecast: str = Field(description="High: XX°C, Low: XX°C, Condition: XXX, Precipitation: XX%")
     safety_risk_assessment: str = Field(description="Assessment text based on risk guidelines")
     dynamic_adjustments: Optional[str] = Field(None, description="Risk Alert description if activity is impacted, else null")
-    activities: List[str] = Field(description="List of activities planned for the day")
+    activities: List[Activity] = Field(description="List of activities planned for the day, each with a name and estimated_cost")
     alternate_options: AlternateOptions = Field(description="Alternate options for the day")
 
 class ItinerarySchema(BaseModel):

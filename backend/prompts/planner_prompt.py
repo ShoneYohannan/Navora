@@ -13,7 +13,11 @@ You MUST return your response as a valid JSON object with the following structur
         "weather_forecast": "High: XX°C, Low: XX°C, Condition: XXX, Precipitation: XX%",
         "safety_risk_assessment": "Assessment text based on risk guidelines",
         "dynamic_adjustments": "Risk Alert description if activity is impacted, else null",
-        "activities": ["Activity 1 at HH:MM", "Activity 2 at HH:MM", "Activity 3 at HH:MM"],
+        "activities": [
+          {{"name": "09:00 – Activity description", "estimated_cost": 25.0}},
+          {{"name": "12:00 – Lunch at Restaurant Name", "estimated_cost": 15.0}},
+          {{"name": "15:00 – Free activity or sightseeing", "estimated_cost": 0}}
+        ],
         "alternate_options": {{
           "has_risk": true,
           "reason": "Rain predicted (65% precipitation)",
@@ -114,7 +118,7 @@ INSTRUCTIONS:
         * Use real places from the provided Attractions data
         * Mark exactly ONE option as "is_best_pick": true (the highest recommended activity)
         * Set "type" to "outdoor" for all options
-8. BUDGETING: Distribute the budget cap across categories realistically. The total_estimated must be less than or equal to the Budget Cap. Ensure all prices are formatted in {currency}.
+8. BUDGETING: Distribute the budget cap across categories realistically. The total_estimated must be less than or equal to the Budget Cap. Ensure all prices are formatted in {currency}. For each activity in the \"activities\" list, include a realistic \"estimated_cost\" in {currency} as a number (use 0 for free activities like sightseeing, beach, park visits).
 9. RESEARCH INTEGRATION: Incorporate the researched attractions, restaurants, malls, movie theatres, and events into the daily activities. Do NOT use fake places.
 10. packing_checklist: Create a specific packing checklist based on the 15-day forecast conditions (e.g., umbrella/poncho for rain, sunhat for high UV).
 11. Return ONLY the JSON object. Do not include markdown wrappers (like ```json ... ```) or conversational commentary outside the JSON.
