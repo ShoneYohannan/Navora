@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MapPin, Calendar, Users, DollarSign, Heart, Loader2 } from 'lucide-react';
-import { travelApi } from '../services/api';
+import { generateTrip, saveTrip } from '../services/api';
 
 const CreateTrip = () => {
   const navigate = useNavigate();
@@ -29,10 +29,17 @@ const CreateTrip = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const response = await travelApi.generateTrip(formData);
-      // After generation, save it to DB automatically and redirect to the specific trip page
-      const saveResponse = await travelApi.saveTrip(response.data);
-      navigate(`/trip/${saveResponse.data.id}`);
+      const payload = {
+        destination: formData.destination,
+        days: Number(formData.duration),
+        budget: Number(formData.budget),
+        currency: "USD",
+        travelers: Number(formData.travelers || 1),
+        interests: formData.interests
+      };
+      const response = await generateTrip(payload);
+      const saveResponse = await saveTrip(response.data);
+      navigate(`/itinerary?id=${saveResponse.data.id}`);
     } catch (error) {
       console.error("Failed to generate trip:", error);
       alert("Error generating trip. Please try again.");

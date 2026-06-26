@@ -1,7 +1,7 @@
-from fastapi import APIRouter, HTTPException, BackgroundTasks
+from fastapi import APIRouter, HTTPException
 from typing import List, Dict, Any
 from agents.travel_graph import TravelIntelligenceSystem
-from models.trip_model import TripModel
+from models.trip_model import TripModel, TripRequest
 from services.pdf_service import PDFService
 from motor.motor_asyncio import AsyncIOMotorClient
 import os
@@ -21,27 +21,43 @@ client = AsyncIOMotorClient(MONGODB_URL)
 db = client.travelmind
 trips_collection = db.trips
 
+
 @router.post("/generate-trip")
-async def generate_trip(request: Dict[str, Any]):
+async def generate_trip(request: TripRequest):
     try:
-        destination = request.get("destination")
-        duration = request.get("duration")
-        budget = request.get("budget")
-        travelers = request.get("travelers")
-        interests = request.get("interests", [])
-        
-        if not destination or not duration:
-            raise HTTPException(status_code=400, detail="Destination and duration are required")
-            
-        result = system.generate_trip(destination, duration, budget, travelers, interests)
+        destination = request.destination
+        days = request.days
+        budget = request.budget
+        travelers = getattr(request, "travelers", 1)
+        interests = request.interests or []
+        currency = getattr(request, "currency", "USD") or "USD"
+
+        if not destination or not days:
+            raise HTTPException(
+                status_code=400,
+                detail="Destination and days are required"
+            )
+
+        result = system.generate_trip(
+            destination=destination,
+            days=days,
+            budget=budget,
+            travelers=travelers,
+            interests=interests,
+            currency=currency
+        )
+
         return result
+
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
 
 @router.post("/save-trip")
 async def save_trip(trip_data: Dict[str, Any]):
     try:
-        # Pydantic validation
         trip = TripModel(**trip_data)
         serialized_trip = trip.dict(by_alias=True, exclude={"id"})
         result = await trips_collection.insert_one(serialized_trip)
@@ -49,52 +65,74 @@ async def save_trip(trip_data: Dict[str, Any]):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+
 @router.get("/trip-history", response_model=List[TripModel])
 async def get_trip_history():
     try:
         cursor = trips_collection.find().sort("created_at", -1)
         trips = []
+
         async for document in cursor:
             document["_id"] = str(document["_id"])
             trips.append(TripModel(**document))
+
         return trips
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
 
 @router.get("/trip/{trip_id}", response_model=TripModel)
 async def get_trip(trip_id: str):
     try:
         document = await trips_collection.find_one({"_id": ObjectId(trip_id)})
+
         if not document:
             raise HTTPException(status_code=404, detail="Trip not found")
+
         document["_id"] = str(document["_id"])
         return TripModel(**document)
+
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
 
 @router.delete("/trip/{trip_id}")
 async def delete_trip(trip_id: str):
     try:
         result = await trips_collection.delete_one({"_id": ObjectId(trip_id)})
+
         if result.deleted_count == 0:
             raise HTTPException(status_code=404, detail="Trip not found")
+
         return {"status": "deleted"}
+
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
 
 @router.post("/trip/{trip_id}/export-pdf")
 async def export_pdf(trip_id: str):
     try:
         document = await trips_collection.find_one({"_id": ObjectId(trip_id)})
+
         if not document:
             raise HTTPException(status_code=404, detail="Trip not found")
-        
+
         pdf_bytes = pdf_service.generate_itinerary_pdf(document)
-        
+
         return Response(
             content=pdf_bytes,
             media_type="application/pdf",
-            headers={"Content-Disposition": f"attachment; filename=itinerary_{trip_id}.pdf"}
+            headers={
+                "Content-Disposition": f"attachment; filename=itinerary_{trip_id}.pdf"
+            }
         )
+
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

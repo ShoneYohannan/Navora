@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { travelApi } from '../services/api';
+import API, { getTripHistory } from '../services/api';
 import { Trash2, ExternalLink, Calendar, MapPin, Loader2 } from 'lucide-react';
 
 const Dashboard = () => {
@@ -13,7 +13,7 @@ const Dashboard = () => {
 
   const fetchHistory = async () => {
     try {
-      const response = await travelApi.getTripHistory();
+      const response = await getTripHistory();
       setTrips(response.data);
     } catch (error) {
       console.error("Error fetching history:", error);
@@ -25,7 +25,7 @@ const Dashboard = () => {
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this trip intelligence report?")) return;
     try {
-      await travelApi.deleteTrip(id);
+      await API.delete(`/trip/${id}`);
       setTrips(trips.filter(t => t._id !== id));
     } catch (error) {
       alert("Failed to delete trip");
@@ -75,7 +75,7 @@ const Dashboard = () => {
                 <div className="space-y-3 mb-8">
                   <div className="flex items-center gap-2 text-slate-400 text-sm">
                     <Calendar size={16} />
-                    <span>{trip.duration} Days • {trip.travelers} Persons</span>
+                    <span>{trip.days} Days • {trip.travelers} Persons</span>
                   </div>
                   <div className="flex items-center gap-2 text-slate-400 text-sm">
                     <span className="font-bold text-sky-400">{trip.travel_quality_score}%</span>
@@ -85,7 +85,7 @@ const Dashboard = () => {
               </div>
               
               <Link 
-                to={`/trip/${trip._id}`}
+                to={`/itinerary?id=${trip._id}`}
                 className="w-full py-4 bg-white/5 hover:bg-sky-500 text-center font-bold flex items-center justify-center gap-2 transition-all border-t border-white/5"
               >
                 View Intelligence Report <ExternalLink size={18} />

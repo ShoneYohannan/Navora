@@ -5,7 +5,7 @@ import {
   MapPin, Calendar, Heart, Wallet, Coffee, Hotel, Utensils, Award, Waypoints
 } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { travelApi } from '../services/api';
+import { generateTrip, saveTrip } from '../services/api';
 
 const Home = () => {
   const navigate = useNavigate();
@@ -14,7 +14,8 @@ const Home = () => {
     destination: 'kochi',
     startDate: new Date().toISOString().split('T')[0],
     duration: 3,
-    budget: 'mid-range',
+    budget: 1500,
+    currency: 'USD',
     interest: 'Culture'
   });
 
@@ -47,18 +48,41 @@ const Home = () => {
   const handleGenerateItinerary = async (e) => {
     e.preventDefault();
     setLoading(true);
+
     try {
-      const response = await travelApi.generateTrip(formData);
-      // Saved automatically in API mock layer. Redirect to itinerary page.
-      const tripId = response.data.id || response.data._id;
-      navigate(`/itinerary?id=${tripId}`);
-    } catch (error) {
-      console.error("Failed to generate itinerary:", error);
-      alert("Error generating plan. Please try again.");
-    } finally {
-      setLoading(false);
+      const payload = {
+        destination: formData.destination,
+        days: Number(formData.duration),
+        budget: Number(formData.budget),
+        currency: formData.currency,
+        travelers: 1,
+        interests: [formData.interest],
+      };
+
+      console.log("Sending payload:", payload);
+
+      const generateResponse = await generateTrip(payload);
+      const saveResponse = await saveTrip(generateResponse.data);
+
+    const mongoId = saveResponse.data.id;
+
+    console.log("Trip saved with MongoDB ID:", mongoId);
+
+    // Navigate using MongoDB ID
+    navigate(`/itinerary?id=${mongoId}`);
+
+  } catch (error) {
+    console.error("Failed to generate itinerary:", error);
+
+    if (error.response) {
+      console.error("Backend Response:", error.response.data);
     }
-  };
+
+    alert("Error generating itinerary.");
+  } finally {
+    setLoading(false);
+  }
+};
 
   const handleExploreDestinations = () => {
     navigate(`/results?destination=${formData.destination}&days=${formData.duration}&budget=${formData.budget}&date=${formData.startDate}`);
@@ -118,23 +142,19 @@ const Home = () => {
                 <label className="block text-xs font-bold text-slate-400 dark:text-slate-500 mb-2.5 uppercase tracking-wider">Where to?</label>
                 <div className="relative">
                   <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-                  <select
-                    className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl py-3.5 pl-12 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-sky-500 text-slate-800 dark:text-slate-200 appearance-none font-semibold cursor-pointer"
+                  <input
+                    type="text"
+                    required
+                    placeholder="e.g. Paris, Tokyo, Kochi"
+                    className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl py-3.5 pl-12 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-sky-500 text-slate-800 dark:text-slate-200 font-semibold"
                     value={formData.destination}
                     onChange={(e) => setFormData({...formData, destination: e.target.value})}
-                  >
-                    <option value="kochi">Kochi, Kerala</option>
-                    <option value="munnar">Munnar, Kerala</option>
-                    <option value="alleppey">Alleppey, Kerala</option>
-                    <option value="wayanad">Wayanad, Kerala</option>
-                    <option value="goa">Goa</option>
-                    <option value="jaipur">Jaipur, Rajasthan</option>
-                  </select>
+                  />
                 </div>
               </div>
 
               {/* Grid selectors */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 {/* Start Date */}
                 <div>
                   <label className="block text-xs font-bold text-slate-400 dark:text-slate-500 mb-2.5 uppercase tracking-wider">Start Date</label>
@@ -168,16 +188,32 @@ const Home = () => {
                   <label className="block text-xs font-bold text-slate-400 dark:text-slate-500 mb-2.5 uppercase tracking-wider">Budget</label>
                   <div className="relative">
                     <Wallet className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
-                    <select
-                      className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl py-3 pl-10 pr-3 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-sky-500 text-slate-800 dark:text-slate-200 cursor-pointer appearance-none"
+                    <input
+                      type="number"
+                      min="1"
+                      placeholder="Budget"
+                      className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl py-3 pl-10 pr-3 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-sky-500 text-slate-800 dark:text-slate-200"
                       value={formData.budget}
-                      onChange={(e) => setFormData({...formData, budget: e.target.value})}
-                    >
-                      <option value="budget">Budget ($)</option>
-                      <option value="mid-range">Mid-range ($$)</option>
-                      <option value="luxury">Luxury ($$$)</option>
-                    </select>
+                      onChange={(e) => setFormData({...formData, budget: parseFloat(e.target.value) || 0})}
+                    />
                   </div>
+                </div>
+
+                {/* Currency */}
+                <div>
+                  <label className="block text-xs font-bold text-slate-400 dark:text-slate-500 mb-2.5 uppercase tracking-wider">Currency</label>
+                  <select
+                    className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl py-3 px-3 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-sky-500 text-slate-800 dark:text-slate-200 cursor-pointer"
+                    value={formData.currency}
+                    onChange={(e) => setFormData({...formData, currency: e.target.value})}
+                  >
+                    <option value="USD">USD ($)</option>
+                    <option value="INR">INR (₹)</option>
+                    <option value="EUR">EUR (€)</option>
+                    <option value="GBP">GBP (£)</option>
+                    <option value="JPY">JPY (¥)</option>
+                    <option value="AUD">AUD ($)</option>
+                  </select>
                 </div>
               </div>
 

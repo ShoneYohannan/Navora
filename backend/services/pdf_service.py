@@ -9,13 +9,13 @@ class PDFService:
         
         # Title
         pdf.set_font("Helvetica", "B", 24)
-        pdf.cell(0, 20, f"TravelMind: {trip_data.get('destination', 'Your Trip')}", ln=True, align="C")
+        pdf.cell(0, 20, f"Navora AI: {trip_data.get('destination', 'Your Trip')}", ln=True, align="C")
         
         # Trip Overview
         pdf.set_font("Helvetica", "B", 14)
         pdf.cell(0, 10, "Trip Overview", ln=True)
         pdf.set_font("Helvetica", "", 12)
-        pdf.cell(0, 8, f"Duration: {trip_data.get('duration')} Days", ln=True)
+        pdf.cell(0, 8, f"Days: {trip_data.get('days', trip_data.get('duration', 0))} Days", ln=True)
         pdf.cell(0, 8, f"Travelers: {trip_data.get('travelers')}", ln=True)
         pdf.cell(0, 8, f"Budget: ${trip_data.get('budget', 0)}", ln=True)
         pdf.ln(5)

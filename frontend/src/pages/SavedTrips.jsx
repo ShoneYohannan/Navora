@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { travelApi } from '../services/api';
+import API, { getTripHistory } from '../services/api';
 import { EmptyState } from '../components/FeedbackStates';
 import { Trash2, ExternalLink, Calendar, MapPin, DollarSign, Star, Compass } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -10,13 +10,25 @@ const SavedTrips = () => {
   const [trips, setTrips] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const getCurrencySymbol = (currency) => {
+    const symbols = {
+      USD: '$',
+      INR: '₹',
+      EUR: '€',
+      GBP: '£',
+      JPY: '¥',
+      AUD: '$'
+    };
+    return symbols[currency] || currency || '$';
+  };
+
   useEffect(() => {
     fetchHistory();
   }, []);
 
   const fetchHistory = async () => {
     try {
-      const response = await travelApi.getTripHistory();
+      const response = await getTripHistory();
       setTrips(response.data || []);
     } catch (error) {
       console.error("Error fetching history:", error);
@@ -30,7 +42,7 @@ const SavedTrips = () => {
     e.stopPropagation();
     if (!window.confirm("Are you sure you want to delete this trip itinerary?")) return;
     try {
-      await travelApi.deleteTrip(id);
+      await API.delete(`/trip/${id}`);
       setTrips(trips.filter(t => t.id !== id && t._id !== id));
     } catch (error) {
       alert("Failed to delete trip");
@@ -128,7 +140,7 @@ const SavedTrips = () => {
                           <p className="text-[10px] text-slate-400 uppercase tracking-wider">Duration</p>
                           <p className="text-slate-800 dark:text-slate-300 flex items-center gap-1">
                             <Calendar size={13} className="text-sky-500" />
-                            {trip.duration} Days
+                             {trip.days} Days
                           </p>
                         </div>
                         <div className="space-y-1">
@@ -145,7 +157,7 @@ const SavedTrips = () => {
                           <p className="text-[10px] text-slate-400 uppercase tracking-wider">Budget Est.</p>
                           <p className="text-slate-800 dark:text-slate-300 flex items-center gap-0.5">
                             <DollarSign size={13} className="text-emerald-500" />
-                            ${trip.budget_breakdown?.total_estimated || 150}
+                            {getCurrencySymbol(trip.currency)} {trip.budget_breakdown?.total_estimated || 150}
                           </p>
                         </div>
                         <div className="space-y-1">

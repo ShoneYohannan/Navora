@@ -5,6 +5,8 @@ from state import TravelState
 from langchain_groq import ChatGroq
 from prompts.evaluator_prompt import EVALUATOR_PROMPT
 from dotenv import load_dotenv
+from utils.helpers import safe_json_loads
+from utils.config import Config
 
 load_dotenv()
 
@@ -12,7 +14,7 @@ class EvaluatorAgent:
     def __init__(self):
         self.llm = ChatGroq(
             model="llama-3.3-70b-versatile",
-            api_key=os.getenv("GROQ_API_KEY"),
+            api_key=Config.GROQ_API_KEY,
             temperature=0.2
         )
 
@@ -20,32 +22,34 @@ class EvaluatorAgent:
         print(f"--- Evaluating: {state['destination']} ---")
         
         plan_summary = {
-            "itinerary": state["itinerary"],
-            "budget_breakdown": state["budget_breakdown"]
+            "itinerary": state.get("itinerary"),
+            "budget_breakdown": state.get("budget_breakdown")
         }
         
         prompt = EVALUATOR_PROMPT.format(
             plan=json.dumps(plan_summary),
             destination=state["destination"],
             budget=state["budget"],
-            weather=json.dumps(state["weather_info"])
+            currency=state.get("currency", "USD") or "USD",
+            weather=json.dumps(state.get("weather_info", {}))
         )
         
         try:
             response = self.llm.invoke(prompt)
             content = response.content
             
-            if "```json" in content:
-                content = content.split("```json")[1].split("```")[0].strip()
-            elif "```" in content:
-                content = content.split("```")[1].split("```")[0].strip()
-                
-            data = json.loads(content)
+            data = safe_json_loads(content, fallback={})
             
+            # Combine feedback and corrections into one string for easier display/planner ingestion if needed
+            feedback = data.get("evaluator_feedback", "")
+            corrections = data.get("corrections", [])
+            if corrections:
+                feedback += "\nCorrections suggested:\n" + "\n".join(f"- {c}" for c in corrections)
+
             return {
                 "safety_score": data.get("safety_score", 0.0),
                 "travel_quality_score": data.get("travel_quality_score", 0.0),
-                "evaluator_feedback": data.get("evaluator_feedback", "")
+                "evaluator_feedback": feedback
             }
         except Exception as e:
             print(f"Evaluator error: {e}")
@@ -54,3 +58,4 @@ class EvaluatorAgent:
                 "travel_quality_score": 0.0,
                 "evaluator_feedback": "Evaluation failed."
             }
+

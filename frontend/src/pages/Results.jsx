@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import { travelApi } from '../services/api';
 import FilterSidebar from '../components/FilterSidebar';
 import PlaceCard from '../components/PlaceCard';
 import { LoadingSkeleton, EmptyState } from '../components/FeedbackStates';
@@ -40,17 +39,24 @@ const Results = () => {
     }
   }, [destParam]);
 
-  const fetchDestination = async () => {
-    setLoading(true);
-    try {
-      const response = await travelApi.getDestinationDetails(destParam);
-      setDestinationData(response.data);
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setLoading(false);
-    }
-  };
+const fetchDestination = async () => {
+  setLoading(true);
+  try {
+    const mockData = {
+      name: destParam.charAt(0).toUpperCase() + destParam.slice(1),
+      attractions: [],
+      restaurants: [],
+      hotels: [],
+      events: []
+    };
+
+    setDestinationData(mockData);
+  } catch (e) {
+    console.error(e);
+  } finally {
+    setLoading(false);
+  }
+};
 
   // Run filters
   useEffect(() => {

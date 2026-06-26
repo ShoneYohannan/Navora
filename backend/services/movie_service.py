@@ -1,14 +1,12 @@
-import os
 import requests
 from typing import List, Dict, Any, Optional
-from dotenv import load_dotenv
-
-load_dotenv()
+from utils.config import Config
 
 class MovieService:
     def __init__(self):
-        self.api_key = os.getenv("TMDB_API_KEY")
+        self.api_key = Config.TMDB_API_KEY
         self.base_url = "https://api.themoviedb.org/3"
+
 
     def get_recommendations(self, genre_context: str = "") -> List[Dict[str, Any]]:
         if not self.api_key:
