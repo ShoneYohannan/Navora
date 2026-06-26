@@ -1,6 +1,7 @@
 import os
 import json
-from typing import Dict, Any
+from typing import Dict, Any, List, Optional
+from pydantic import BaseModel, Field
 from state import TravelState
 from langchain_groq import ChatGroq
 from prompts.planner_prompt import PLANNER_PROMPT
@@ -9,6 +10,52 @@ from utils.helpers import safe_json_loads
 from utils.config import Config
 
 load_dotenv()
+
+class AlternateOption(BaseModel):
+    name: str = Field(description="Place or Activity Name")
+    type: str = Field(description="indoor or outdoor")
+    description: str = Field(description="Short reason why this is a good alternative")
+    is_best_pick: bool = Field(description="Mark exactly one option as the best pick")
+
+class AlternateOptions(BaseModel):
+    has_risk: bool = Field(description="True if there is a weather risk for that day, else False")
+    reason: str = Field(description="Reason for alternate options (e.g. rain predicted or clear weather)")
+    options: List[AlternateOption] = Field(description="List of 2-3 alternative options")
+
+class ItineraryDay(BaseModel):
+    day: int = Field(description="Day number (1, 2, 3, etc.)")
+    date: str = Field(description="Date in YYYY-MM-DD format")
+    theme: str = Field(description="Theme of the day")
+    weather_forecast: str = Field(description="High: XX°C, Low: XX°C, Condition: XXX, Precipitation: XX%")
+    safety_risk_assessment: str = Field(description="Assessment text based on risk guidelines")
+    dynamic_adjustments: Optional[str] = Field(None, description="Risk Alert description if activity is impacted, else null")
+    activities: List[str] = Field(description="List of activities planned for the day")
+    alternate_options: AlternateOptions = Field(description="Alternate options for the day")
+
+class ItinerarySchema(BaseModel):
+    days: List[ItineraryDay]
+
+class RiskSummaryRow(BaseModel):
+    day: int
+    date: str
+    primary_risk: str = Field(description="None / Rain / Wind / UV / Temp")
+    level: str = Field(description="Low / Moderate / High / Health / Extreme")
+    backup_plan: str = Field(description="Specific indoor backup plan")
+
+class BudgetBreakdown(BaseModel):
+    accommodation: float
+    transport: float
+    food: float
+    activities: float
+    miscellaneous: float
+    total_estimated: float
+
+class PlannerOutput(BaseModel):
+    itinerary: ItinerarySchema
+    risk_summary_table: List[RiskSummaryRow]
+    budget_breakdown: BudgetBreakdown
+    packing_checklist: List[str]
+    alternate_activities: List[str]
 
 class PlannerAgent:
     def __init__(self):
@@ -26,11 +73,9 @@ class PlannerAgent:
         feedback = state.get("evaluator_feedback")
         if feedback:
             feedback_context = f"""
-=========================================
-WARNING: PREVIOUS EVALUATION FAILED OR REQUIRES CORRECTIONS
+Token warning override: revised planner instructions.
 Evaluator Feedback: {feedback}
 Please revise the itinerary and budget breakdown to address these concerns specifically.
-=========================================
 """
 
         prompt = PLANNER_PROMPT.format(
@@ -47,17 +92,25 @@ Please revise the itinerary and budget breakdown to address these concerns speci
             theatres=json.dumps(state.get("movie_theatres", [])),
             events=json.dumps(state.get("local_events", [])),
             movies=json.dumps(state.get("movie_recommendations", [])),
-            feedback_context=feedback_context
+            feedback_context=feedback_context,
+            start_date=state.get("start_date") or "",
+            end_date=state.get("end_date") or "",
+            start_time=state.get("start_time") or "08:00",
+            end_time=state.get("end_time") or "20:00",
+            breakfast_time=state.get("breakfast_time") or "07:30",
+            lunch_time=state.get("lunch_time") or "13:00",
+            dinner_time=state.get("dinner_time") or "19:30",
+            travel_mode=state.get("travel_mode") or "mixed",
         )
         
         try:
-            response = self.llm.invoke(prompt)
-            content = response.content
-            
-            data = safe_json_loads(content, fallback={})
+            structured_llm = self.llm.with_structured_output(PlannerOutput)
+            response = structured_llm.invoke(prompt)
+            data = response.model_dump()
             
             return {
                 "itinerary": data.get("itinerary"),
+                "risk_summary_table": data.get("risk_summary_table", []),
                 "budget_breakdown": data.get("budget_breakdown"),
                 "packing_checklist": data.get("packing_checklist", []),
                 "alternate_activities": data.get("alternate_activities", [])
@@ -67,9 +120,11 @@ Please revise the itinerary and budget breakdown to address these concerns speci
             return {
                 "errors": [f"Planner failed: {str(e)}"],
                 "itinerary": {"days": []},
+                "risk_summary_table": [],
                 "budget_breakdown": {},
                 "packing_checklist": [],
                 "alternate_activities": []
             }
+
 
         

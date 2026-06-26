@@ -4,7 +4,8 @@ import API, { generateTrip, saveTrip } from '../services/api';
 import {
   CloudSun, Shield, Wallet, CheckSquare,
   Map as MapIcon, Download, Film, Share2, Edit3,
-  ChevronDown, ChevronUp, MapPin, Clock, Info, Check
+  ChevronDown, ChevronUp, MapPin, Clock, Info, Check,
+  Home, Star, Umbrella, Sun, ArrowRight
 } from 'lucide-react';
 import MapComponent from '../components/MapComponent';
 import { LoadingSkeleton, ErrorState } from '../components/FeedbackStates';
@@ -15,6 +16,7 @@ const Itinerary = () => {
   const navigate = useNavigate();
 
   const tripId = searchParams.get('id');
+  const fromSession = searchParams.get('from') === 'session';
   const destinationQuery = searchParams.get('destination');
   const daysQuery = parseInt(searchParams.get('days')) || 3;
   const budgetQuery = searchParams.get('budget') || 'mid-range';
@@ -54,16 +56,16 @@ const Itinerary = () => {
 
   useEffect(() => {
     fetchTripDetails();
-  }, [tripId, destinationQuery, daysQuery, budgetQuery]);
+  }, [tripId, fromSession, destinationQuery, daysQuery, budgetQuery]);
 
   const fetchTripDetails = async () => {
     setLoading(true);
     setError(false);
 
     try {
+      // 1. Load from MongoDB by ID
       if (tripId) {
         const response = await API.get(`/trip/${tripId}`);
-
         setTrip(response.data);
         setEditForm({
           destination: response.data.destination || 'kochi',
@@ -71,8 +73,25 @@ const Itinerary = () => {
           budget: response.data.budget || 1500,
           currency: response.data.currency || 'USD'
         });
+        sessionStorage.setItem('current_trip', JSON.stringify(response.data));
 
-        localStorage.setItem('latest_trip', JSON.stringify(response.data));
+      // 2. Load from sessionStorage (when MongoDB save failed)
+      } else if (fromSession) {
+        const stored = sessionStorage.getItem('current_trip');
+        if (stored) {
+          const data = JSON.parse(stored);
+          setTrip(data);
+          setEditForm({
+            destination: data.destination || 'kochi',
+            days: data.days || 3,
+            budget: data.budget || 1500,
+            currency: data.currency || 'USD'
+          });
+        } else {
+          setError(true);
+        }
+
+      // 3. Generate a new trip on-the-fly (legacy results page flow)
       } else {
         const parsedBudget = parseFloat(budgetQuery);
         let numericBudget = 10000;
@@ -92,12 +111,15 @@ const Itinerary = () => {
         };
 
         const generateResponse = await generateTrip(payload);
-        const saveResponse = await saveTrip(generateResponse.data);
+        const tripData = generateResponse.data;
+        sessionStorage.setItem('current_trip', JSON.stringify(tripData));
 
-        const mongoId = saveResponse.data.id;
-
-        localStorage.setItem('latest_trip', JSON.stringify(generateResponse.data));
-        navigate(`/itinerary?id=${mongoId}`, { replace: true });
+        try {
+          const saveResponse = await saveTrip(tripData);
+          navigate(`/itinerary?id=${saveResponse.data.id}`, { replace: true });
+        } catch {
+          setTrip(tripData);
+        }
       }
     } catch (e) {
       console.error('Failed to load itinerary:', e);
@@ -162,15 +184,19 @@ const Itinerary = () => {
       };
 
       const generateResponse = await generateTrip(payload);
-      const saveResponse = await saveTrip(generateResponse.data);
+      const tripData = generateResponse.data;
+      sessionStorage.setItem('current_trip', JSON.stringify(tripData));
 
-      const mongoId = saveResponse.data.id;
-
-      localStorage.setItem('latest_trip', JSON.stringify(generateResponse.data));
-      navigate(`/itinerary?id=${mongoId}`, { replace: true });
+      try {
+        const saveResponse = await saveTrip(tripData);
+        navigate(`/itinerary?id=${saveResponse.data.id}`, { replace: true });
+      } catch {
+        console.warn('MongoDB save failed for edit. Using session data.');
+        navigate(`/itinerary?from=session`, { replace: true });
+      }
     } catch (err) {
       console.error(err);
-      alert('Failed to update plan');
+      alert('Failed to update plan. Please ensure the backend is running.');
     } finally {
       setLoading(false);
     }
@@ -310,6 +336,12 @@ const Itinerary = () => {
             </h2>
 
             <div className="space-y-4">
+              {(!trip.itinerary?.days || trip.itinerary.days.length === 0) && (
+                <div className="glass p-6 rounded-3xl border border-amber-400/30 bg-amber-500/5 text-center space-y-2">
+                  <p className="text-sm font-bold text-amber-500">⚠️ Itinerary Unavailable</p>
+                  <p className="text-xs text-slate-400">The AI planner couldn't generate a day-by-day plan — this is usually caused by an API rate limit. Please wait a few minutes and try generating the trip again.</p>
+                </div>
+              )}
               {trip.itinerary?.days?.map((day, dayIdx) => {
                 const isExpanded = expandedDays[dayIdx];
 
@@ -328,9 +360,17 @@ const Itinerary = () => {
                         </div>
 
                         <div>
-                          <h3 className="font-extrabold text-slate-800 dark:text-white leading-tight">
-                            Day {day.day}
-                          </h3>
+                          <div className="flex flex-wrap items-center gap-2">
+                            <h3 className="font-extrabold text-slate-800 dark:text-white leading-tight">
+                              Day {day.day}
+                            </h3>
+                            {day.weather_forecast && (
+                              <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-sky-500/10 text-sky-600 dark:text-sky-400 text-[10px] font-bold rounded-full border border-sky-400/20">
+                                <CloudSun size={10} />
+                                {day.weather_forecast}
+                              </span>
+                            )}
+                          </div>
                           <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
                             {day.theme}
                           </p>
@@ -353,6 +393,28 @@ const Itinerary = () => {
                           className="overflow-hidden border-t border-slate-100 dark:border-slate-800/80"
                         >
                           <div className="p-6 space-y-6 relative before:absolute before:left-8 before:top-8 before:bottom-8 before:w-0.5 before:bg-slate-200 dark:before:bg-slate-800">
+                            {(day.safety_risk_assessment || day.dynamic_adjustments) && (
+                              <div className="ml-14 p-4 bg-slate-50 dark:bg-slate-900/50 rounded-2xl border border-slate-200/60 dark:border-slate-800/80 space-y-2 relative z-10">
+                                {day.safety_risk_assessment && (
+                                  <div className="flex items-start gap-2">
+                                    <Shield size={14} className={day.safety_risk_assessment.toLowerCase().includes("low risk") ? "text-emerald-500 mt-0.5" : "text-amber-500 mt-0.5"} />
+                                    <p className="text-xs font-semibold text-slate-655 dark:text-slate-400">
+                                      <span className="font-extrabold text-slate-700 dark:text-slate-350">Safety Risk: </span>
+                                      {day.safety_risk_assessment}
+                                    </p>
+                                  </div>
+                                )}
+                                {day.dynamic_adjustments && (
+                                  <div className="flex items-start gap-2">
+                                    <Info size={14} className="text-rose-500 mt-0.5" />
+                                    <p className="text-xs font-bold text-rose-600 dark:text-rose-450">
+                                      <span className="font-extrabold">Dynamic Adjustment: </span>
+                                      {day.dynamic_adjustments}
+                                    </p>
+                                  </div>
+                                )}
+                              </div>
+                            )}
                             {day.activities?.map((act, actIdx) => {
                               const time = `${9 + actIdx * 2}:00`;
                               const showTransit = actIdx < day.activities.length - 1;
@@ -382,6 +444,101 @@ const Itinerary = () => {
                                 </div>
                               );
                             })}
+
+                            {/* Alternate Options Panel */}
+                            {day.alternate_options && day.alternate_options.options && day.alternate_options.options.length > 0 && (
+                              <div className={`ml-14 mt-2 rounded-2xl border overflow-hidden relative z-10 ${
+                                day.alternate_options.has_risk
+                                  ? 'bg-amber-50/60 dark:bg-amber-950/20 border-amber-300/40 dark:border-amber-700/30'
+                                  : 'bg-emerald-50/60 dark:bg-emerald-950/20 border-emerald-300/40 dark:border-emerald-700/30'
+                              }`}>
+                                {/* Header */}
+                                <div className={`flex items-center gap-2 px-4 py-2.5 ${
+                                  day.alternate_options.has_risk
+                                    ? 'bg-amber-100/70 dark:bg-amber-900/30'
+                                    : 'bg-emerald-100/70 dark:bg-emerald-900/30'
+                                }`}>
+                                  {day.alternate_options.has_risk
+                                    ? <Umbrella size={13} className="text-amber-600 dark:text-amber-400 flex-shrink-0" />
+                                    : <Sun size={13} className="text-emerald-600 dark:text-emerald-400 flex-shrink-0" />
+                                  }
+                                  <span className={`text-[10px] font-extrabold uppercase tracking-wider ${
+                                    day.alternate_options.has_risk
+                                      ? 'text-amber-700 dark:text-amber-400'
+                                      : 'text-emerald-700 dark:text-emerald-400'
+                                  }`}>
+                                    {day.alternate_options.has_risk ? 'Rain Alert — Indoor Alternatives' : 'Best Picks for Today'}
+                                  </span>
+                                  <span className={`ml-auto text-[9px] font-bold px-2 py-0.5 rounded-full ${
+                                    day.alternate_options.has_risk
+                                      ? 'bg-amber-200 dark:bg-amber-800/50 text-amber-700 dark:text-amber-300'
+                                      : 'bg-emerald-200 dark:bg-emerald-800/50 text-emerald-700 dark:text-emerald-300'
+                                  }`}>
+                                    {day.alternate_options.reason}
+                                  </span>
+                                </div>
+
+                                {/* Options List */}
+                                <div className="divide-y divide-slate-200/60 dark:divide-slate-700/40">
+                                  {day.alternate_options.options.map((opt, optIdx) => (
+                                    <div
+                                      key={optIdx}
+                                      className={`flex items-start gap-3 px-4 py-3 transition-colors ${
+                                        opt.is_best_pick
+                                          ? day.alternate_options.has_risk
+                                            ? 'bg-amber-100/50 dark:bg-amber-900/20'
+                                            : 'bg-emerald-100/50 dark:bg-emerald-900/20'
+                                          : 'hover:bg-white/40 dark:hover:bg-slate-800/20'
+                                      }`}
+                                    >
+                                      {/* Icon */}
+                                      <div className={`p-1.5 rounded-lg flex-shrink-0 mt-0.5 ${
+                                        opt.is_best_pick
+                                          ? day.alternate_options.has_risk
+                                            ? 'bg-amber-200 dark:bg-amber-800/50 text-amber-700 dark:text-amber-300'
+                                            : 'bg-emerald-200 dark:bg-emerald-800/50 text-emerald-700 dark:text-emerald-300'
+                                          : 'bg-slate-100 dark:bg-slate-800 text-slate-500'
+                                      }`}>
+                                        {opt.type === 'indoor'
+                                          ? <Home size={10} />
+                                          : <MapPin size={10} />
+                                        }
+                                      </div>
+
+                                      {/* Text */}
+                                      <div className="flex-1 min-w-0">
+                                        <div className="flex items-center gap-1.5 flex-wrap">
+                                          <span className="text-[11px] font-extrabold text-slate-800 dark:text-slate-200 leading-tight">
+                                            {opt.name}
+                                          </span>
+                                          {opt.is_best_pick && (
+                                            <span className={`inline-flex items-center gap-0.5 text-[8px] font-extrabold px-1.5 py-0.5 rounded-full uppercase tracking-wide ${
+                                              day.alternate_options.has_risk
+                                                ? 'bg-amber-400/20 text-amber-700 dark:text-amber-300'
+                                                : 'bg-emerald-400/20 text-emerald-700 dark:text-emerald-300'
+                                            }`}>
+                                              <Star size={7} className="fill-current" /> Best Pick
+                                            </span>
+                                          )}
+                                          <span className={`text-[8px] font-bold px-1.5 py-0.5 rounded-full uppercase ${
+                                            opt.type === 'indoor'
+                                              ? 'bg-sky-100 dark:bg-sky-900/40 text-sky-600 dark:text-sky-400'
+                                              : 'bg-violet-100 dark:bg-violet-900/40 text-violet-600 dark:text-violet-400'
+                                          }`}>
+                                            {opt.type === 'indoor' ? '🏠 Indoor' : '🌿 Outdoor'}
+                                          </span>
+                                        </div>
+                                        <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5 leading-relaxed">
+                                          {opt.description}
+                                        </p>
+                                      </div>
+
+                                      <ArrowRight size={12} className="text-slate-300 dark:text-slate-600 flex-shrink-0 mt-1" />
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
                           </div>
                         </motion.div>
                       )}
@@ -447,6 +604,51 @@ const Itinerary = () => {
               </span>
             </div>
           </div>
+
+          {trip.risk_summary_table && trip.risk_summary_table.length > 0 && (
+            <div className="glass p-6 rounded-3xl border border-slate-200 dark:border-slate-800 space-y-4">
+              <h3 className="font-bold text-slate-800 dark:text-white flex items-center gap-2">
+                <CloudSun size={18} className="text-sky-500" /> Weather Risk & Backup Plans
+              </h3>
+
+              <div className="space-y-3">
+                {trip.risk_summary_table.map((row, idx) => {
+                  let badgeColor = "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-400/20";
+                  if (row.level === "Moderate") {
+                    badgeColor = "bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-400/20";
+                  } else if (["High", "Health", "Extreme"].includes(row.level)) {
+                    badgeColor = "bg-rose-500/10 text-rose-600 dark:text-rose-450 border border-rose-450/20";
+                  }
+
+                  return (
+                    <div key={idx} className="p-3.5 bg-slate-50 dark:bg-slate-900/40 rounded-2xl border border-slate-200/60 dark:border-slate-800/80 space-y-2">
+                      <div className="flex justify-between items-center">
+                        <span className="text-[11px] font-extrabold text-slate-700 dark:text-slate-350">
+                          Day {row.day} ({row.date})
+                        </span>
+                        <span className={`text-[9px] font-extrabold px-2 py-0.5 rounded-full ${badgeColor}`}>
+                          {row.level} Risk
+                        </span>
+                      </div>
+
+                      <div className="text-[10px] text-slate-500 dark:text-slate-400 space-y-1">
+                        <p>
+                          <span className="font-semibold text-slate-650 dark:text-slate-450">Primary Risk: </span>
+                          {row.primary_risk}
+                        </p>
+                        {row.backup_plan && row.backup_plan !== "None" && (
+                          <p>
+                            <span className="font-semibold text-slate-650 dark:text-slate-450">Backup Plan: </span>
+                            {row.backup_plan}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
 
           <div className="glass p-6 rounded-3xl border border-slate-200 dark:border-slate-800 space-y-4">
             <h3 className="font-bold text-slate-800 dark:text-white flex items-center gap-2">

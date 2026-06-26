@@ -36,7 +36,7 @@ const Navbar = () => {
             <Compass size={24} className="animate-spin-slow" />
           </div>
           <span className="text-xl font-bold tracking-tight text-slate-800 dark:text-white">
-            AI Travel<span className="text-emerald-500 dark:text-emerald-400"> Planner</span>
+            Navora<span className="text-emerald-500 dark:text-emerald-400"> Trip Planner</span>
           </span>
         </Link>
         

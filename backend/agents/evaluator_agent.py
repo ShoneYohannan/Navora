@@ -1,6 +1,7 @@
 import os
 import json
-from typing import Dict, Any
+from typing import Dict, Any, List
+from pydantic import BaseModel, Field
 from state import TravelState
 from langchain_groq import ChatGroq
 from prompts.evaluator_prompt import EVALUATOR_PROMPT
@@ -9,6 +10,12 @@ from utils.helpers import safe_json_loads
 from utils.config import Config
 
 load_dotenv()
+
+class EvaluatorOutput(BaseModel):
+    safety_score: float = Field(description="Safety score from 0.0 to 100.0")
+    travel_quality_score: float = Field(description="Travel quality score from 0.0 to 100.0")
+    evaluator_feedback: str = Field(description="Detailed feedback if safety or quality is low, or approval message")
+    corrections: List[str] = Field(default=[], description="List of specific corrections needed if any")
 
 class EvaluatorAgent:
     def __init__(self):
@@ -35,10 +42,9 @@ class EvaluatorAgent:
         )
         
         try:
-            response = self.llm.invoke(prompt)
-            content = response.content
-            
-            data = safe_json_loads(content, fallback={})
+            structured_llm = self.llm.with_structured_output(EvaluatorOutput)
+            response = structured_llm.invoke(prompt)
+            data = response.model_dump()
             
             # Combine feedback and corrections into one string for easier display/planner ingestion if needed
             feedback = data.get("evaluator_feedback", "")
@@ -58,4 +64,5 @@ class EvaluatorAgent:
                 "travel_quality_score": 0.0,
                 "evaluator_feedback": "Evaluation failed."
             }
+
 

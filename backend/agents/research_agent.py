@@ -1,4 +1,5 @@
 from typing import Dict, Any
+from datetime import datetime
 from state import TravelState
 from services.weather_service import WeatherService
 from services.serper_service import SerperService
@@ -13,8 +14,9 @@ class ResearchAgent:
     def run(self, state: TravelState) -> Dict[str, Any]:
         print(f"--- Researching: {state['destination']} ---")
         
-        # 1. Fetch Weather
-        weather = self.weather_service.get_weather(state["destination"])
+        # 1. Fetch Weather Forecast
+        start_date = state.get("start_date") or datetime.now().strftime("%Y-%m-%d")
+        weather = self.weather_service.get_forecast(state["destination"], state["days"], start_date)
         
         # 2. Fetch Destination Data from Serper.dev
         serper_data = self.serper_service.get_destination_data(state["destination"])

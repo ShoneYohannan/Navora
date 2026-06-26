@@ -12,7 +12,7 @@ const Footer = () => {
             <Link to="/" className="flex items-center space-x-2 text-slate-900 dark:text-white">
               <Compass className="text-sky-500" size={28} />
               <span className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">
-                AI Travel<span className="text-emerald-500"> Planner</span>
+                Navora<span className="text-emerald-500"> Trip Planner</span>
               </span>
             </Link>
             <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
@@ -90,7 +90,7 @@ const Footer = () => {
         </div>
 
         <div className="mt-12 pt-8 border-t border-slate-200 dark:border-slate-800 text-center text-xs text-slate-500 dark:text-slate-500 flex flex-col sm:flex-row justify-between items-center gap-4">
-          <p>© 2026 AI Travel Planner. Your Intelligent Travel Companion.</p>
+          <p>© 2026 Navora Trip Planner. Your Intelligent Travel Companion.</p>
           <div className="flex space-x-4">
             <a href="#" className="hover:underline">Privacy Policy</a>
             <a href="#" className="hover:underline">Terms of Service</a>
