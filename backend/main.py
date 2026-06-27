@@ -18,12 +18,26 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-app = FastAPI(title="Navora AI API", description="Multi-Agent Travel Intelligence System")
+app = FastAPI(
+    title="Navora AI API",
+    description="Multi-Agent Travel Intelligence System"
+)
 
 # CORS setup
+origins = [
+    "http://127.0.0.1:5173",
+    "http://localhost:5173",
+    "https://sales-loss-new.web.app",
+    "https://sales-loss-new.firebaseapp.com",
+]
+
+env_origins = os.getenv("ALLOWED_ORIGINS")
+if env_origins:
+    origins.extend([o.strip() for o in env_origins.split(",") if o.strip()])
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://127.0.0.1:5173", "http://localhost:5173"], # In production, restrict this to your frontend URL
+    allow_origins=list(set(origins)),
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -38,4 +52,4 @@ async def root():
 
 if __name__ == "__main__":
     port = int(os.getenv("PORT", 8000))
-    uvicorn.run("main:app", host="0.0.0.0", port=port, reload=True)
+    uvicorn.run("main:app", host="0.0.0.0", port=port, reload=False)
