@@ -26,7 +26,8 @@ You MUST return your response as a valid JSON object with the following structur
               "name": "Place or Activity Name",
               "type": "indoor",
               "description": "Short reason why this is a good alternative",
-              "is_best_pick": true
+              "is_best_pick": true,
+              "website": "https://example.com"
             }}
           ]
         }}
@@ -43,12 +44,12 @@ You MUST return your response as a valid JSON object with the following structur
     }}
   ],
   "budget_breakdown": {{
-    "accommodation": 0,
-    "transport": 0,
-    "food": 0,
-    "activities": 0,
-    "miscellaneous": 0,
-    "total_estimated": 0
+    "accommodation": 150.0,
+    "transport": 50.0,
+    "food": 75.0,
+    "activities": 100.0,
+    "miscellaneous": 40.0,
+    "total_estimated": 415.0
   }},
   "packing_checklist": ["Item 1", "Item 2"],
   "alternate_activities": ["Alt Activity 1", "Alt Activity 2"]
@@ -118,7 +119,7 @@ INSTRUCTIONS:
         * Use real places from the provided Attractions data
         * Mark exactly ONE option as "is_best_pick": true (the highest recommended activity)
         * Set "type" to "outdoor" for all options
-8. BUDGETING: Distribute the budget cap across categories realistically. The total_estimated must be less than or equal to the Budget Cap. Ensure all prices are formatted in {currency}. For each activity in the \"activities\" list, include a realistic \"estimated_cost\" in {currency} as a number (use 0 for free activities like sightseeing, beach, park visits).
+8. BUDGETING: Distribute the budget cap across categories realistically. The total_estimated must be less than or equal to the Budget Cap. Ensure all prices are formatted in {currency}. Do NOT set the individual category values (accommodation, transport, food, activities, miscellaneous) to 0. Populate them with realistic non-zero estimates that sum up to total_estimated, based on the provided budget cap. For each activity in the \"activities\" list, include a realistic \"estimated_cost\" in {currency} as a number (use 0 for free activities like sightseeing, beach, park visits).
 9. RESEARCH INTEGRATION: Incorporate the researched attractions, restaurants, malls, movie theatres, and events into the daily activities. Do NOT use fake places.
 10. packing_checklist: Create a specific packing checklist based on the 15-day forecast conditions (e.g., umbrella/poncho for rain, sunhat for high UV).
 11. Return ONLY the JSON object. Do not include markdown wrappers (like ```json ... ```) or conversational commentary outside the JSON.

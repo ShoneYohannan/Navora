@@ -98,7 +98,7 @@ class MovieService:
     # ── Secondary: Serper – targeted individual movie searches ──────────────
     def _fetch_from_serper(self) -> List[Dict[str, Any]]:
         """
-        Search Serper for each known 2026 blockbuster to get live ratings/overviews
+        Search Serper for each known 2026 blockbuster in parallel to get live ratings/overviews
         from Google's knowledge graph, then return the enriched list.
         """
         # These are confirmed 2026 theatrical releases — use as search seeds
@@ -126,63 +126,68 @@ class MovieService:
             "Content-Type": "application/json",
         }
 
+        from concurrent.futures import ThreadPoolExecutor, as_completed
+
+        def fetch_one(query):
+            payload = {"q": query, "num": 3}
+            resp = requests.post(
+                self.serper_url, headers=headers, json=payload, timeout=3
+            )
+            resp.raise_for_status()
+            return query, resp.json()
+
         enriched = []
-        for query in seed_titles[:4]:   # limit to 4 to save Serper quota
-            try:
-                payload = {"q": query, "num": 3}
-                resp = requests.post(
-                    self.serper_url, headers=headers, json=payload, timeout=8
-                )
-                resp.raise_for_status()
-                data = resp.json()
+        with ThreadPoolExecutor(max_workers=4) as executor:
+            futures = [executor.submit(fetch_one, q) for q in seed_titles[:4]]
+            for future in as_completed(futures):
+                try:
+                    query, data = future.result(timeout=4.0)
+                    kg = data.get("knowledgeGraph", {})
+                    title = kg.get("title", "")
+                    description = kg.get("description", "")
+                    image = kg.get("imageUrl")
+                    attrs = kg.get("attributes", {})
 
-                kg = data.get("knowledgeGraph", {})
-                title = kg.get("title", "")
-                description = kg.get("description", "")
-                image = kg.get("imageUrl")
-                attrs = kg.get("attributes", {})
-
-                # Extract rating — check attributes, description, and organic snippets
-                rating = None
-                candidates = [
-                    attrs.get("Rating", ""),
-                    attrs.get("IMDb", ""),
-                    description,
-                ]
-                for text_src in candidates:
-                    m = re.search(r"(\d+\.?\d*)\s*/\s*10", str(text_src))
-                    if m:
-                        rating = float(m.group(1))
-                        break
-
-                if not rating:
-                    for item in data.get("organic", [])[:3]:
-                        snip = item.get("snippet", "")
-                        m2 = re.search(r"(\d+\.?\d*)\s*/\s*10", snip)
-                        if m2:
-                            rating = float(m2.group(1))
+                    # Extract rating — check attributes, description, and organic snippets
+                    rating = None
+                    candidates = [
+                        attrs.get("Rating", ""),
+                        attrs.get("IMDb", ""),
+                        description,
+                    ]
+                    for text_src in candidates:
+                        m = re.search(r"(\d+\.?\d*)\s*/\s*10", str(text_src))
+                        if m:
+                            rating = float(m.group(1))
                             break
 
-                # Strip the rating prefix from the overview if it's in there
-                clean_desc = re.sub(r"^\d+\.?\d*/10\s*[–\-•·|]?\s*\d+%.*?[–\-•·|]\s*", "", description).strip()
-                if not clean_desc:
-                    clean_desc = description
+                    if not rating:
+                        for item in data.get("organic", [])[:3]:
+                            snip = item.get("snippet", "")
+                            m2 = re.search(r"(\d+\.?\d*)\s*/\s*10", snip)
+                            if m2:
+                                rating = float(m2.group(1))
+                                break
 
-                if title and len(title) > 2:
-                    # Skip noise titles
-                    if not any(n in title.lower() for n in _NOISE_WORDS[:6]):
-                        release_date = movie_release_dates.get(title.lower(), "2026-06-28")
-                        enriched.append({
-                            "title": title,
-                            "rating": rating,
-                            "overview": clean_desc or "Currently playing in theaters.",
-                            "poster_path": image,
-                            "release_date": release_date,
-                        })
+                    # Strip the rating prefix from the overview if it's in there
+                    clean_desc = re.sub(r"^\d+\.?\d*/10\s*[–\-•·|]?\s*\d+%.*?[–\-•·|]\s*", "", description).strip()
+                    if not clean_desc:
+                        clean_desc = description
 
-            except Exception as e:
-                print(f"[MovieService] Serper enrichment error for '{query}': {e}")
-                continue
+                    if title and len(title) > 2:
+                        # Skip noise titles
+                        if not any(n in title.lower() for n in _NOISE_WORDS[:6]):
+                            release_date = movie_release_dates.get(title.lower(), "2026-06-28")
+                            enriched.append({
+                                "title": title,
+                                "rating": rating,
+                                "overview": clean_desc or "Currently playing in theaters.",
+                                "poster_path": image,
+                                "release_date": release_date,
+                            })
+
+                except Exception as e:
+                    print(f"[MovieService] Serper parallel enrichment error: {e}")
 
         return enriched
 

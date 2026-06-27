@@ -21,7 +21,7 @@ class WeatherService:
                 "appid": self.api_key,
                 "units": "metric"
             }
-            response = requests.get(self.base_url, params=params, timeout=10)
+            response = requests.get(self.base_url, params=params, timeout=3)
             response.raise_for_status()
             data = response.json()
 
@@ -59,7 +59,7 @@ class WeatherService:
                     "appid": self.api_key,
                     "units": "metric"
                 }
-                response = requests.get(self.forecast_url, params=params, timeout=10)
+                response = requests.get(self.forecast_url, params=params, timeout=3)
                 if response.status_code == 200:
                     data = response.json()
                     # Group 3-hour entries by date

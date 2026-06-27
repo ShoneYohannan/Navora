@@ -16,6 +16,7 @@ class AlternateOption(BaseModel):
     type: str = Field(description="indoor or outdoor")
     description: str = Field(description="Short reason why this is a good alternative")
     is_best_pick: bool = Field(description="Mark exactly one option as the best pick")
+    website: Optional[str] = Field(None, description="Official website URL of the place, if present in the context")
 
 class AlternateOptions(BaseModel):
     has_risk: bool = Field(description="True if there is a weather risk for that day, else False")

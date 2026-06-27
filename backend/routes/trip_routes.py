@@ -98,7 +98,9 @@ async def save_trip(trip_data: Dict[str, Any]):
         
         try:
             result = await trips_collection.insert_one(serialized_trip)
-            return {"id": str(result.inserted_id), "status": "saved"}
+            inserted_id = str(result.inserted_id)
+            IN_MEMORY_TRIPS[inserted_id] = serialized_trip
+            return {"id": inserted_id, "status": "saved"}
         except Exception as db_err:
             print(f"MongoDB save failed, falling back to in-memory: {db_err}")
             import uuid

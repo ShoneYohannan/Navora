@@ -564,7 +564,8 @@ const Itinerary = () => {
                                       key={optIdx}
                                       onClick={(e) => {
                                         e.stopPropagation();
-                                        navigate(`/place/${encodeURIComponent(opt.name)}`);
+                                        const url = opt.website || `https://www.google.com/search?q=${encodeURIComponent(opt.name + ' ' + (trip.destination || ''))}`;
+                                        window.open(url, '_blank');
                                       }}
                                       className={`flex items-start gap-3 px-4 py-3 transition-all cursor-pointer hover:bg-black/5 dark:hover:bg-white/5 active:scale-[0.99] ${
                                         opt.is_best_pick

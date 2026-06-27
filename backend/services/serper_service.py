@@ -21,7 +21,7 @@ class SerperService:
         payload = {"q": query}
 
         try:
-            response = requests.post(self.search_url, headers=headers, json=payload, timeout=10)
+            response = requests.post(self.search_url, headers=headers, json=payload, timeout=3)
             response.raise_for_status()
             data = response.json()
             
@@ -50,7 +50,7 @@ class SerperService:
         payload = {"q": query}
 
         try:
-            response = requests.post(self.places_url, headers=headers, json=payload, timeout=10)
+            response = requests.post(self.places_url, headers=headers, json=payload, timeout=3)
             response.raise_for_status()
             data = response.json()
             
@@ -63,6 +63,7 @@ class SerperService:
                     "lat": item.get("latitude"),
                     "lon": item.get("longitude"),
                     "rating": item.get("rating"),
+                    "website": item.get("website"),
                     "snippet": f"Rating: {item.get('rating')} - {item.get('address')}"
                 })
             return results
@@ -71,19 +72,35 @@ class SerperService:
             return []
 
     def get_destination_data(self, destination: str) -> Dict[str, List[Dict[str, Any]]]:
-        """Gathers all local info for a destination using Serper search and places queries."""
-        print(f"--- Fetching Serper.dev data for {destination} ---")
+        """Gathers all local info for a destination using Serper search and places queries in parallel."""
+        print(f"--- Fetching Serper.dev data for {destination} in parallel ---")
         
-        attractions = self.search_places(f"tourist attractions in {destination}")
-        restaurants = self.search_places(f"restaurants in {destination}")
-        malls = self.search_places(f"shopping malls in {destination}")
-        theatres = self.search_places(f"movie theatres in {destination}")
-        events = self.search_organic(f"local events and activities in {destination}")
+        from concurrent.futures import ThreadPoolExecutor, as_completed
 
-        return {
-            "attractions": attractions,
-            "restaurants": restaurants,
-            "malls": malls,
-            "theatres": theatres,
-            "events": events
+        tasks = {
+            "attractions": lambda: self.search_places(f"tourist attractions in {destination}"),
+            "restaurants": lambda: self.search_places(f"restaurants in {destination}"),
+            "malls": lambda: self.search_places(f"shopping malls in {destination}"),
+            "theatres": lambda: self.search_places(f"movie theatres in {destination}"),
+            "events": lambda: self.search_organic(f"local events and activities in {destination}")
         }
+
+        results = {
+            "attractions": [],
+            "restaurants": [],
+            "malls": [],
+            "theatres": [],
+            "events": []
+        }
+
+        with ThreadPoolExecutor(max_workers=5) as executor:
+            futures = {executor.submit(func): key for key, func in tasks.items()}
+            for future in as_completed(futures):
+                key = futures[future]
+                try:
+                    results[key] = future.result(timeout=4.0)
+                except Exception as e:
+                    print(f"Serper parallel fetch failed for {key}: {e}")
+                    results[key] = []
+
+        return results
