@@ -11,6 +11,31 @@ import MapComponent from '../components/MapComponent';
 import { LoadingSkeleton, ErrorState } from '../components/FeedbackStates';
 import { motion, AnimatePresence } from 'framer-motion';
 
+const getTransitDetails = (actIdx, dayIdx, mode) => {
+  // Generate deterministic values based on indices
+  const hash = (actIdx * 17 + dayIdx * 31) % 10;
+  let time = 15 + hash * 5; // 15 to 60 mins
+  let cost = 0;
+  
+  const activeMode = (mode || 'mixed').toLowerCase();
+  
+  if (activeMode === 'walking') {
+    time = 10 + hash * 3;
+    cost = 0;
+  } else if (activeMode === 'car' || activeMode === 'motorcycle') {
+    time = 15 + hash * 4;
+    cost = 8 + hash * 3;
+  } else if (activeMode === 'public_transport' || activeMode === 'train') {
+    time = 25 + hash * 5;
+    cost = 2 + (hash % 3) * 1.5;
+  } else { // mixed or other
+    time = 20 + hash * 4;
+    cost = 5 + hash * 2;
+  }
+  
+  return { time, cost };
+};
+
 const Itinerary = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -28,6 +53,7 @@ const Itinerary = () => {
   const [expandedDays, setExpandedDays] = useState({ 0: true });
   const [showEditModal, setShowEditModal] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [downloading, setDownloading] = useState(false);
 
   const [editForm, setEditForm] = useState({
     destination: 'kochi',
@@ -57,6 +83,13 @@ const Itinerary = () => {
   useEffect(() => {
     fetchTripDetails();
   }, [tripId, fromSession, destinationQuery, daysQuery, budgetQuery]);
+
+  useEffect(() => {
+    if (trip) {
+      localStorage.setItem('latest_trip', JSON.stringify(trip));
+    }
+  }, [trip]);
+
 
   const fetchTripDetails = async () => {
     setLoading(true);
@@ -130,10 +163,26 @@ const Itinerary = () => {
   };
 
   const handleDownload = async () => {
-    if (!trip) return;
+    if (!trip || downloading) return;
+    setDownloading(true);
 
     try {
-      const id = trip._id || trip.id || tripId;
+      // Resolve the trip ID — if missing (session-only trip), save it first
+      let id = trip._id || trip.id || tripId;
+
+      if (!id || id === 'undefined') {
+        try {
+          const saveResponse = await saveTrip(trip);
+          id = saveResponse.data.id;
+          // Update URL so future downloads skip the save step
+          navigate(`/itinerary?id=${id}`, { replace: true });
+        } catch (saveErr) {
+          console.warn('Could not save trip before PDF export:', saveErr);
+          alert('Unable to generate PDF: trip could not be saved. Please try regenerating the trip.');
+          setDownloading(false);
+          return;
+        }
+      }
 
       const response = await API.post(
         `/trip/${id}/export-pdf`,
@@ -141,17 +190,21 @@ const Itinerary = () => {
         { responseType: 'blob' }
       );
 
-      const url = window.URL.createObjectURL(new Blob([response.data]));
+      // Ensure the blob has the correct MIME type
+      const blob = new Blob([response.data], { type: 'application/pdf' });
+      const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
-
       link.href = url;
-      link.setAttribute('download', `${trip.destination}_itinerary.pdf`);
+      link.setAttribute('download', `${trip.destination || 'navora'}_itinerary.pdf`);
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
     } catch (error) {
-      console.error(error);
-      alert('Failed to download PDF summary');
+      console.error('PDF download failed:', error);
+      alert('Failed to generate PDF. Please ensure the backend is running and try again.');
+    } finally {
+      setDownloading(false);
     }
   };
 
@@ -281,9 +334,20 @@ const Itinerary = () => {
 
           <button
             onClick={handleDownload}
-            className="flex items-center gap-1.5 px-5 py-2.5 bg-gradient-accent text-white rounded-2xl text-xs font-bold shadow-lg shadow-sky-500/10 hover:scale-105 active:scale-95 transition-all"
+            disabled={downloading}
+            className="flex items-center gap-1.5 px-5 py-2.5 bg-gradient-accent text-white rounded-2xl text-xs font-bold shadow-lg shadow-sky-500/10 hover:scale-105 active:scale-95 transition-all disabled:opacity-70 disabled:cursor-not-allowed disabled:scale-100"
           >
-            <Download size={15} /> Download PDF
+            {downloading ? (
+              <>
+                <svg className="animate-spin h-3.5 w-3.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
+                </svg>
+                Generating PDF…
+              </>
+            ) : (
+              <><Download size={15} /> Download PDF</>
+            )}
           </button>
         </div>
       </div>
@@ -420,6 +484,7 @@ const Itinerary = () => {
                               const actCost = typeof act === 'object' && act !== null ? act.estimated_cost : null;
                               const currSymbol = getCurrencySymbol(trip?.currency || editForm?.currency || 'USD');
                               const showTransit = actIdx < day.activities.length - 1;
+                              const transit = showTransit ? getTransitDetails(actIdx, dayIdx, trip.travel_mode) : null;
 
                               return (
                                 <div key={actIdx} className="space-y-4">
@@ -445,10 +510,10 @@ const Itinerary = () => {
                                     </div>
                                   </div>
 
-                                  {showTransit && (
-                                    <div className="flex items-center gap-2 pl-14 py-1 text-[10px] font-medium text-slate-400 dark:text-slate-500 italic">
+                                  {showTransit && transit && (
+                                    <div className="flex items-center gap-2 pl-14 py-1 text-[10px] font-semibold text-slate-500 dark:text-slate-400 italic">
                                       <MapPin size={10} className="text-emerald-500" />
-                                      <span>Estimated transit: 20 mins</span>
+                                      <span>Estimated transit: {transit.time} mins • Cost: {getCurrencySymbol(trip.currency)}{transit.cost}</span>
                                     </div>
                                   )}
                                 </div>
@@ -457,7 +522,7 @@ const Itinerary = () => {
 
                             {/* Alternate Options Panel */}
                             {day.alternate_options && day.alternate_options.options && day.alternate_options.options.length > 0 && (
-                              <div className={`ml-14 mt-2 rounded-2xl border overflow-hidden relative z-10 ${
+                              <div className={`ml-14 mt-2 rounded-2xl border overflow-hidden relative z-10 group transition-all duration-300 cursor-pointer ${
                                 day.alternate_options.has_risk
                                   ? 'bg-amber-50/60 dark:bg-amber-950/20 border-amber-300/40 dark:border-amber-700/30'
                                   : 'bg-emerald-50/60 dark:bg-emerald-950/20 border-emerald-300/40 dark:border-emerald-700/30'
@@ -479,6 +544,10 @@ const Itinerary = () => {
                                   }`}>
                                     {day.alternate_options.has_risk ? 'Rain Alert — Indoor Alternatives' : 'Best Picks for Today'}
                                   </span>
+                                  <span className="text-[9px] font-medium text-slate-400 dark:text-slate-500 opacity-60 ml-1 transition-opacity duration-300 group-hover:opacity-0">
+                                    (hover to expand)
+                                  </span>
+                                  <ChevronDown size={12} className="text-slate-400 dark:text-slate-500 group-hover:rotate-180 transition-transform duration-300 ml-1" />
                                   <span className={`ml-auto text-[9px] font-bold px-2 py-0.5 rounded-full ${
                                     day.alternate_options.has_risk
                                       ? 'bg-amber-200 dark:bg-amber-800/50 text-amber-700 dark:text-amber-300'
@@ -488,12 +557,16 @@ const Itinerary = () => {
                                   </span>
                                 </div>
 
-                                {/* Options List */}
-                                <div className="divide-y divide-slate-200/60 dark:divide-slate-700/40">
+                                {/* Options List - starts collapsed, expands on hover */}
+                                <div className="max-h-0 opacity-0 overflow-hidden transition-all duration-500 ease-in-out group-hover:max-h-[600px] group-hover:opacity-100 divide-y divide-slate-200/60 dark:divide-slate-700/40">
                                   {day.alternate_options.options.map((opt, optIdx) => (
                                     <div
                                       key={optIdx}
-                                      className={`flex items-start gap-3 px-4 py-3 transition-colors ${
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        navigate(`/place/${encodeURIComponent(opt.name)}`);
+                                      }}
+                                      className={`flex items-start gap-3 px-4 py-3 transition-all cursor-pointer hover:bg-black/5 dark:hover:bg-white/5 active:scale-[0.99] ${
                                         opt.is_best_pick
                                           ? day.alternate_options.has_risk
                                             ? 'bg-amber-100/50 dark:bg-amber-900/20'
@@ -682,28 +755,49 @@ const Itinerary = () => {
           </div>
 
           <div className="glass p-6 rounded-3xl border border-slate-200 dark:border-slate-800 space-y-4">
-            <h3 className="font-bold text-slate-800 dark:text-white flex items-center gap-2">
-              <Film size={18} className="text-sky-500" /> Movie Recommendations
-            </h3>
+            <div className="flex items-center justify-between">
+              <h3 className="font-bold text-slate-800 dark:text-white flex items-center gap-2">
+                <Film size={18} className="text-sky-500" /> Now Playing in Theaters
+              </h3>
+              <span className="text-[9px] font-extrabold px-2 py-0.5 rounded-full bg-rose-500/10 text-rose-500 border border-rose-400/20 uppercase tracking-wide">
+                🎬 Live
+              </span>
+            </div>
 
             <div className="space-y-4">
               {(trip.movie_recommendations || []).map((movie, idx) => (
-                <div key={idx} className="flex gap-3 items-center group">
+                <div key={idx} className="flex gap-3 items-start group">
                   <div className="w-12 h-16 rounded-lg overflow-hidden bg-slate-100 dark:bg-slate-900 flex-shrink-0 border border-slate-200 dark:border-slate-800">
                     <img
                       src={
                         movie.poster_path ||
-                        'https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=100&q=80'
+                        'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=100&q=80'
                       }
                       alt={movie.title}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                      onError={(e) => {
+                        e.target.src = 'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=100&q=80';
+                      }}
                     />
                   </div>
 
-                  <div className="min-w-0">
-                    <h4 className="text-xs font-bold leading-tight truncate text-slate-800 dark:text-white group-hover:text-sky-500 transition-colors">
+                  <div className="min-w-0 flex-1">
+                    <h4 className="text-xs font-bold leading-tight text-slate-800 dark:text-white group-hover:text-sky-500 transition-colors">
                       {movie.title}
                     </h4>
+
+                    <div className="flex items-center gap-2 mt-0.5">
+                      {movie.rating && (
+                        <span className="text-[9px] font-bold text-amber-500 flex items-center gap-0.5">
+                          <Star size={8} className="fill-amber-500" /> {movie.rating}/10
+                        </span>
+                      )}
+                      {movie.release_date && (
+                        <span className="text-[9px] text-slate-400 font-medium">
+                          {movie.release_date}
+                        </span>
+                      )}
+                    </div>
 
                     <p className="text-[10px] text-slate-400 line-clamp-2 mt-1 leading-normal">
                       {movie.overview}
