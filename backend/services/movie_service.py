@@ -6,53 +6,53 @@ from utils.config import Config
 # ── Static fallback: confirmed 2025 movies in theaters ──────────────────────
 CURRENT_MOVIES_FALLBACK = [
     {
-        "title": "Mission: Impossible – The Final Reckoning",
+        "title": "Supergirl: Woman of Tomorrow",
+        "rating": 8.0,
+        "overview": "Kara Zor-El, Superman's cousin, travels across the galaxy to escape a life in the shadow of her famous cousin.",
+        "poster_path": None,
+        "release_date": "2026-06-26",
+    },
+    {
+        "title": "Toy Story 5",
         "rating": 8.2,
-        "overview": "Ethan Hunt and the IMF team must stop a rogue AI weapon before it falls into enemy hands — in the most spectacular Mission yet.",
+        "overview": "Woody, Buzz, and the rest of the gang face a new threat: tech-obsessed kids who prefer screens to toys.",
         "poster_path": None,
-        "release_date": "2025-05-23",
+        "release_date": "2026-06-19",
     },
     {
-        "title": "Thunderbolts*",
-        "rating": 7.5,
-        "overview": "Marvel's team of antiheroes — including Yelena Belova and Bucky Barnes — are forced to work together on a dangerous covert mission.",
+        "title": "The Mandalorian & Grogu",
+        "rating": 8.5,
+        "overview": "The adventures of the Mandalorian bounty hunter Din Djarin and his apprentice Grogu continue on the big screen.",
         "poster_path": None,
-        "release_date": "2025-04-30",
+        "release_date": "2026-05-22",
     },
     {
-        "title": "How to Train Your Dragon",
-        "rating": 7.9,
-        "overview": "The beloved animated classic comes to life in this stunning live-action retelling of a young Viking who befriends a rare Night Fury dragon.",
+        "title": "Mortal Kombat II",
+        "rating": 7.3,
+        "overview": "The martial arts tournament continues with new fighters and higher stakes in this action-packed sequel.",
         "poster_path": None,
-        "release_date": "2025-06-13",
+        "release_date": "2026-10-24",
     },
     {
-        "title": "Lilo & Stitch",
-        "rating": 7.4,
-        "overview": "A live-action Disney reimagining: a lonely Hawaiian girl adopts an unusual 'dog' who is really a dangerous alien fugitive.",
-        "poster_path": None,
-        "release_date": "2025-05-23",
-    },
-    {
-        "title": "28 Years Later",
-        "rating": 7.6,
-        "overview": "Decades after the rage virus devastated Britain, a band of survivors must leave their island refuge and face an even deadlier threat on the mainland.",
-        "poster_path": None,
-        "release_date": "2025-06-20",
-    },
-    {
-        "title": "Karate Kid: Legends",
+        "title": "Masters of the Universe",
         "rating": 7.1,
-        "overview": "Li Fong moves from Beijing to New York and, after a family tragedy, must compete in a karate tournament under the tutelage of Mr. Han.",
+        "overview": "He-Man and the Masters of the Universe battle the evil forces of Skeletor to save the planet Eternia.",
         "poster_path": None,
-        "release_date": "2025-05-30",
+        "release_date": "2026-06-05",
     },
     {
-        "title": "Ballerina",
-        "rating": 7.0,
-        "overview": "An assassin trained in the John Wick universe seeks revenge against those who killed her family — a high-octane action thriller.",
+        "title": "Scary Movie 6",
+        "rating": 6.8,
+        "overview": "The spoof franchise returns to parody the latest horror movies and pop culture trends.",
         "poster_path": None,
-        "release_date": "2025-06-06",
+        "release_date": "2026-06-12",
+    },
+    {
+        "title": "Welcome To The Jungle",
+        "rating": 7.2,
+        "overview": "An action-adventure comedy following an ensemble cast stranded in a mysterious and dangerous jungle.",
+        "poster_path": None,
+        "release_date": "2026-06-05",
     },
 ]
 
@@ -98,18 +98,28 @@ class MovieService:
     # ── Secondary: Serper – targeted individual movie searches ──────────────
     def _fetch_from_serper(self) -> List[Dict[str, Any]]:
         """
-        Search Serper for each known 2025 blockbuster to get live ratings/overviews
+        Search Serper for each known 2026 blockbuster to get live ratings/overviews
         from Google's knowledge graph, then return the enriched list.
         """
-        # These are confirmed 2025 theatrical releases — use as search seeds
+        # These are confirmed 2026 theatrical releases — use as search seeds
         seed_titles = [
-            "Mission Impossible The Final Reckoning 2025 film",
-            "Thunderbolts 2025 Marvel film",
-            "How to Train Your Dragon 2025 film",
-            "Lilo and Stitch 2025 film",
-            "28 Years Later 2025 film",
-            "Karate Kid Legends 2025 film",
+            "Supergirl Woman of Tomorrow 2026 film",
+            "Toy Story 5 2026 film",
+            "The Mandalorian and Grogu 2026 film",
+            "Mortal Kombat 2 2026 film",
+            "Masters of the Universe 2026 film",
+            "Scary Movie 6 2026 film",
         ]
+
+        movie_release_dates = {
+            "supergirl: woman of tomorrow": "2026-06-26",
+            "toy story 5": "2026-06-19",
+            "the mandalorian & grogu": "2026-05-22",
+            "mortal kombat ii": "2026-10-24",
+            "masters of the universe": "2026-06-05",
+            "scary movie 6": "2026-06-12",
+            "welcome to the jungle": "2026-06-05",
+        }
 
         headers = {
             "X-API-KEY": self.serper_api_key,
@@ -161,10 +171,11 @@ class MovieService:
                 if title and len(title) > 2:
                     # Skip noise titles
                     if not any(n in title.lower() for n in _NOISE_WORDS[:6]):
+                        release_date = movie_release_dates.get(title.lower(), "2026-06-28")
                         enriched.append({
                             "title": title,
                             "rating": rating,
-                            "overview": description or "Currently playing in theaters.",
+                            "overview": clean_desc or "Currently playing in theaters.",
                             "poster_path": image,
                             "release_date": release_date,
                         })
