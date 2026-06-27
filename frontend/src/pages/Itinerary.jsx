@@ -11,6 +11,31 @@ import MapComponent from '../components/MapComponent';
 import { LoadingSkeleton, ErrorState } from '../components/FeedbackStates';
 import { motion, AnimatePresence } from 'framer-motion';
 
+const getTransitDetails = (actIdx, dayIdx, mode) => {
+  // Generate deterministic values based on indices
+  const hash = (actIdx * 17 + dayIdx * 31) % 10;
+  let time = 15 + hash * 5; // 15 to 60 mins
+  let cost = 0;
+  
+  const activeMode = (mode || 'mixed').toLowerCase();
+  
+  if (activeMode === 'walking') {
+    time = 10 + hash * 3;
+    cost = 0;
+  } else if (activeMode === 'car' || activeMode === 'motorcycle') {
+    time = 15 + hash * 4;
+    cost = 8 + hash * 3;
+  } else if (activeMode === 'public_transport' || activeMode === 'train') {
+    time = 25 + hash * 5;
+    cost = 2 + (hash % 3) * 1.5;
+  } else { // mixed or other
+    time = 20 + hash * 4;
+    cost = 5 + hash * 2;
+  }
+  
+  return { time, cost };
+};
+
 const Itinerary = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -58,6 +83,13 @@ const Itinerary = () => {
   useEffect(() => {
     fetchTripDetails();
   }, [tripId, fromSession, destinationQuery, daysQuery, budgetQuery]);
+
+  useEffect(() => {
+    if (trip) {
+      localStorage.setItem('latest_trip', JSON.stringify(trip));
+    }
+  }, [trip]);
+
 
   const fetchTripDetails = async () => {
     setLoading(true);
@@ -450,6 +482,7 @@ const Itinerary = () => {
                             {day.activities?.map((act, actIdx) => {
                               const time = `${9 + actIdx * 2}:00`;
                               const showTransit = actIdx < day.activities.length - 1;
+                              const transit = showTransit ? getTransitDetails(actIdx, dayIdx, trip.travel_mode) : null;
 
                               return (
                                 <div key={actIdx} className="space-y-4">
@@ -467,10 +500,10 @@ const Itinerary = () => {
                                     </div>
                                   </div>
 
-                                  {showTransit && (
-                                    <div className="flex items-center gap-2 pl-14 py-1 text-[10px] font-medium text-slate-400 dark:text-slate-500 italic">
+                                  {showTransit && transit && (
+                                    <div className="flex items-center gap-2 pl-14 py-1 text-[10px] font-semibold text-slate-500 dark:text-slate-400 italic">
                                       <MapPin size={10} className="text-emerald-500" />
-                                      <span>Estimated transit: 20 mins</span>
+                                      <span>Estimated transit: {transit.time} mins • Cost: {getCurrencySymbol(trip.currency)}{transit.cost}</span>
                                     </div>
                                   )}
                                 </div>
@@ -479,7 +512,7 @@ const Itinerary = () => {
 
                             {/* Alternate Options Panel */}
                             {day.alternate_options && day.alternate_options.options && day.alternate_options.options.length > 0 && (
-                              <div className={`ml-14 mt-2 rounded-2xl border overflow-hidden relative z-10 ${
+                              <div className={`ml-14 mt-2 rounded-2xl border overflow-hidden relative z-10 group transition-all duration-300 cursor-pointer ${
                                 day.alternate_options.has_risk
                                   ? 'bg-amber-50/60 dark:bg-amber-950/20 border-amber-300/40 dark:border-amber-700/30'
                                   : 'bg-emerald-50/60 dark:bg-emerald-950/20 border-emerald-300/40 dark:border-emerald-700/30'
@@ -501,6 +534,10 @@ const Itinerary = () => {
                                   }`}>
                                     {day.alternate_options.has_risk ? 'Rain Alert — Indoor Alternatives' : 'Best Picks for Today'}
                                   </span>
+                                  <span className="text-[9px] font-medium text-slate-400 dark:text-slate-500 opacity-60 ml-1 transition-opacity duration-300 group-hover:opacity-0">
+                                    (hover to expand)
+                                  </span>
+                                  <ChevronDown size={12} className="text-slate-400 dark:text-slate-500 group-hover:rotate-180 transition-transform duration-300 ml-1" />
                                   <span className={`ml-auto text-[9px] font-bold px-2 py-0.5 rounded-full ${
                                     day.alternate_options.has_risk
                                       ? 'bg-amber-200 dark:bg-amber-800/50 text-amber-700 dark:text-amber-300'
@@ -510,12 +547,16 @@ const Itinerary = () => {
                                   </span>
                                 </div>
 
-                                {/* Options List */}
-                                <div className="divide-y divide-slate-200/60 dark:divide-slate-700/40">
+                                {/* Options List - starts collapsed, expands on hover */}
+                                <div className="max-h-0 opacity-0 overflow-hidden transition-all duration-500 ease-in-out group-hover:max-h-[600px] group-hover:opacity-100 divide-y divide-slate-200/60 dark:divide-slate-700/40">
                                   {day.alternate_options.options.map((opt, optIdx) => (
                                     <div
                                       key={optIdx}
-                                      className={`flex items-start gap-3 px-4 py-3 transition-colors ${
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        navigate(`/place/${encodeURIComponent(opt.name)}`);
+                                      }}
+                                      className={`flex items-start gap-3 px-4 py-3 transition-all cursor-pointer hover:bg-black/5 dark:hover:bg-white/5 active:scale-[0.99] ${
                                         opt.is_best_pick
                                           ? day.alternate_options.has_risk
                                             ? 'bg-amber-100/50 dark:bg-amber-900/20'
