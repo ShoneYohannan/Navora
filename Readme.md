@@ -1,7 +1,7 @@
 # 🌍 Navora – AI Powered Travel Planner
 
 <p align="center">
-  <img src="assets/logo.png" width="180" alt="Navora Logo"/>
+  <img src="x1.png" width="180" alt="Navora Logo"/>
 </p>
 
 <p align="center">
