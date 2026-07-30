@@ -27,6 +27,26 @@ const buildTimeOptions = () => {
 
 const ALL_TIMES = buildTimeOptions();
 
+/* ─── Travel mode colors ─── */
+const modeColors = {
+  walking: { hex: '#FF9F43', selected: 'bg-[#FF9F43] text-white border-transparent shadow-[#FF9F43]/30', hover: 'hover:border-[#FF9F43]/50' },
+  car: { hex: '#54A0FF', selected: 'bg-[#54A0FF] text-white border-transparent shadow-[#54A0FF]/30', hover: 'hover:border-[#54A0FF]/50' },
+  public_transport: { hex: '#1DD1A1', selected: 'bg-[#1DD1A1] text-white border-transparent shadow-[#1DD1A1]/30', hover: 'hover:border-[#1DD1A1]/50' },
+  bicycle: { hex: '#ff6b6b', selected: 'bg-[#ff6b6b] text-white border-transparent shadow-[#ff6b6b]/30', hover: 'hover:border-[#ff6b6b]/50' },
+  train: { hex: '#9b5de5', selected: 'bg-[#9b5de5] text-white border-transparent shadow-[#9b5de5]/30', hover: 'hover:border-[#9b5de5]/50' },
+  flight: { hex: '#48DBFB', selected: 'bg-[#48DBFB] text-slate-900 border-transparent shadow-[#48DBFB]/30', hover: 'hover:border-[#48DBFB]/50' },
+  mixed: { hex: '#f15bb5', selected: 'bg-[#f15bb5] text-white border-transparent shadow-[#f15bb5]/30', hover: 'hover:border-[#f15bb5]/50' },
+};
+
+/* ─── Travel preference colors ─── */
+const prefColors = {
+  Adventure: { hex: '#FF7F50', selected: 'bg-[#FF7F50] text-white border-transparent shadow-[#FF7F50]/30', hover: 'hover:border-[#FF7F50]/50' },
+  Family: { hex: '#FD79A8', selected: 'bg-[#FD79A8] text-white border-transparent shadow-[#FD79A8]/30', hover: 'hover:border-[#FD79A8]/50' },
+  Nature: { hex: '#26DE81', selected: 'bg-[#26DE81] text-slate-900 border-transparent shadow-[#26DE81]/30', hover: 'hover:border-[#26DE81]/50' },
+  Food: { hex: '#FF6B6B', selected: 'bg-[#FF6B6B] text-white border-transparent shadow-[#FF6B6B]/30', hover: 'hover:border-[#FF6B6B]/50' },
+  Culture: { hex: '#00D2D3', selected: 'bg-[#00D2D3] text-slate-900 border-transparent shadow-[#00D2D3]/30', hover: 'hover:border-[#00D2D3]/50' },
+};
+
 /* ─── Travel mode options ─── */
 const TRAVEL_MODES = [
   { id: 'walking',          label: 'Walking',          icon: PersonStanding },
@@ -141,10 +161,13 @@ const Home = () => {
   const set = (key, val) => setFormData(prev => ({ ...prev, [key]: val }));
 
   /* Shared select class */
-  const selectCls = "w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl py-3 px-3 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-sky-500 text-slate-800 dark:text-slate-200 cursor-pointer";
+  const selectCls = "w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl py-3 px-3 text-xs font-semibold input-premium text-slate-800 dark:text-slate-200 cursor-pointer";
 
   return (
-    <div className="space-y-24 pb-20">
+    <div className="space-y-24 pb-20 relative overflow-hidden">
+      {/* Background Ambient Glows */}
+      <div className="absolute top-0 left-[-10%] w-[50%] aspect-square rounded-full bg-gradient-to-tr from-[#E63946]/08 via-[#800020]/08 to-transparent blur-[130px] pointer-events-none -z-10" />
+      <div className="absolute top-[25%] right-[-10%] w-[55%] aspect-square rounded-full bg-gradient-to-br from-[#800020]/08 via-[#E63946]/05 to-transparent blur-[160px] pointer-events-none -z-10" />
       
       {/* Hero Section with form panel */}
       <section className="relative pt-12 md:pt-20 px-6 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
@@ -154,14 +177,18 @@ const Home = () => {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="inline-flex items-center gap-2 px-3 py-1.5 bg-sky-500/10 text-sky-600 dark:text-sky-400 text-xs font-bold rounded-full border border-sky-400/20"
+            className="badge-gold"
           >
             <Sparkles size={14} className="animate-pulse" />
             <span>AI-Powered Local Discovery</span>
           </motion.div>
           
-          <h1 className="text-4xl md:text-6xl font-black tracking-tight leading-tight text-slate-800 dark:text-white">
-            Plan smarter trips with <span className="text-gradient">AI Local Insights</span>.
+          <h1
+            className="text-4xl md:text-6xl font-black tracking-tight leading-tight"
+            style={{ color: '#F8FAFC' }}
+          >
+            Plan smarter trips with{' '}
+            <span className="text-gradient">AI Local Insights</span>.
           </h1>
           
           <p className="text-base md:text-lg text-slate-500 dark:text-slate-400 leading-relaxed max-w-lg">
@@ -174,9 +201,17 @@ const Home = () => {
                 "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80",
                 "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=100&q=80",
                 "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=100&q=80"
-              ].map((src, i) => (
-                <img key={i} className="w-10 h-10 rounded-full border-2 border-white dark:border-slate-900 object-cover" src={src} alt="Traveler avatar" />
-              ))}
+              ].map((src, i) => {
+                const borderClass = ["border-[#FF9F43]", "border-[#9b5de5]", "border-[#00F2FE]"][i];
+                return (
+                  <img 
+                    key={i} 
+                    className={`w-10 h-10 rounded-full border-2 ${borderClass} object-cover shadow-sm`} 
+                    src={src} 
+                    alt="Traveler avatar" 
+                  />
+                );
+              })}
             </div>
             <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">
               Joined by <span className="text-slate-800 dark:text-white font-bold">12,000+</span> globetrotters this month
@@ -186,7 +221,7 @@ const Home = () => {
 
         {/* Right column planner form */}
         <div className="lg:col-span-6 w-full">
-          <div className="glass p-8 rounded-3xl border border-slate-200 dark:border-slate-800/80 shadow-xl relative">
+          <div className="card-elevated p-8 rounded-3xl relative">
             <h3 className="text-xl font-bold mb-6 text-slate-800 dark:text-white flex items-center gap-2">
               <Compass size={20} className="text-sky-500" /> Start Planning
             </h3>
@@ -197,12 +232,12 @@ const Home = () => {
               <div>
                 <label className="block text-xs font-bold text-slate-400 dark:text-slate-500 mb-2.5 uppercase tracking-wider">Where to?</label>
                 <div className="relative">
-                  <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                  <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-[#FF4D4D]" size={18} />
                   <input
                     type="text"
                     required
                     placeholder="e.g. Paris, Tokyo, Kochi"
-                    className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl py-3.5 pl-12 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-sky-500 text-slate-800 dark:text-slate-200 font-semibold"
+                    className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl py-3.5 pl-12 pr-4 text-sm input-premium text-slate-800 dark:text-slate-200 font-semibold"
                     value={formData.destination}
                     onChange={(e) => set('destination', e.target.value)}
                   />
@@ -215,11 +250,11 @@ const Home = () => {
                 <div>
                   <label className="block text-xs font-bold text-slate-400 dark:text-slate-500 mb-2.5 uppercase tracking-wider">Start Date</label>
                   <div className="relative">
-                    <Calendar className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
+                    <Calendar className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#1DD1A1]" size={16} />
                     <input
                       type="date"
                       required
-                      className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl py-3 pl-10 pr-3 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-sky-500 text-slate-800 dark:text-slate-200"
+                      className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl py-3 pl-10 pr-3 text-xs font-semibold input-premium text-slate-800 dark:text-slate-200"
                       value={formData.startDate}
                       onChange={(e) => set('startDate', e.target.value)}
                     />
@@ -233,7 +268,7 @@ const Home = () => {
                     type="number"
                     min="1"
                     max="10"
-                    className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl py-3 px-4 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-sky-500 text-slate-800 dark:text-slate-200"
+                    className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl py-3 px-4 text-xs font-semibold input-premium text-slate-800 dark:text-slate-200"
                     value={formData.duration}
                     onChange={(e) => set('duration', parseInt(e.target.value))}
                   />
@@ -243,12 +278,12 @@ const Home = () => {
                 <div>
                   <label className="block text-xs font-bold text-slate-400 dark:text-slate-500 mb-2.5 uppercase tracking-wider">Budget</label>
                   <div className="relative">
-                    <Wallet className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
+                    <Wallet className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#FFD700]" size={16} />
                     <input
                       type="number"
                       min="1"
                       placeholder="Budget"
-                      className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl py-3 pl-10 pr-3 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-sky-500 text-slate-800 dark:text-slate-200"
+                      className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl py-3 pl-10 pr-3 text-xs font-semibold input-premium text-slate-800 dark:text-slate-200"
                       value={formData.budget}
                       onChange={(e) => set('budget', parseFloat(e.target.value) || 0)}
                     />
@@ -357,19 +392,21 @@ const Home = () => {
                 <div className="flex flex-wrap gap-2">
                   {TRAVEL_MODES.map((mode) => {
                     const isSelected = formData.travelMode === mode.id;
+                    const styleConf = modeColors[mode.id] || { hex: '#38bdf8', selected: 'bg-sky-500 text-white shadow-sky-500/20', hover: 'hover:border-sky-500/50' };
                     return (
                       <button
                         key={mode.id}
                         type="button"
                         onClick={() => set('travelMode', mode.id)}
-                        className={`px-3 py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5 border transition-all ${
+                        className={`px-3 py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5 border transition-all shadow-md ${
                           isSelected
-                            ? 'bg-gradient-accent text-white border-transparent shadow-md'
-                            : 'bg-transparent border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:border-sky-500/50'
+                            ? `${styleConf.selected} shadow-lg`
+                            : `bg-transparent text-slate-600 dark:text-slate-400 ${styleConf.hover}`
                         }`}
+                        style={!isSelected ? { color: styleConf.hex } : undefined}
                       >
-                        <mode.icon size={13} />
-                        <span>{mode.label}</span>
+                        <mode.icon size={13} className={!isSelected ? '' : 'text-current'} />
+                        <span className={isSelected ? 'text-current' : 'text-slate-700 dark:text-slate-300'}>{mode.label}</span>
                       </button>
                     );
                   })}
@@ -382,19 +419,21 @@ const Home = () => {
                 <div className="flex flex-wrap gap-2">
                   {travelPreferences.map((pref) => {
                     const isSelected = formData.interest === pref.id;
+                    const styleConf = prefColors[pref.id] || { hex: '#38bdf8', selected: 'bg-sky-500 text-white shadow-sky-500/20', hover: 'hover:border-sky-500/50' };
                     return (
                       <button
                         key={pref.id}
                         type="button"
                         onClick={() => set('interest', pref.id)}
-                        className={`px-3 py-2 rounded-xl text-xs font-semibold flex items-center gap-1 border transition-all ${
+                        className={`px-3 py-2 rounded-xl text-xs font-semibold flex items-center gap-1 border transition-all shadow-md ${
                           isSelected
-                            ? 'bg-gradient-accent text-white border-transparent shadow-md'
-                            : 'bg-transparent border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:border-sky-500/50'
+                            ? `${styleConf.selected} shadow-lg`
+                            : `bg-transparent text-slate-600 dark:text-slate-400 ${styleConf.hover}`
                         }`}
+                        style={!isSelected ? { color: styleConf.hex } : undefined}
                       >
-                        <pref.icon size={13} />
-                        <span>{pref.label}</span>
+                        <pref.icon size={13} className={!isSelected ? '' : 'text-current'} />
+                        <span className={isSelected ? 'text-current' : 'text-slate-700 dark:text-slate-300'}>{pref.label}</span>
                       </button>
                     );
                   })}
@@ -406,7 +445,7 @@ const Home = () => {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full py-3.5 bg-gradient-accent hover:opacity-95 text-white font-bold rounded-2xl text-xs flex justify-center items-center gap-1.5 shadow-lg shadow-sky-500/20 active:scale-95 transition-all"
+                  className="w-full py-3.5 bg-gradient-glow text-slate-900 dark:text-slate-900 font-bold rounded-2xl text-xs flex justify-center items-center gap-1.5 shadow-lg shadow-cyan-500/20 transition-all"
                 >
                   {loading ? 'Analyzing Destination...' : 'Generate Itinerary'}
                 </button>

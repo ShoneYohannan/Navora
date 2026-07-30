@@ -1,0 +1,8 @@
+{
+  "name": "navora-root",
+  "version": "1.0.0",
+  "description": "Navora Travel Planner root workspace for local orchestration",
+  "scripts": {
+    "dev": "run_local.bat"
+  }
+}

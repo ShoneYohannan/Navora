@@ -4,88 +4,220 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ═══════════════════════════════════════════════════
+   BURGUNDY / CRIMSON LUXURY PALETTE
+   ═══════════════════════════════════════════════════ */
 :root {
   font-family: 'Plus Jakarta Sans', 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
-  color-scheme: light dark;
+  color-scheme: dark;
+
+  /* ── Core backgrounds ── */
+  --lux-bg:           #090406;   /* deep velvet black */
+  --lux-surface:      #180B10;   /* very dark burgundy — cards/panels */
+  --lux-surface-2:    #1E0D14;   /* elevated card / form container */
+  --lux-border:       rgba(230, 57, 70, 0.1);
+  --lux-border-hover: rgba(230, 57, 70, 0.4);
+
+  /* ── Accent — Deep Crimson → Rich Wine ── */
+  --lux-gold:         #E63946;   /* deep crimson (primary accent) */
+  --lux-gold-light:   #FF6B74;   /* bright rose — active text, highlights */
+  --lux-gold-dim:     rgba(230, 57, 70, 0.12);
+  --lux-gold-glow:    rgba(230, 57, 70, 0.35);
+
+  /* ── Accent 2 — Rich Wine ── */
+  --lux-violet:       #800020;   /* rich wine / deep burgundy */
+  --lux-violet-dim:   rgba(128, 0, 32, 0.18);
+
+  /* ── Text ── */
+  --lux-text-primary:   #F8FAFC;   /* bright off-white — maximum contrast */
+  --lux-text-secondary: #7A6672;   /* muted mauve-gray */
+  --lux-text-muted:     #4A3040;   /* very muted wine-gray */
 }
 
+/* ═══════════════════════════════════════════════════
+   BASE BODY
+   ═══════════════════════════════════════════════════ */
 body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
+  background-color: var(--lux-bg);
+  color: var(--lux-text-primary);
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Light / Default Mode styles */
+/* Light mode — still nice if toggled */
 html:not(.dark) body {
-  background-color: #f8fafc; /* slate-50 */
-  color: #0f172a; /* slate-900 */
+  background-color: #F0F4FF;
+  color: #0f172a;
 }
 
-/* Dark Mode styles */
+/* Dark mode — luxury dark */
 html.dark body {
-  background-color: #090d16; /* midnight-950 */
-  color: #f8fafc; /* slate-50 */
+  background-color: var(--lux-bg);
+  color: var(--lux-text-primary);
 }
 
 #root {
   width: 100%;
 }
 
-/* Glassmorphism Styles */
+/* ═══════════════════════════════════════════════════
+   GLASSMORPHISM — LUXURY DARK
+   ═══════════════════════════════════════════════════ */
 .glass {
   transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 html:not(.dark) .glass {
-  background: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.8);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(226, 232, 240, 0.8); /* slate-200 */
-  box-shadow: 0 10px 30px -10px rgba(148, 163, 184, 0.15);
+  border: 1px solid rgba(230, 57, 70, 0.15);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.08);
 }
 
 html.dark .glass {
-  background: rgba(15, 23, 42, 0.6);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+  background: rgba(24, 11, 16, 0.75);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--lux-border);
+  box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.7);
 }
 
-/* Floating Navigation Bar Glass Effect */
+/* ═══════════════════════════════════════════════════
+   CARD — LUXURY ELEVATED
+   ═══════════════════════════════════════════════════ */
+.card-elevated {
+  background-color: var(--lux-surface-2);
+  border-radius: 1.25rem;
+  border: 1px solid var(--lux-border);
+  box-shadow:
+    0 0 0 1px rgba(230, 57, 70, 0.04),
+    0 20px 40px -12px rgba(0, 0, 0, 0.6);
+  transition: box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.card-elevated:hover {
+  border-color: var(--lux-border-hover);
+  box-shadow:
+    0 0 0 1px rgba(230, 57, 70, 0.1),
+    0 0 30px rgba(230, 57, 70, 0.06),
+    0 24px 48px -12px rgba(0, 0, 0, 0.7);
+}
+
+html:not(.dark) .card-elevated {
+  background-color: #ffffff;
+  border: 1px solid rgba(230, 57, 70, 0.15);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.06), 0 4px 10px -3px rgba(0, 0, 0, 0.04);
+}
+
+/* ═══════════════════════════════════════════════════
+   NAVBAR — LUXURY DARK
+   ═══════════════════════════════════════════════════ */
+.glass-navbar {
+  background: rgba(9, 4, 6, 0.94);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-bottom: 1px solid rgba(230, 57, 70, 0.12);
+  box-shadow: 0 1px 0 0 rgba(230, 57, 70, 0.04);
+}
+
 html:not(.dark) .glass-navbar {
-  background: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-bottom: 1px solid rgba(230, 57, 70, 0.18);
 }
 
-html.dark .glass-navbar {
-  background: rgba(9, 13, 22, 0.8);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-}
+/* ═══════════════════════════════════════════════════
+   GRADIENT UTILITIES
+   ═══════════════════════════════════════════════════ */
 
-/* Premium Gradient Text */
+/* Hero text gradient — warm gold for "AI Local Insights" */
 .text-gradient {
-  background: linear-gradient(135deg, #0ea5e9 0%, #10b981 100%); /* sky-500 to emerald-500 */
+  background: linear-gradient(135deg, #FFD166 0%, #F4A261 45%, #E76F51 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
+/* CTA button gradient — crimson → wine */
+.bg-gradient-glow {
+  background: linear-gradient(135deg, #E63946 0%, #C1121F 50%, #800020 100%);
+  transition: all 0.3s ease;
+}
+
+.bg-gradient-glow:hover {
+  box-shadow:
+    0 0 24px rgba(230, 57, 70, 0.55),
+    0 0 50px rgba(128, 0, 32, 0.3);
+  transform: translateY(-1px);
+}
+
+.bg-gradient-glow:active {
+  transform: translateY(1px);
+}
+
+/* Brand icon / accent gradient — crimson → wine */
 .bg-gradient-accent {
-  background: linear-gradient(135deg, #0ea5e9 0%, #10b981 100%);
+  background: linear-gradient(135deg, #E63946 0%, #800020 100%);
 }
 
 .border-gradient-accent {
-  border-image: linear-gradient(135deg, #0ea5e9 0%, #10b981 100%) 1;
+  border-image: linear-gradient(135deg, #E63946 0%, #800020 100%) 1;
 }
 
-/* Leaflet Map Custom Styling to match dark/light theme */
+/* ═══════════════════════════════════════════════════
+   INPUT — LUXURY FOCUS RING
+   ═══════════════════════════════════════════════════ */
+.input-premium {
+  transition: all 0.25s ease;
+  background-color: var(--lux-surface) !important;
+  border-color: rgba(230, 57, 70, 0.12) !important;
+  color: var(--lux-text-primary) !important;
+}
+
+.input-premium::placeholder {
+  color: var(--lux-text-secondary);
+}
+
+.input-premium:focus {
+  outline: none !important;
+  border-color: var(--lux-gold) !important;
+  box-shadow:
+    0 0 0 3px var(--lux-gold-dim),
+    0 0 16px rgba(230, 57, 70, 0.18) !important;
+}
+
+html:not(.dark) .input-premium {
+  background-color: #fff !important;
+  border-color: rgba(230, 57, 70, 0.15) !important;
+  color: #1a0009 !important;
+}
+
+/* ═══════════════════════════════════════════════════
+   LUXURY BADGE / TAG
+   ═══════════════════════════════════════════════════ */
+.badge-gold {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.25rem 0.75rem;
+  background: var(--lux-gold-dim);
+  border: 1px solid rgba(230, 57, 70, 0.28);
+  color: var(--lux-gold-light);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  border-radius: 9999px;
+}
+
+/* ═══════════════════════════════════════════════════
+   LEAFLET MAP
+   ═══════════════════════════════════════════════════ */
 .leaflet-container {
   width: 100%;
   height: 100%;
@@ -93,39 +225,55 @@ html.dark .glass-navbar {
 }
 
 html.dark .leaflet-tile-container {
-  filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
+  filter: invert(100%) hue-rotate(180deg) brightness(85%) contrast(90%) sepia(20%);
 }
 
-/* Scrollbar Customization */
+/* ═══════════════════════════════════════════════════
+   SCROLLBAR — LUXURY GOLD TINT
+   ═══════════════════════════════════════════════════ */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
   background: transparent;
 }
 
-html:not(.dark) ::-webkit-scrollbar-thumb {
-  background: #cbd5e1; /* slate-300 */
-  border-radius: 9999px;
-}
-
-html.dark ::-webkit-scrollbar-thumb {
-  background: #334155; /* slate-700 */
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #E6394644, #80002044);
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: linear-gradient(180deg, #E6394688, #80002088);
 }
 
-/* Micro-animations */
+/* ═══════════════════════════════════════════════════
+   MICRO-ANIMATIONS
+   ═══════════════════════════════════════════════════ */
 @keyframes pulse-gentle {
   0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-4px); }
+  50%       { transform: translateY(-4px); }
 }
 
 .animate-pulse-gentle {
   animation: pulse-gentle 4s ease-in-out infinite;
+}
+
+/* Subtle gold shimmer on hover for luxury cards */
+@keyframes gold-shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+.shimmer-gold {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(230, 57, 70, 0.07) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: gold-shimmer 2.5s ease-in-out infinite;
 }

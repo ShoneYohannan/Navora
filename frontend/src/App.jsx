@@ -12,7 +12,7 @@ import Footer from './components/Footer';
 function App() {
   return (
     <Router>
-      <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-[#090d16] dark:text-slate-100 flex flex-col transition-colors duration-300">
+      <div className="min-h-screen flex flex-col transition-colors duration-300" style={{ backgroundColor: 'var(--lux-bg)', color: 'var(--lux-text-primary)' }}>
         <Navbar />
         
         {/* Main Content Area */}
