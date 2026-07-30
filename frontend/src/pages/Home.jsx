@@ -221,23 +221,23 @@ const Home = () => {
 
         {/* Right column planner form */}
         <div className="lg:col-span-6 w-full">
-          <div className="card-elevated p-8 rounded-3xl relative">
-            <h3 className="text-xl font-bold mb-6 text-slate-800 dark:text-white flex items-center gap-2">
-              <Compass size={20} className="text-sky-500" /> Start Planning
+          <div className="bg-white text-slate-900 p-8 rounded-[2rem] shadow-2xl border border-slate-100 relative">
+            <h3 className="text-xl font-bold mb-6 text-slate-900 flex items-center gap-2">
+              <Compass size={22} className="text-sky-500" /> Start Planning
             </h3>
             
             <form onSubmit={handleGenerateItinerary} className="space-y-6">
 
               {/* ── Destination ── */}
               <div>
-                <label className="block text-xs font-bold text-slate-400 dark:text-slate-500 mb-2.5 uppercase tracking-wider">Where to?</label>
+                <label className="block text-xs font-bold text-slate-400 mb-2.5 uppercase tracking-wider">WHERE TO?</label>
                 <div className="relative">
-                  <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-[#FF4D4D]" size={18} />
+                  <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-red-500" size={18} />
                   <input
                     type="text"
                     required
                     placeholder="e.g. Paris, Tokyo, Kochi"
-                    className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl py-3.5 pl-12 pr-4 text-sm input-premium text-slate-800 dark:text-slate-200 font-semibold"
+                    className="w-full bg-white border border-slate-200 rounded-2xl py-3.5 pl-12 pr-4 text-sm font-semibold text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 shadow-sm"
                     value={formData.destination}
                     onChange={(e) => set('destination', e.target.value)}
                   />
@@ -248,13 +248,13 @@ const Home = () => {
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 {/* Start Date */}
                 <div>
-                  <label className="block text-xs font-bold text-slate-400 dark:text-slate-500 mb-2.5 uppercase tracking-wider">Start Date</label>
+                  <label className="block text-xs font-bold text-slate-400 mb-2.5 uppercase tracking-wider">START DATE</label>
                   <div className="relative">
-                    <Calendar className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#1DD1A1]" size={16} />
+                    <Calendar className="absolute left-3.5 top-1/2 -translate-y-1/2 text-emerald-500" size={16} />
                     <input
                       type="date"
                       required
-                      className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl py-3 pl-10 pr-3 text-xs font-semibold input-premium text-slate-800 dark:text-slate-200"
+                      className="w-full bg-white border border-slate-200 rounded-xl py-3 pl-10 pr-3 text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 shadow-sm"
                       value={formData.startDate}
                       onChange={(e) => set('startDate', e.target.value)}
                     />
@@ -263,12 +263,12 @@ const Home = () => {
 
                 {/* Days Duration */}
                 <div>
-                  <label className="block text-xs font-bold text-slate-400 dark:text-slate-500 mb-2.5 uppercase tracking-wider">Days</label>
+                  <label className="block text-xs font-bold text-slate-400 mb-2.5 uppercase tracking-wider">DAYS</label>
                   <input
                     type="number"
                     min="1"
                     max="10"
-                    className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl py-3 px-4 text-xs font-semibold input-premium text-slate-800 dark:text-slate-200"
+                    className="w-full bg-white border border-slate-200 rounded-xl py-3 px-4 text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 shadow-sm"
                     value={formData.duration}
                     onChange={(e) => set('duration', parseInt(e.target.value))}
                   />
@@ -276,14 +276,14 @@ const Home = () => {
 
                 {/* Budget */}
                 <div>
-                  <label className="block text-xs font-bold text-slate-400 dark:text-slate-500 mb-2.5 uppercase tracking-wider">Budget</label>
+                  <label className="block text-xs font-bold text-slate-400 mb-2.5 uppercase tracking-wider">BUDGET</label>
                   <div className="relative">
-                    <Wallet className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#FFD700]" size={16} />
+                    <Wallet className="absolute left-3.5 top-1/2 -translate-y-1/2 text-amber-500" size={16} />
                     <input
                       type="number"
                       min="1"
                       placeholder="Budget"
-                      className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl py-3 pl-10 pr-3 text-xs font-semibold input-premium text-slate-800 dark:text-slate-200"
+                      className="w-full bg-white border border-slate-200 rounded-xl py-3 pl-10 pr-3 text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 shadow-sm"
                       value={formData.budget}
                       onChange={(e) => set('budget', parseFloat(e.target.value) || 0)}
                     />
@@ -292,9 +292,9 @@ const Home = () => {
 
                 {/* Currency */}
                 <div>
-                  <label className="block text-xs font-bold text-slate-400 dark:text-slate-500 mb-2.5 uppercase tracking-wider">Currency</label>
+                  <label className="block text-xs font-bold text-slate-400 mb-2.5 uppercase tracking-wider">CURRENCY</label>
                   <select
-                    className={selectCls}
+                    className="w-full bg-white border border-slate-200 rounded-xl py-3 px-3 text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 shadow-sm cursor-pointer"
                     value={formData.currency}
                     onChange={(e) => set('currency', e.target.value)}
                   >
@@ -313,13 +313,13 @@ const Home = () => {
 
               {/* ── Day Timing Row ── */}
               <div>
-                <label className="block text-xs font-bold text-slate-400 dark:text-slate-500 mb-2.5 uppercase tracking-wider flex items-center gap-1.5">
-                  <Clock size={12} /> Day Schedule (Start → End)
+                <label className="block text-xs font-bold text-slate-400 mb-2.5 uppercase tracking-wider flex items-center gap-1.5">
+                  <Clock size={12} /> DAY SCHEDULE (START → END)
                 </label>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
                     <p className="text-[10px] font-bold text-slate-400 mb-1.5">Day Starts At</p>
-                    <select className={selectCls} value={formData.startTime} onChange={(e) => set('startTime', e.target.value)}>
+                    <select className="w-full bg-white border border-slate-200 rounded-xl py-3 px-3 text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 shadow-sm cursor-pointer" value={formData.startTime} onChange={(e) => set('startTime', e.target.value)}>
                       {ALL_TIMES.map(t => (
                         <option key={t.value} value={t.value}>{t.label}</option>
                       ))}
@@ -327,7 +327,7 @@ const Home = () => {
                   </div>
                   <div>
                     <p className="text-[10px] font-bold text-slate-400 mb-1.5">Day Ends At</p>
-                    <select className={selectCls} value={formData.endTime} onChange={(e) => set('endTime', e.target.value)}>
+                    <select className="w-full bg-white border border-slate-200 rounded-xl py-3 px-3 text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 shadow-sm cursor-pointer" value={formData.endTime} onChange={(e) => set('endTime', e.target.value)}>
                       {ALL_TIMES.map(t => (
                         <option key={t.value} value={t.value}>{t.label}</option>
                       ))}
@@ -338,15 +338,15 @@ const Home = () => {
 
               {/* ── Food Timings Row ── */}
               <div>
-                <label className="block text-xs font-bold text-slate-400 dark:text-slate-500 mb-2.5 uppercase tracking-wider flex items-center gap-1.5">
-                  <Utensils size={12} /> Preferred Meal Times
+                <label className="block text-xs font-bold text-slate-400 mb-2.5 uppercase tracking-wider flex items-center gap-1.5">
+                  <Utensils size={12} /> PREFERRED MEAL TIMES
                 </label>
                 <div className="grid grid-cols-3 gap-3">
                   <div>
                     <p className="text-[10px] font-bold text-slate-400 mb-1.5 flex items-center gap-1">
                       ☀️ Breakfast
                     </p>
-                    <select className={selectCls} value={formData.breakfastTime} onChange={(e) => set('breakfastTime', e.target.value)}>
+                    <select className="w-full bg-white border border-slate-200 rounded-xl py-3 px-3 text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 shadow-sm cursor-pointer" value={formData.breakfastTime} onChange={(e) => set('breakfastTime', e.target.value)}>
                       {ALL_TIMES.filter(t => {
                         const h = parseInt(t.value.split(':')[0]);
                         return h >= 5 && h <= 11;
@@ -359,7 +359,7 @@ const Home = () => {
                     <p className="text-[10px] font-bold text-slate-400 mb-1.5 flex items-center gap-1">
                       🌤 Lunch
                     </p>
-                    <select className={selectCls} value={formData.lunchTime} onChange={(e) => set('lunchTime', e.target.value)}>
+                    <select className="w-full bg-white border border-slate-200 rounded-xl py-3 px-3 text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 shadow-sm cursor-pointer" value={formData.lunchTime} onChange={(e) => set('lunchTime', e.target.value)}>
                       {ALL_TIMES.filter(t => {
                         const h = parseInt(t.value.split(':')[0]);
                         return h >= 11 && h <= 15;
@@ -372,7 +372,7 @@ const Home = () => {
                     <p className="text-[10px] font-bold text-slate-400 mb-1.5 flex items-center gap-1">
                       🌙 Dinner
                     </p>
-                    <select className={selectCls} value={formData.dinnerTime} onChange={(e) => set('dinnerTime', e.target.value)}>
+                    <select className="w-full bg-white border border-slate-200 rounded-xl py-3 px-3 text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 shadow-sm cursor-pointer" value={formData.dinnerTime} onChange={(e) => set('dinnerTime', e.target.value)}>
                       {ALL_TIMES.filter(t => {
                         const h = parseInt(t.value.split(':')[0]);
                         return h >= 17 && h <= 23;
@@ -386,27 +386,25 @@ const Home = () => {
 
               {/* ── Travel Mode ── */}
               <div>
-                <label className="block text-xs font-bold text-slate-400 dark:text-slate-500 mb-3 uppercase tracking-wider flex items-center gap-1.5">
-                  <Car size={12} /> Travel Mode
+                <label className="block text-xs font-bold text-slate-400 mb-3 uppercase tracking-wider flex items-center gap-1.5">
+                  <Car size={12} /> TRAVEL MODE
                 </label>
                 <div className="flex flex-wrap gap-2">
                   {TRAVEL_MODES.map((mode) => {
                     const isSelected = formData.travelMode === mode.id;
-                    const styleConf = modeColors[mode.id] || { hex: '#38bdf8', selected: 'bg-sky-500 text-white shadow-sky-500/20', hover: 'hover:border-sky-500/50' };
                     return (
                       <button
                         key={mode.id}
                         type="button"
                         onClick={() => set('travelMode', mode.id)}
-                        className={`px-3 py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5 border transition-all shadow-md ${
+                        className={`px-3 py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5 border transition-all ${
                           isSelected
-                            ? `${styleConf.selected} shadow-lg`
-                            : `bg-transparent text-slate-600 dark:text-slate-400 ${styleConf.hover}`
+                            ? 'bg-gradient-to-r from-pink-500 to-rose-500 text-white font-bold shadow-lg shadow-pink-500/30 border-transparent'
+                            : 'bg-white border-slate-200 text-slate-700 hover:border-slate-300 hover:bg-slate-50'
                         }`}
-                        style={!isSelected ? { color: styleConf.hex } : undefined}
                       >
-                        <mode.icon size={13} className={!isSelected ? '' : 'text-current'} />
-                        <span className={isSelected ? 'text-current' : 'text-slate-700 dark:text-slate-300'}>{mode.label}</span>
+                        <mode.icon size={13} className={isSelected ? 'text-white' : 'text-slate-500'} />
+                        <span>{mode.label}</span>
                       </button>
                     );
                   })}
@@ -415,25 +413,23 @@ const Home = () => {
 
               {/* ── Travel Preferences ── */}
               <div>
-                <label className="block text-xs font-bold text-slate-400 dark:text-slate-500 mb-3 uppercase tracking-wider">Travel Preference</label>
+                <label className="block text-xs font-bold text-slate-400 mb-3 uppercase tracking-wider">TRAVEL PREFERENCE</label>
                 <div className="flex flex-wrap gap-2">
                   {travelPreferences.map((pref) => {
                     const isSelected = formData.interest === pref.id;
-                    const styleConf = prefColors[pref.id] || { hex: '#38bdf8', selected: 'bg-sky-500 text-white shadow-sky-500/20', hover: 'hover:border-sky-500/50' };
                     return (
                       <button
                         key={pref.id}
                         type="button"
                         onClick={() => set('interest', pref.id)}
-                        className={`px-3 py-2 rounded-xl text-xs font-semibold flex items-center gap-1 border transition-all shadow-md ${
+                        className={`px-3 py-2 rounded-xl text-xs font-semibold flex items-center gap-1 border transition-all ${
                           isSelected
-                            ? `${styleConf.selected} shadow-lg`
-                            : `bg-transparent text-slate-600 dark:text-slate-400 ${styleConf.hover}`
+                            ? 'bg-cyan-400 text-slate-900 font-bold shadow-md border-transparent'
+                            : 'bg-white border-slate-200 text-slate-700 hover:border-slate-300 hover:bg-slate-50'
                         }`}
-                        style={!isSelected ? { color: styleConf.hex } : undefined}
                       >
-                        <pref.icon size={13} className={!isSelected ? '' : 'text-current'} />
-                        <span className={isSelected ? 'text-current' : 'text-slate-700 dark:text-slate-300'}>{pref.label}</span>
+                        <pref.icon size={13} className={isSelected ? 'text-slate-900' : 'text-slate-500'} />
+                        <span>{pref.label}</span>
                       </button>
                     );
                   })}
@@ -445,7 +441,7 @@ const Home = () => {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full py-3.5 bg-gradient-glow text-white font-bold rounded-2xl text-xs flex justify-center items-center gap-1.5 shadow-lg shadow-red-900/30 transition-all"
+                  className="w-full py-4 bg-gradient-to-r from-[#C9184A] to-[#800020] hover:from-[#A01A3E] hover:to-[#590016] text-white font-bold rounded-2xl text-xs flex justify-center items-center gap-1.5 shadow-lg shadow-red-600/30 hover:scale-[1.02] transition-transform"
                 >
                   {loading ? 'Analyzing Destination...' : 'Generate Itinerary'}
                 </button>
@@ -453,8 +449,7 @@ const Home = () => {
                 <button
                   type="button"
                   onClick={handleExploreDestinations}
-                  className="w-full py-3.5 font-bold rounded-2xl text-xs flex justify-center items-center border transition-colors"
-                  style={{ background: 'rgba(230,57,70,0.1)', color: '#FF6B74', borderColor: 'rgba(230,57,70,0.25)' }}
+                  className="w-full py-4 bg-red-50 hover:bg-red-100 text-red-500 font-bold rounded-2xl text-xs flex justify-center items-center border border-red-100 transition-colors"
                 >
                   Explore Destinations
                 </button>
