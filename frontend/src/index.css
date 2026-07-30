@@ -31,7 +31,7 @@
   --lux-violet-dim:   rgba(128, 0, 32, 0.18);
 
   /* ── Text ── */
-  --lux-text-primary:   #F8FAFC;   /* bright off-white — maximum contrast */
+  --lux-text-primary:   #F8FAFC;   /* bright off-white */
   --lux-text-secondary: #7A6672;   /* muted mauve-gray */
   --lux-text-muted:     #4A3040;   /* very muted wine-gray */
 }
@@ -136,7 +136,7 @@ html:not(.dark) .glass-navbar {
    GRADIENT UTILITIES
    ═══════════════════════════════════════════════════ */
 
-/* Hero text gradient — warm gold for "AI Local Insights" */
+/* Hero text gradient — warm gold fire for "AI Local Insights" */
 .text-gradient {
   background: linear-gradient(135deg, #FFD166 0%, #F4A261 45%, #E76F51 100%);
   -webkit-background-clip: text;

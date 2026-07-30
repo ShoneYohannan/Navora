@@ -77,8 +77,8 @@ const SavedTrips = () => {
     <div className="max-w-7xl mx-auto px-6 py-12">
       <div className="flex justify-between items-center mb-10">
         <div>
-          <h1 className="text-3xl md:text-4xl font-black text-slate-800 dark:text-white">Your Saved Trips</h1>
-          <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 mt-1">Review and manage your generated AI travel itineraries</p>
+          <h1 className="text-3xl md:text-4xl font-black text-[#F8FAFC]">Your Saved Trips</h1>
+          <p className="text-xs font-semibold text-[#94A3B8] mt-1">Review and manage your generated AI travel itineraries</p>
         </div>
         <Link 
           to="/" 

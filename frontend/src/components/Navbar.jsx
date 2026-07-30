@@ -59,27 +59,23 @@ const Navbar = () => {
     <nav
       className="sticky top-0 z-50 transition-colors"
       style={{
-        background: 'rgba(11, 15, 23, 0.94)',
+        background: 'rgba(9, 4, 6, 0.95)',
         backdropFilter: 'blur(24px)',
         WebkitBackdropFilter: 'blur(24px)',
-        borderBottom: '1px solid rgba(201, 168, 76, 0.1)',
+        borderBottom: '1px solid rgba(230, 57, 70, 0.12)',
       }}
     >
       <div className="max-w-7xl mx-auto px-6 py-3.5 flex items-center justify-between gap-6">
 
         {/* ── Brand Logo ── */}
-        <Link to="/" className="flex items-center gap-2.5 flex-shrink-0 group">
-          <div
-            className="p-2 rounded-xl text-white shadow-lg transition-all duration-300 group-hover:shadow-[0_0_20px_rgba(201,168,76,0.4)]"
-            style={{ background: 'linear-gradient(135deg, #E63946 0%, #800020 100%)' }}
-          >
-            <Compass size={22} className="animate-spin-slow" />
-          </div>
-          <span className="text-lg font-bold tracking-tight" style={{ color: 'var(--lux-text-primary)' }}>
+        <Link to="/" className="flex items-center gap-2 flex-shrink-0 group">
+          <Compass
+            size={26}
+            className="transition-all duration-300 group-hover:scale-110"
+            style={{ color: '#E63946' }}
+          />
+          <span className="text-lg font-bold tracking-tight" style={{ color: '#F8FAFC' }}>
             Navora
-            <span style={{ background: 'linear-gradient(90deg, #FF6B74, #E63946)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-              {' '}Trip Planner
-            </span>
           </span>
         </Link>
 

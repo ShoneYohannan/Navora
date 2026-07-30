@@ -41,10 +41,10 @@ const modeColors = {
 /* ─── Travel preference colors ─── */
 const prefColors = {
   Adventure: { hex: '#FF7F50', selected: 'bg-[#FF7F50] text-white border-transparent shadow-[#FF7F50]/30', hover: 'hover:border-[#FF7F50]/50' },
-  Family: { hex: '#FD79A8', selected: 'bg-[#FD79A8] text-white border-transparent shadow-[#FD79A8]/30', hover: 'hover:border-[#FD79A8]/50' },
-  Nature: { hex: '#26DE81', selected: 'bg-[#26DE81] text-slate-900 border-transparent shadow-[#26DE81]/30', hover: 'hover:border-[#26DE81]/50' },
-  Food: { hex: '#FF6B6B', selected: 'bg-[#FF6B6B] text-white border-transparent shadow-[#FF6B6B]/30', hover: 'hover:border-[#FF6B6B]/50' },
-  Culture: { hex: '#00D2D3', selected: 'bg-[#00D2D3] text-slate-900 border-transparent shadow-[#00D2D3]/30', hover: 'hover:border-[#00D2D3]/50' },
+  Family:    { hex: '#FD79A8', selected: 'bg-[#FD79A8] text-white border-transparent shadow-[#FD79A8]/30', hover: 'hover:border-[#FD79A8]/50' },
+  Nature:    { hex: '#26DE81', selected: 'bg-[#26DE81] text-slate-900 border-transparent shadow-[#26DE81]/30', hover: 'hover:border-[#26DE81]/50' },
+  Food:      { hex: '#FF6B6B', selected: 'bg-[#FF6B6B] text-white border-transparent shadow-[#FF6B6B]/30', hover: 'hover:border-[#FF6B6B]/50' },
+  Culture:   { hex: '#00D2D3', selected: 'bg-[#00D2D3] text-slate-900 border-transparent shadow-[#00D2D3]/30', hover: 'hover:border-[#00D2D3]/50' },
 };
 
 /* ─── Travel mode options ─── */
@@ -88,12 +88,12 @@ const Home = () => {
   ];
 
   const features = [
-    { icon: Sparkles,  title: "Smart Itinerary Generation",    desc: "Builds a highly personalized day-by-day itinerary tailored to budget and interests.",                  color: "text-sky-500 bg-sky-500/10" },
-    { icon: Map,       title: "Local Attractions Discovery",    desc: "Uncover heritage hotspots, ancient museums, and breathtaking viewpoint lookouts.",                     color: "text-emerald-500 bg-emerald-500/10" },
-    { icon: Utensils,  title: "Restaurant Recommendations",     desc: "Curates authentic regional food places, street cafes, and harbor-side seafood spots.",                  color: "text-amber-500 bg-amber-500/10" },
-    { icon: Hotel,     title: "Hotel Suggestions",              desc: "Matches travelers with top hostels, mid-range family resorts, or luxury palaces.",                       color: "text-indigo-500 bg-indigo-500/10" },
-    { icon: Award,     title: "Event Recommendations",          desc: "Finds boat races, art exhibitions, and beach carnivals happening locally.",                             color: "text-purple-500 bg-purple-500/10" },
-    { icon: Waypoints, title: "Route Optimization",             desc: "Coordinates timings and transit to ensure smooth, personalised schedules.",                             color: "text-rose-500 bg-rose-500/10" }
+    { icon: Sparkles,  title: "Smart Itinerary Generation",    desc: "Builds a highly personalized day-by-day itinerary tailored to budget and interests.",                  color: "text-rose-400 bg-rose-500/10" },
+    { icon: Map,       title: "Local Attractions Discovery",    desc: "Uncover heritage hotspots, ancient museums, and breathtaking viewpoint lookouts.",                     color: "text-red-400 bg-red-500/10" },
+    { icon: Utensils,  title: "Restaurant Recommendations",     desc: "Curates authentic regional food places, street cafes, and harbor-side seafood spots.",                  color: "text-orange-400 bg-orange-500/10" },
+    { icon: Hotel,     title: "Hotel Suggestions",              desc: "Matches travelers with top hostels, mid-range family resorts, or luxury palaces.",                       color: "text-amber-400 bg-amber-500/10" },
+    { icon: Award,     title: "Event Recommendations",          desc: "Finds boat races, art exhibitions, and beach carnivals happening locally.",                             color: "text-pink-400 bg-pink-500/10" },
+    { icon: Waypoints, title: "Route Optimization",             desc: "Coordinates timings and transit to ensure smooth, personalised schedules.",                             color: "text-red-300 bg-red-400/10" }
   ];
 
   const travelPreferences = [
@@ -445,7 +445,7 @@ const Home = () => {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full py-3.5 bg-gradient-glow text-slate-900 dark:text-slate-900 font-bold rounded-2xl text-xs flex justify-center items-center gap-1.5 shadow-lg shadow-cyan-500/20 transition-all"
+                  className="w-full py-3.5 bg-gradient-glow text-white font-bold rounded-2xl text-xs flex justify-center items-center gap-1.5 shadow-lg shadow-red-900/30 transition-all"
                 >
                   {loading ? 'Analyzing Destination...' : 'Generate Itinerary'}
                 </button>
@@ -453,7 +453,8 @@ const Home = () => {
                 <button
                   type="button"
                   onClick={handleExploreDestinations}
-                  className="w-full py-3.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold rounded-2xl text-xs flex justify-center items-center border border-slate-200/60 dark:border-slate-700/60 transition-colors"
+                  className="w-full py-3.5 font-bold rounded-2xl text-xs flex justify-center items-center border transition-colors"
+                  style={{ background: 'rgba(230,57,70,0.1)', color: '#FF6B74', borderColor: 'rgba(230,57,70,0.25)' }}
                 >
                   Explore Destinations
                 </button>
@@ -464,24 +465,55 @@ const Home = () => {
       </section>
 
       {/* Features Grid Section */}
-      <section className="bg-slate-100/50 dark:bg-slate-900/30 border-y border-slate-200 dark:border-slate-800/60 py-20 px-6">
+      <section
+        style={{ backgroundColor: '#0F172A', borderTop: '1px solid rgba(230,57,70,0.12)', borderBottom: '1px solid rgba(230,57,70,0.12)' }}
+        className="py-20 px-6"
+      >
         <div className="max-w-7xl mx-auto space-y-16">
           <div className="text-center max-w-2xl mx-auto space-y-4">
-            <h2 className="text-3xl font-black text-slate-800 dark:text-white tracking-tight">Intelligence at Every Step</h2>
-            <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+            <h2
+              className="text-3xl font-black tracking-tight"
+              style={{ color: '#F8FAFC' }}
+            >
+              Intelligence at Every Step
+            </h2>
+            <p
+              className="text-sm leading-relaxed"
+              style={{ color: '#94A3B8' }}
+            >
               Our travel advisor suite employs multiple helper agents that collaborate to source top attractions, calculate costs, and draft schedules.
             </p>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {features.map((feat, i) => (
-              <div key={i} className="glass p-6 rounded-3xl border border-slate-200/50 dark:border-slate-800/50 hover:border-sky-500/30 transition-all hover:shadow-lg group flex gap-4">
+              <div
+                key={i}
+                className="p-6 rounded-3xl flex gap-4 transition-all group"
+                style={{
+                  background: 'rgba(30, 13, 20, 0.6)',
+                  border: '1px solid rgba(230, 57, 70, 0.12)',
+                  backdropFilter: 'blur(12px)',
+                }}
+                onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(230,57,70,0.35)'; }}
+                onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(230,57,70,0.12)'; }}
+              >
                 <div className={`p-3 rounded-2xl h-fit flex-shrink-0 ${feat.color}`}>
                   <feat.icon size={22} className="group-hover:scale-110 transition-transform" />
                 </div>
                 <div className="space-y-2">
-                  <h3 className="font-bold text-slate-800 dark:text-white leading-tight">{feat.title}</h3>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">{feat.desc}</p>
+                  <h3
+                    className="font-bold leading-tight"
+                    style={{ color: '#F1F5F9' }}
+                  >
+                    {feat.title}
+                  </h3>
+                  <p
+                    className="text-xs leading-relaxed"
+                    style={{ color: '#94A3B8' }}
+                  >
+                    {feat.desc}
+                  </p>
                 </div>
               </div>
             ))}
