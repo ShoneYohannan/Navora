@@ -902,5 +902,41 @@ export const assistantAnswers = {
   "best time of year to visit wayanad?": `### Best Time to Visit Wayanad
 
 *   **October to May (Peak Season)**: Cool and comfortable temperatures (18°C - 28°C). Ideal for trekking up Chembra Peak, exploring Edakkal Caves, and jungle safaris.
-*   **June to September (Monsoon - Adventure)**: Beautiful lush-green look with gushing waterfalls (Soochipara). Best for experiencing the *Wayanad Splash monsoon festival*, though mountain trekking is closed due to slippery terrains.`
+*   **June to September (Monsoon - Adventure)**: Beautiful lush-green look with gushing waterfalls (Soochipara). Best for experiencing the *Wayanad Splash monsoon festival*, though mountain trekking is closed due to slippery terrains.`,
+
+  "spa in kochi": `### 💆 Top Ayurvedic Spas & Wellness Retreats in Kochi
+
+If you are visiting Kochi exclusively for a relaxing spa or authentic Kerala Ayurveda experience, here are the top recommended centers:
+
+1. **Ayurville Ayurveda Clinic & Spa (Fort Kochi)**
+   * **Highlight**: Traditional authentic *Abhyangam* (herbal oil massage) and *Shirodhara* (oil stream therapy) by licensed practitioners.
+   * **Vibe**: Peaceful heritage bungalow on KB Jacob Road, Fort Kochi.
+   * **Estimated Cost**: ₹2,500 – ₹4,500 per session.
+
+2. **Fort Ayurveda Spa at Forte Kochi Hotel**
+   * **Highlight**: Luxury wellness treatment combining classical Kerala therapies with modern steam rooms inside a restored 1860 colonial mansion.
+   * **Location**: Princess Street, Fort Kochi.
+   * **Estimated Cost**: ₹3,500 – ₹6,000 per session.
+
+3. **Quan Spa at Kochi Marriott & Grand Hyatt Spa (Bolgatty Island)**
+   * **Highlight**: World-class 5-star luxury waterfront spa featuring Swedish massage, deep tissue therapy, and couples hydrotherapy.
+   * **Location**: Bolgatty Island & Edappally.
+   * **Estimated Cost**: ₹5,000 – ₹9,000 per session.
+
+4. **Prakriti Ayurveda Massage Center**
+   * **Highlight**: Budget-friendly, highly-rated authentic *Panchakarma* & head/foot reflexology.
+   * **Location**: Near Seagull Hotel, Fort Kochi.
+   * **Estimated Cost**: ₹1,800 – ₹3,000 per session.
+
+> 💡 **Traveler Tip**: Book your appointment 24 hours in advance, especially during peak season (November–February). Afterward, enjoy a quiet sunset stroll along Fort Kochi beach!`,
+
+  "spa and wellness in munnar": `### 🌿 Mountain Spas & Wellness Retreats in Munnar
+
+* **Mayura Ayurveda Spa at Amber Dale**: Relax with warm herbal oil massages surrounded by misty tea valley panoramas.
+* **Spice Tree Wellness Spa**: Holistic aromatherapy, eucalyptus steam, and tea-infused body scrubs.`,
+
+  "spa and wellness in goa": `### 🌊 Oceanfront Spas & Wellness in Goa
+
+* **Jiva Spa at Taj Exotica (Benaulim)**: Ayurvedic wellness therapies right on the Arabian Sea shore.
+* **Warren Tricomi Spa (Candolim)**: Modern Swedish massages, body wraps, and scalp treatments.`
 };

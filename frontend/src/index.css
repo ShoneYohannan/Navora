@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Space+Grotesk:wght@400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -277,3 +278,80 @@ html.dark .leaflet-tile-container {
   background-size: 200% 100%;
   animation: gold-shimmer 2.5s ease-in-out infinite;
 }
+
+/* ═══════════════════════════════════════════════════
+   RETRO TRAVEL PLANNER - PASTANO LUXURY STYLES
+   ═══════════════════════════════════════════════════ */
+
+.font-serif-journal {
+  font-family: 'Playfair Display', 'Cinzel', Georgia, serif;
+}
+
+.font-cinzel {
+  font-family: 'Cinzel', Georgia, serif;
+}
+
+.font-retro-tech {
+  font-family: 'Space Grotesk', 'Plus Jakarta Sans', sans-serif;
+}
+
+/* Left Explorer Panel Retro Glass */
+.retro-glass-dark {
+  background: linear-gradient(145deg, rgba(13, 23, 42, 0.88) 0%, rgba(7, 13, 30, 0.94) 100%);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(224, 122, 95, 0.25);
+  box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(212, 175, 55, 0.2);
+}
+
+/* Right Vellum Journal Texture */
+.retro-vellum {
+  background-color: #FAF6EF;
+  background-image: 
+    radial-gradient(circle at 50% 50%, rgba(224, 122, 95, 0.03) 0%, transparent 80%),
+    radial-gradient(circle at 10% 20%, rgba(212, 175, 55, 0.04) 0%, transparent 50%),
+    repeating-linear-gradient(0deg, transparent, transparent 19px, rgba(44, 34, 30, 0.015) 20px);
+  color: #2C221E;
+  box-shadow: inset 0 0 80px rgba(184, 134, 11, 0.08), 0 25px 60px rgba(0, 0, 0, 0.4);
+}
+
+/* Gold and Coral Pinstripe Borders */
+.border-gold-pinstripe {
+  border: 1px solid #D4AF37;
+  outline: 1px solid rgba(224, 122, 95, 0.3);
+  outline-offset: 3px;
+}
+
+.border-coral-glass {
+  border: 1px solid rgba(224, 122, 95, 0.35);
+  box-shadow: 0 4px 20px rgba(224, 122, 95, 0.08);
+}
+
+.border-coral-glass:hover {
+  border-color: rgba(224, 122, 95, 0.8);
+  box-shadow: 0 6px 25px rgba(224, 122, 95, 0.25), inset 0 0 12px rgba(212, 175, 55, 0.15);
+}
+
+/* Glowing Map Elements */
+.glow-coral-node {
+  box-shadow: 0 0 12px #E07A5F, 0 0 24px rgba(224, 122, 95, 0.6);
+}
+
+/* Engraved Text Effect */
+.engraved-text {
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.6), 0 -1px 1px rgba(0, 0, 0, 0.2);
+}
+
+/* Antique Gold Text Gradient */
+.text-gold-gradient {
+  background: linear-gradient(135deg, #F9E79F 0%, #D4AF37 50%, #B8860B 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-coral-gradient {
+  background: linear-gradient(135deg, #FF9F80 0%, #E07A5F 50%, #C0392B 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+

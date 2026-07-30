@@ -1,19 +1,106 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Send, User, Bot, Sparkles, MessageSquare, Trash2, Globe } from 'lucide-react';
-import { assistantSuggestedPrompts, assistantAnswers } from '../services/mockData';
+import React, { useState, useEffect, useRef } from 'react';
+import { Bot, Send, Sparkles, RefreshCw, Copy, CheckCircle2, User, Globe, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { assistantAnswers } from '../services/mockData';
+
+// Dynamic destination image pool for left preview card
+const destinationGallery = [
+  {
+    title: 'KERALA SUNSET HOUSEBOAT',
+    url: 'https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?auto=format&fit=crop&w=800&q=80',
+    prompt: 'Tell me about Alleppey sunset houseboat cruises and backwater dining.'
+  },
+  {
+    title: 'FORT KOCHI CHINESE NETS',
+    url: 'https://images.unsplash.com/photo-1589308078059-be1415eab4c3?auto=format&fit=crop&w=800&q=80',
+    prompt: 'What are the top heritage spots and seafood stalls near Chinese Fishing Nets?'
+  },
+  {
+    title: 'AYURVEDA & SPA RETREAT KOCHI',
+    url: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=800&q=80',
+    prompt: 'I want to go for a spa only in Kochi'
+  },
+  {
+    title: 'MUNNAR TEA GARDENS MIST',
+    url: 'https://images.unsplash.com/photo-1593693397690-362cb9666fc2?auto=format&fit=crop&w=800&q=80',
+    prompt: 'Create a budget itinerary for Munnar tea plantations and viewpoint treks.'
+  },
+  {
+    title: 'JAIPUR HAWA MAHAL PALACE',
+    url: 'https://images.unsplash.com/photo-1599661046289-e31897846e41?auto=format&fit=crop&w=800&q=80',
+    prompt: 'Which regal forts, palaces, and handicrafts should I visit in Jaipur?'
+  },
+  {
+    title: 'PALOLEM BEACH GOA SUNSET',
+    url: 'https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?auto=format&fit=crop&w=800&q=80',
+    prompt: 'Which events and beaches are happening in Goa?'
+  }
+];
+
+// Local Explorer Channels matching user design
+const explorerChannels = [
+  {
+    id: 'kochi-spa',
+    title: 'Kochi Spa & Ayurveda',
+    icon: '💆',
+    galleryIndex: 2,
+    prompt: 'I want to go for a spa only in Kochi'
+  },
+  {
+    id: 'kochi-2days',
+    title: 'Kochi in 2 days',
+    icon: '🛕',
+    galleryIndex: 1,
+    prompt: 'What can I visit in Kochi in 2 days?'
+  },
+  {
+    id: 'fort-kochi-food',
+    title: 'Fort Kochi food',
+    icon: '🍲',
+    galleryIndex: 1,
+    prompt: 'Best food places near Fort Kochi?'
+  },
+  {
+    id: 'fresh-market',
+    title: 'Fresh market',
+    icon: '🏛️',
+    galleryIndex: 5,
+    prompt: 'Tell me about local fresh markets and spice bazaars in Kochi and Goa.'
+  },
+  {
+    id: 'spice-market',
+    title: 'Spice market',
+    icon: '🏺',
+    galleryIndex: 2,
+    prompt: 'What are the historic spice trading routes and spice markets in Kerala?'
+  },
+  {
+    id: 'goa',
+    title: 'Goa',
+    icon: '🌴',
+    galleryIndex: 5,
+    prompt: 'Which events and beaches are happening in Goa?'
+  }
+];
 
 const Assistant = () => {
+  // Randomize initial preview image on page open/load
+  const [currentImageIndex, setCurrentImageIndex] = useState(() =>
+    Math.floor(Math.random() * destinationGallery.length)
+  );
+
   const [messages, setMessages] = useState([
     {
-      id: 'welcome',
+      id: 'welcome_1',
       sender: 'ai',
-      text: "Hello! I'm your AI Travel Assistant. Ask me anything about attractions, restaurants, packing checklists, or itineraries for Kochi, Munnar, Alleppey, Wayanad, Goa, and Jaipur!",
+      text: "Hello! I'm your AI Travel Assistant. Ask me anything about Ayurvedic spas in Kochi, sightseeing, local food, packing checklists, or itineraries for Kochi, Munnar, Alleppey, Wayanad, Goa, and Jaipur!",
       timestamp: new Date()
     }
   ]);
   const [inputText, setInputText] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  const [copiedId, setCopiedId] = useState(null);
+
   const messagesEndRef = useRef(null);
 
   const scrollToBottom = () => {
@@ -24,264 +111,410 @@ const Assistant = () => {
     scrollToBottom();
   }, [messages, isTyping]);
 
-  const handleSendMessage = (textToSend) => {
-    const text = textToSend || inputText;
+  // Intelligent Travel AI Intent Generator
+  const generateAIResponse = (userQuery) => {
+    const q = userQuery.toLowerCase().trim();
+
+    // 1. SPA / AYURVEDA / WELLNESS INTENT
+    if (q.includes('spa') || q.includes('ayurveda') || q.includes('massage') || q.includes('wellness') || q.includes('relaxation')) {
+      if (q.includes('kochi') || q.includes('fort kochi') || (!q.includes('munnar') && !q.includes('goa') && !q.includes('jaipur') && !q.includes('wayanad'))) {
+        return assistantAnswers["spa in kochi"];
+      } else if (q.includes('munnar')) {
+        return assistantAnswers["spa and wellness in munnar"];
+      } else if (q.includes('goa')) {
+        return assistantAnswers["spa and wellness in goa"];
+      } else {
+        return assistantAnswers["spa in kochi"];
+      }
+    }
+
+    // 2. KOCHI ITINERARY / 2 DAYS INTENT
+    if (q.includes('kochi') && (q.includes('days') || q.includes('2') || q.includes('itinerary') || q.includes('visit') || q.includes('attractions'))) {
+      return assistantAnswers["what can i visit in kochi in 2 days?"];
+    }
+
+    // 3. FOOD / RESTAURANTS / DINING INTENT
+    if (q.includes('food') || q.includes('eat') || q.includes('restaurant') || q.includes('seafood') || q.includes('cafe')) {
+      if (q.includes('kochi') || q.includes('fort kochi') || !q.includes('goa')) {
+        return assistantAnswers["best food places near fort kochi?"];
+      }
+    }
+
+    // 4. GOA EVENTS / BEACHES INTENT
+    if (q.includes('goa')) {
+      return assistantAnswers["which events are happening in goa?"];
+    }
+
+    // 5. MUNNAR ITINERARY INTENT
+    if (q.includes('munnar')) {
+      return assistantAnswers["create a budget itinerary for munnar."];
+    }
+
+    // 6. WAYANAD TIMING INTENT
+    if (q.includes('wayanad')) {
+      return assistantAnswers["best time of year to visit wayanad?"];
+    }
+
+    // 7. EXACT MATCH CHECK AGAINST MOCK DATA
+    for (const key of Object.keys(assistantAnswers)) {
+      const normKey = key.toLowerCase().trim().replace(/[?.]/g, '');
+      const normQ = q.replace(/[?.]/g, '');
+      if (normQ.includes(normKey) || normKey.includes(normQ)) {
+        return assistantAnswers[key];
+      }
+    }
+
+    // 8. DYNAMIC INTELLIGENT TRAVEL RESPONSE FOR ANY CUSTOM DESTINATION / ACTIVITY
+    let detectedCity = "Kochi";
+    if (q.includes("munnar")) detectedCity = "Munnar";
+    else if (q.includes("alleppey")) detectedCity = "Alleppey";
+    else if (q.includes("wayanad")) detectedCity = "Wayanad";
+    else if (q.includes("goa")) detectedCity = "Goa";
+    else if (q.includes("jaipur")) detectedCity = "Jaipur";
+
+    return `### 🌟 Curated Recommendations for ${detectedCity}
+
+Regarding your request: **"${userQuery}"**
+
+1. **Top Recommendation**: We recommend starting your exploration around the main heritage center of ${detectedCity}.
+2. **Local Tip**: Speak with licensed local guides and arrange transport (auto-rickshaws or private cabs) in advance.
+3. **Best Hours**: Morning sessions (8:00 AM – 11:30 AM) offer peaceful atmospheres and pleasant temperatures.
+
+> 💡 *Need specific details on pricing, hotel stays, or transport options for ${detectedCity}? Let me know!*`;
+  };
+
+  // Handle send message
+  const handleSendMessage = (customText) => {
+    const text = customText || inputText;
     if (!text.trim()) return;
 
-    // Add user message
     const userMsg = {
-      id: `msg_user_${Date.now()}`,
+      id: `usr_${Date.now()}`,
       sender: 'user',
       text: text,
       timestamp: new Date()
     };
 
-    setMessages(prev => [...prev, userMsg]);
-    if (!textToSend) setInputText('');
-    
-    // Simulate AI typing response
+    setMessages((prev) => [...prev, userMsg]);
+    if (!customText) setInputText('');
+
     setIsTyping(true);
-    
+
     setTimeout(() => {
-      const normalizedQuery = text.toLowerCase().trim().replace(/[?.]/g, '').trim();
-      let aiText = `I'd love to help you plan that! Could you tell me a bit more about your preferred destination (Kochi, Munnar, Alleppey, Wayanad, Goa, or Jaipur), budget, and duration? I can outline sightseeing spots and local dining.`;
-
-      // Check for matching mock response keys
-      for (const key of Object.keys(assistantAnswers)) {
-        const normalizedKey = key.toLowerCase().trim().replace(/[?.]/g, '').trim();
-        if (normalizedQuery.includes(normalizedKey) || normalizedKey.includes(normalizedQuery)) {
-          aiText = assistantAnswers[key];
-          break;
-        }
-      }
-
-      // Special fallback matching
-      if (normalizedQuery.includes('budget') && normalizedQuery.includes('munnar')) {
-        aiText = assistantAnswers["create a budget itinerary for munnar."];
-      } else if (normalizedQuery.includes('kochi') && (normalizedQuery.includes('days') || normalizedQuery.includes('2'))) {
-        aiText = assistantAnswers["what can i visit in kochi in 2 days?"];
-      } else if (normalizedQuery.includes('food') || normalizedQuery.includes('eat') || normalizedQuery.includes('restaurant')) {
-        if (normalizedQuery.includes('kochi')) {
-          aiText = assistantAnswers["best food places near fort kochi?"];
-        }
-      } else if (normalizedQuery.includes('event') || normalizedQuery.includes('festival')) {
-        if (normalizedQuery.includes('goa')) {
-          aiText = assistantAnswers["which events are happening in goa?"];
-        }
-      } else if (normalizedQuery.includes('time') || normalizedQuery.includes('visit') || normalizedQuery.includes('weather')) {
-        if (normalizedQuery.includes('wayanad')) {
-          aiText = assistantAnswers["best time of year to visit wayanad?"];
-        }
-      }
+      const aiText = generateAIResponse(text);
 
       const aiMsg = {
-        id: `msg_ai_${Date.now()}`,
+        id: `ai_${Date.now()}`,
         sender: 'ai',
         text: aiText,
         timestamp: new Date()
       };
 
-      setMessages(prev => [...prev, aiMsg]);
+      setMessages((prev) => [...prev, aiMsg]);
       setIsTyping(false);
-    }, 1200);
+    }, 900);
   };
 
-  const handleKeyPress = (e) => {
-    if (e.key === 'Enter') {
-      handleSendMessage();
+  // Cycle / random image update
+  const handleNextImage = () => {
+    setCurrentImageIndex((prev) => (prev + 1) % destinationGallery.length);
+  };
+
+  const handleChannelClick = (channel) => {
+    if (channel.galleryIndex !== undefined) {
+      setCurrentImageIndex(channel.galleryIndex);
+    } else {
+      handleNextImage();
     }
+    handleSendMessage(channel.prompt);
   };
 
-  const handleClearChat = () => {
-    if (window.confirm("Clear chat history?")) {
-      setMessages([
-        {
-          id: 'welcome',
-          sender: 'ai',
-          text: "Chat cleared. What travel destinations can I assist you with today?",
-          timestamp: new Date()
-        }
-      ]);
-    }
+  const handleCopy = (id, text) => {
+    navigator.clipboard.writeText(text);
+    setCopiedId(id);
+    setTimeout(() => setCopiedId(null), 2000);
   };
 
-  // Convert markdown-like syntax to HTML strings safely
-  const renderMessageContent = (text) => {
-    // Escape standard elements to render lists and headings simply
-    const lines = text.split('\n');
-    return lines.map((line, idx) => {
-      if (line.startsWith('### ')) {
-        return <h4 key={idx} className="text-base font-extrabold mt-3 mb-1 text-slate-800 dark:text-white">{line.slice(4)}</h4>;
-      }
-      if (line.startsWith('**') && line.endsWith('**')) {
-        return <h5 key={idx} className="font-bold text-sm mt-2 text-slate-700 dark:text-slate-200">{line.replace(/\*\*/g, '')}</h5>;
-      }
-      if (line.startsWith('* **')) {
-        // Bullet list item
-        const parts = line.split('**:');
-        if (parts.length > 1) {
-          return (
-            <div key={idx} className="flex items-start gap-1.5 ml-2 my-1 text-xs text-slate-600 dark:text-slate-300">
-              <span className="mt-1.5 w-1 h-1 bg-sky-500 rounded-full flex-shrink-0" />
-              <p>
-                <strong className="text-slate-800 dark:text-slate-200">{parts[0].replace(/\*\s\*\*/g, '')}</strong>: 
-                {parts[1]}
-              </p>
-            </div>
-          );
-        }
-      }
-      if (line.startsWith('1.  **') || line.startsWith('2.  **') || line.startsWith('3.  **')) {
-        const parts = line.split('**');
-        return (
-          <div key={idx} className="ml-2 my-2 text-xs text-slate-600 dark:text-slate-300">
-            <span className="font-bold text-slate-800 dark:text-slate-200">{line.slice(0, 4)}{parts[1]}</span>
-            <span>{parts.slice(2).join('')}</span>
-          </div>
-        );
-      }
-      if (line.trim().startsWith('*')) {
-        return (
-          <div key={idx} className="flex items-center gap-1.5 ml-4 my-1 text-xs text-slate-600 dark:text-slate-300">
-            <span className="w-1 h-1 bg-sky-500 rounded-full" />
-            <span>{line.replace(/\*\s/g, '')}</span>
-          </div>
-        );
-      }
-      return <p key={idx} className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed my-1">{line}</p>;
-    });
-  };
+  const activePhoto = destinationGallery[currentImageIndex];
 
   return (
-    <div className="max-w-5xl mx-auto px-6 py-8 h-[calc(100vh-140px)] flex flex-col md:flex-row gap-6">
-      
-      {/* Sidebar - suggested prompts */}
-      <div className="w-full md:w-80 flex flex-col justify-between gap-4 md:border-r border-slate-200 dark:border-slate-800 md:pr-6">
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <h2 className="text-lg font-black flex items-center gap-2">
-              <Bot size={20} className="text-sky-500" /> Travel Assistant
-            </h2>
-            <button 
-              onClick={handleClearChat}
-              className="p-1.5 rounded-lg text-slate-400 hover:text-red-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-              title="Clear chat"
-            >
-              <Trash2 size={16} />
-            </button>
-          </div>
-          <p className="text-xs text-slate-500 dark:text-slate-400">
-            Get instant local recommendations on cuisine, transit, weather and travel times using natural conversational commands.
-          </p>
+    <div className="min-h-screen bg-[#070e1b] py-6 px-3 sm:px-6 lg:px-8 font-sans text-slate-100 flex items-center justify-center">
+      {/* Main Outer Retro Container Box */}
+      <div className="w-full max-w-6xl rounded-3xl border border-slate-700/60 shadow-[0_20px_60px_rgba(0,0,0,0.8)] overflow-hidden bg-[#0a1222] grid grid-cols-1 lg:grid-cols-12">
+        
+        {/* ========================================================
+            LEFT 'EXPLORER' PANEL (Dark Blue Glassmorphic)
+           ======================================================== */}
+        <div className="lg:col-span-4 bg-gradient-to-b from-[#162238] via-[#101b2f] to-[#0d1627] p-6 flex flex-col justify-between border-r border-slate-700/50 space-y-6">
+          <div className="space-y-6">
+            
+            {/* Left Header */}
+            <div className="space-y-3 border-b border-slate-700/40 pb-4">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-[#E07A5F]/20 border border-[#E07A5F]/40 flex items-center justify-center text-[#E07A5F]">
+                  <Bot className="w-6 h-6" />
+                </div>
+                <div>
+                  <h1 className="font-serif text-2xl font-bold tracking-tight text-slate-100 uppercase leading-none">
+                    TRAVEL
+                  </h1>
+                  <h1 className="font-serif text-2xl font-bold tracking-tight text-slate-100 uppercase leading-none">
+                    ASSISTANT
+                  </h1>
+                </div>
+              </div>
+              <p className="text-xs text-slate-300 leading-relaxed font-normal">
+                Get instant local recommendations on cuisine, transit, weather and travel times using natural conversational commands.
+              </p>
+            </div>
 
-          <div className="w-full h-[1px] bg-slate-200 dark:bg-slate-800" />
+            {/* LOCAL EXPLORER CHANNELS */}
+            <div>
+              <div className="flex items-center justify-between mb-3">
+                <h2 className="text-[11px] font-bold tracking-wider text-slate-300 uppercase font-sans">
+                  LOCAL EXPLORER CHANNELS
+                </h2>
+              </div>
 
-          {/* Quick Prompts List */}
-          <div className="space-y-2">
-            <p className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-2">Suggested Queries</p>
-            {assistantSuggestedPrompts.map((prompt, i) => (
-              <button
-                key={i}
-                onClick={() => handleSendMessage(prompt)}
-                className="w-full text-left p-3 text-xs bg-slate-50 hover:bg-sky-500/10 dark:bg-slate-900 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 hover:border-sky-500/30 rounded-2xl transition-all font-medium text-slate-700 dark:text-slate-300"
+              {/* Grid of 6 interactive pill buttons */}
+              <div className="grid grid-cols-2 gap-2">
+                {explorerChannels.map((chan) => (
+                  <button
+                    key={chan.id}
+                    onClick={() => handleChannelClick(chan)}
+                    className="flex items-center gap-2 px-3 py-2 rounded-xl bg-slate-100 hover:bg-white text-slate-800 text-xs font-medium shadow-sm transition-all hover:scale-[1.02] active:scale-[0.98] border border-slate-200/80 truncate text-left"
+                  >
+                    <span className="text-sm flex-shrink-0">{chan.icon}</span>
+                    <span className="truncate">{chan.title}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Featured Dynamic Destination Image Preview Card */}
+            <div className="space-y-2">
+              <div
+                onClick={handleNextImage}
+                className="relative rounded-2xl overflow-hidden border border-slate-600/50 shadow-lg group cursor-pointer h-44 bg-slate-900"
+                title="Click to cycle next destination preview"
               >
-                {prompt}
-              </button>
-            ))}
+                <img
+                  src={activePhoto.url}
+                  alt={activePhoto.title}
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/20" />
+
+                {/* Refresh Overlay Tag */}
+                <div className="absolute top-2 right-2 bg-black/60 backdrop-blur-md px-2 py-1 rounded-full text-[10px] text-amber-200 border border-amber-500/30 flex items-center gap-1">
+                  <RefreshCw className="w-3 h-3 animate-spin-slow" />
+                  <span>Varies on open</span>
+                </div>
+
+                {/* Image Overlay Title */}
+                <div className="absolute bottom-3 left-3 right-3 text-white">
+                  <p className="text-[10px] font-mono text-amber-300 font-bold uppercase tracking-wider">
+                    FEATURED PREVIEW
+                  </p>
+                  <p className="text-xs font-bold truncate">{activePhoto.title}</p>
+                </div>
+              </div>
+
+              <p
+                onClick={() => handleSendMessage(activePhoto.prompt)}
+                className="text-[10px] text-slate-400 text-center font-mono cursor-pointer hover:text-amber-300 transition-colors"
+              >
+                (Preview: {activePhoto.title} - Click to explore)
+              </p>
+            </div>
+
+            {/* Status & Integrity Box */}
+            <div className="rounded-xl bg-[#0c1424]/80 border border-slate-700/60 p-3 flex items-center gap-2 text-slate-200">
+              <Sparkles className="w-4 h-4 text-amber-400 flex-shrink-0" />
+              <div>
+                <h4 className="font-serif text-xs font-bold text-slate-100">Status & Integrity</h4>
+                <p className="text-[11px] text-slate-400">Local guides database active</p>
+              </div>
+            </div>
+
+          </div>
+
+          {/* Left Panel Footer */}
+          <div className="text-[10px] font-mono text-slate-500 flex items-center justify-between">
+            <span>PASTANO AI ENGINE</span>
+            <span className="text-emerald-400 font-bold">ONLINE</span>
           </div>
         </div>
 
-        <div className="hidden md:flex items-center gap-2 text-[10px] text-slate-400 dark:text-slate-500">
-          <Globe size={12} className="text-sky-500" />
-          <span>Local guides database active</span>
-        </div>
-      </div>
+        {/* ========================================================
+            RIGHT 'TRAVEL JOURNAL' PANEL (Ivory Vellum Paper)
+           ======================================================== */}
+        <div className="lg:col-span-8 bg-[#F7F2E6] text-slate-900 p-6 flex flex-col justify-between relative min-h-[720px] overflow-hidden">
+          
+          {/* Subtle Pencil Landmark Sketches Overlay in Background */}
+          <div className="absolute inset-0 pointer-events-none opacity-20 select-none overflow-hidden">
+            {/* Top Left Houseboat & Temple Sketch */}
+            <svg className="absolute top-10 left-10 w-48 h-36" viewBox="0 0 200 150" stroke="#4A3E3D" fill="none" strokeWidth="1">
+              <path d="M20 100 Q 60 70 120 100 L 180 100 M 40 100 L 40 60 L 80 40 L 120 60 L 120 100 M 50 60 L 110 60 M 70 40 L 70 20" />
+              <path d="M10 120 Q 100 110 190 120" strokeDasharray="3 3" />
+            </svg>
 
-      {/* Main Chat Panel */}
-      <div className="flex-grow flex flex-col justify-between glass rounded-3xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm h-full">
-        {/* Messages Header */}
-        <div className="px-6 py-4 border-b border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/30 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping" />
-            <span className="text-xs font-bold text-slate-700 dark:text-slate-300">AI Specialist Online</span>
+            {/* Middle Mountain Contour Lines Sketch */}
+            <svg className="absolute top-1/3 left-1/3 w-64 h-40" viewBox="0 0 300 200" stroke="#4A3E3D" fill="none" strokeWidth="1">
+              <path d="M10 150 Q 80 60 150 130 T 290 140 M 50 160 Q 120 90 200 170" />
+              <path d="M100 130 Q 140 100 180 140" strokeDasharray="2 2" />
+            </svg>
+
+            {/* Top Right Kettuvallam Houseboat Sketch */}
+            <svg className="absolute top-12 right-12 w-52 h-36" viewBox="0 0 220 140" stroke="#4A3E3D" fill="none" strokeWidth="1">
+              <path d="M10 90 Q 100 40 210 90 L 190 110 Q 100 125 30 110 Z" />
+              <path d="M40 90 Q 100 60 160 90 M 50 70 Q 100 45 150 70" />
+            </svg>
+
+            {/* Bottom Left Houseboat Sketch */}
+            <svg className="absolute bottom-24 left-8 w-56 h-40" viewBox="0 0 240 150" stroke="#4A3E3D" fill="none" strokeWidth="1">
+              <path d="M20 100 Q 120 50 220 100 L 200 120 Q 120 135 40 120 Z" />
+              <path d="M50 100 C 70 70, 170 70, 190 100" />
+            </svg>
+
+            {/* Bottom Right Gateway of India Arch Sketch */}
+            <svg className="absolute bottom-20 right-10 w-60 h-48" viewBox="0 0 260 200" stroke="#4A3E3D" fill="none" strokeWidth="1.2">
+              <path d="M30 180 L 30 60 L 70 40 L 190 40 L 230 60 L 230 180 M 30 90 L 230 90 M 90 180 L 90 110 Q 130 90 170 110 L 170 180 M 110 40 L 110 20 L 150 20 L 150 40" />
+              <circle cx="130" cy="65" r="15" />
+            </svg>
           </div>
-          <span className="text-[10px] font-bold text-slate-400">Model: Gemini Travel-Agent</span>
-        </div>
 
-        {/* Messages Body */}
-        <div className="flex-grow overflow-y-auto p-6 space-y-4">
-          <AnimatePresence initial={false}>
-            {messages.map((msg) => {
-              const isAi = msg.sender === 'ai';
-              return (
-                <motion.div 
-                  key={msg.id}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className={`flex gap-3 max-w-[85%] ${isAi ? 'mr-auto' : 'ml-auto flex-row-reverse'}`}
-                >
-                  <div className={`p-2 rounded-xl flex-shrink-0 h-fit ${
-                    isAi 
-                      ? 'bg-sky-500/10 text-sky-500 border border-sky-500/15' 
-                      : 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/15'
-                  }`}>
-                    {isAi ? <Bot size={18} /> : <User size={18} />}
-                  </div>
+          {/* Top Header Bar */}
+          <div className="relative z-10 flex items-center justify-between border-b border-stone-300/80 pb-3 mb-4 text-stone-700">
+            <div className="flex items-center gap-2">
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
+              <span className="text-xs font-semibold tracking-wide">AI Specialist Online</span>
+            </div>
+            <span className="text-xs font-mono text-stone-500">Model: Gemini Travel-Agent</span>
+          </div>
 
-                  <div className={`p-4 rounded-2xl ${
-                    isAi 
-                      ? 'bg-slate-50/60 dark:bg-slate-900/50 border border-slate-200/50 dark:border-slate-800/80 rounded-tl-none' 
-                      : 'bg-gradient-accent text-white rounded-tr-none shadow-md shadow-sky-500/10'
-                  }`}>
-                    {isAi ? (
-                      <div className="space-y-1">
-                        {renderMessageContent(msg.text)}
+          {/* Chat Messages Stream Area */}
+          <div className="relative z-10 flex-1 overflow-y-auto pr-2 space-y-4 max-h-[460px] scrollbar-thin">
+            <AnimatePresence>
+              {messages.map((msg) => {
+                const isAi = msg.sender === 'ai';
+                return (
+                  <motion.div
+                    key={msg.id}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0 }}
+                    className={`flex gap-3 ${isAi ? 'justify-start' : 'justify-end'}`}
+                  >
+                    {/* Cute Robot Line Icon Avatar for AI */}
+                    {isAi && (
+                      <div className="w-9 h-9 rounded-full bg-[#FAF6EE] border-2 border-[#E07A5F] flex items-center justify-center text-[#E07A5F] flex-shrink-0 shadow-sm">
+                        <Bot className="w-5 h-5" />
                       </div>
-                    ) : (
-                      <p className="text-xs font-medium leading-relaxed">{msg.text}</p>
                     )}
-                  </div>
-                </motion.div>
-              );
-            })}
 
+                    {/* Message Bubble */}
+                    <div
+                      className={`max-w-[85%] rounded-2xl p-4 shadow-sm text-xs leading-relaxed ${
+                        isAi
+                          ? 'bg-[#FAF6EE]/90 backdrop-blur-md text-stone-800 border border-[#E07A5F]/40 rounded-tl-none font-serif text-sm shadow-[0_4px_20px_rgba(224,122,95,0.1)]'
+                          : 'bg-[#E07A5F] text-white rounded-tr-none font-sans shadow-md'
+                      }`}
+                    >
+                      <div className="whitespace-pre-line">{msg.text}</div>
+
+                      <div className="flex items-center justify-between mt-2 pt-1.5 border-t border-stone-200/40 text-[10px] text-stone-400">
+                        <span>
+                          {msg.timestamp.toLocaleTimeString([], {
+                            hour: '2-digit',
+                            minute: '2-digit'
+                          })}
+                        </span>
+                        {isAi && (
+                          <button
+                            onClick={() => handleCopy(msg.id, msg.text)}
+                            className="hover:text-stone-700 transition-colors ml-2"
+                            title="Copy response"
+                          >
+                            {copiedId === msg.id ? (
+                              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                            ) : (
+                              <Copy className="w-3.5 h-3.5" />
+                            )}
+                          </button>
+                        )}
+                      </div>
+                    </div>
+
+                    {!isAi && (
+                      <div className="w-9 h-9 rounded-full bg-slate-800 text-amber-200 flex items-center justify-center font-bold text-xs flex-shrink-0 shadow">
+                        <User className="w-4 h-4" />
+                      </div>
+                    )}
+                  </motion.div>
+                );
+              })}
+            </AnimatePresence>
+
+            {/* Typing status indicator */}
             {isTyping && (
-              <motion.div 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="flex gap-3 max-w-[80%] mr-auto"
-              >
-                <div className="p-2 rounded-xl bg-sky-500/10 text-sky-500 border border-sky-500/15 h-fit">
-                  <Bot size={18} />
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-full bg-[#FAF6EE] border-2 border-[#E07A5F] flex items-center justify-center text-[#E07A5F]">
+                  <Bot className="w-4 h-4" />
                 </div>
-                <div className="p-4 bg-slate-50/60 dark:bg-slate-900/50 border border-slate-200/50 dark:border-slate-800/80 rounded-2xl rounded-tl-none flex items-center gap-1">
-                  <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                  <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                  <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                <div className="bg-[#FAF6EE] px-4 py-2.5 rounded-2xl rounded-tl-none border border-[#E07A5F]/30 text-xs text-stone-600 font-serif italic flex items-center gap-2">
+                  <Sparkles className="w-3.5 h-3.5 text-[#E07A5F] animate-spin" />
+                  <span>Thinking...</span>
                 </div>
-              </motion.div>
+              </div>
             )}
-          </AnimatePresence>
-          <div ref={messagesEndRef} />
-        </div>
 
-        {/* Input Bar */}
-        <div className="p-4 border-t border-slate-200 dark:border-slate-800 bg-slate-50/30 dark:bg-slate-900/10 flex gap-3">
-          <input
-            type="text"
-            placeholder="Ask about Kochi attractions, Munnar weather or Goan food..."
-            className="flex-grow bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl px-4 py-3 text-xs focus:outline-none focus:ring-2 focus:ring-sky-500"
-            value={inputText}
-            onChange={(e) => setInputText(e.target.value)}
-            onKeyDown={handleKeyPress}
-          />
-          <button
-            onClick={() => handleSendMessage()}
-            className="p-3 bg-gradient-accent text-white rounded-2xl shadow-lg shadow-sky-500/15 hover:scale-105 transition-all flex items-center justify-center"
-            aria-label="Send Message"
-          >
-            <Send size={16} />
-          </button>
+            <div ref={messagesEndRef} />
+          </div>
+
+          {/* Travel Journal Bottom Input Bar */}
+          <div className="relative z-10 mt-4 pt-3 border-t border-stone-300/60 space-y-2">
+            {/* Section Tab Header */}
+            <div className="flex items-center justify-between px-1">
+              <span className="font-serif font-bold text-sm text-stone-800">Travel Journal</span>
+              {/* Quick suggestion chips */}
+              <div className="flex items-center gap-1.5 text-[11px]">
+                <button
+                  onClick={() => handleSendMessage("i want to go for a spa only in kochi")}
+                  className="px-2 py-0.5 rounded-full bg-[#E07A5F]/10 border border-[#E07A5F]/30 text-[#E07A5F] hover:bg-[#E07A5F] hover:text-white transition-all font-serif"
+                >
+                  💆 Spa in Kochi
+                </button>
+              </div>
+            </div>
+
+            {/* Input Pill Box with Paper Airplane Send Button */}
+            <div className="relative flex items-center rounded-full bg-[#FAF6EE] border border-stone-300 shadow-inner px-4 py-1.5 focus-within:border-[#E07A5F] focus-within:ring-2 focus-within:ring-[#E07A5F]/20 transition-all">
+              <input
+                type="text"
+                value={inputText}
+                onChange={(e) => setInputText(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
+                placeholder="Ask about Kochi attractions, Spa in Kochi, Munnar weather or Goan food..."
+                className="w-full bg-transparent text-xs text-stone-800 placeholder-stone-400 font-sans outline-none py-1.5"
+              />
+
+              {/* Coral Circle Send Action Button */}
+              <button
+                onClick={() => handleSendMessage()}
+                disabled={!inputText.trim()}
+                className={`w-9 h-9 rounded-full flex items-center justify-center transition-all duration-300 shadow-md flex-shrink-0 ${
+                  inputText.trim()
+                    ? 'bg-[#E07A5F] hover:bg-[#c96349] text-white scale-105'
+                    : 'bg-[#E07A5F] text-white/90 hover:opacity-90'
+                }`}
+                title="Send query"
+              >
+                <Send className="w-4 h-4 transform rotate-45 -translate-y-0.5 translate-x-0.5" />
+              </button>
+            </div>
+          </div>
+
         </div>
       </div>
     </div>

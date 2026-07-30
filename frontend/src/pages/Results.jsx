@@ -3,11 +3,26 @@ import { useSearchParams, useNavigate } from 'react-router-dom';
 import FilterSidebar from '../components/FilterSidebar';
 import PlaceCard from '../components/PlaceCard';
 import { LoadingSkeleton, EmptyState } from '../components/FeedbackStates';
-import { Compass, Calendar, DollarSign, Users, ChevronLeft, MapPin, Search } from 'lucide-react';
+import { Compass, Calendar, DollarSign, Users, ChevronLeft, MapPin, Search, X, Sparkles } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { destinationsData } from '../services/mockData';
+
+const popularSearchChips = [
+  'All Destinations',
+  'Kochi',
+  'Munnar',
+  'Alleppey',
+  'Wayanad',
+  'Goa',
+  'Jaipur',
+  'Spas & Wellness',
+  'Tea Estates',
+  'Houseboats',
+  'Heritage Forts'
+];
 
 const Results = () => {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   
   const destParam = searchParams.get('destination') || 'kochi';
@@ -24,7 +39,7 @@ const Results = () => {
   const [selectedPrice, setSelectedPrice] = useState(['$', '$$', '$$$']);
   const [selectedRating, setSelectedRating] = useState(null);
 
-  // Search input
+  // Search input query
   const [searchQuery, setSearchQuery] = useState('');
 
   // Local storage added places trackers
@@ -39,38 +54,75 @@ const Results = () => {
     }
   }, [destParam]);
 
-const fetchDestination = async () => {
-  setLoading(true);
-  try {
-    const mockData = {
-      name: destParam.charAt(0).toUpperCase() + destParam.slice(1),
-      attractions: [],
-      restaurants: [],
-      hotels: [],
-      events: []
-    };
+  const fetchDestination = async () => {
+    setLoading(true);
+    try {
+      const normalizedKey = (destParam || 'kochi').toLowerCase().trim();
+      let data = destinationsData[normalizedKey];
 
-    setDestinationData(mockData);
-  } catch (e) {
-    console.error(e);
-  } finally {
-    setLoading(false);
-  }
-};
+      // Fallback matching if partial key
+      if (!data) {
+        for (const key of Object.keys(destinationsData)) {
+          if (key.includes(normalizedKey) || normalizedKey.includes(key)) {
+            data = destinationsData[key];
+            break;
+          }
+        }
+      }
 
-  // Run filters
+      // Default fallback to kochi
+      if (!data) {
+        data = destinationsData['kochi'];
+      }
+
+      setDestinationData(data);
+    } catch (e) {
+      console.error(e);
+      setDestinationData(destinationsData['kochi']);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Run filters & global / destination text search
   useEffect(() => {
-    if (!destinationData) return;
+    const query = searchQuery.trim().toLowerCase();
+    let allPlaces = [];
 
-    // Combine all places
-    const all = [
-      ...destinationData.attractions,
-      ...destinationData.restaurants,
-      ...destinationData.hotels,
-      ...destinationData.events
-    ];
+    // Check if query specifies a city name
+    const cityKeys = Object.keys(destinationsData);
+    const matchedCityKey = cityKeys.find(key => key === query || query.includes(key));
 
-    const filtered = all.filter(place => {
+    if (matchedCityKey) {
+      // If user typed a specific city name, load that city's places!
+      const cityData = destinationsData[matchedCityKey];
+      allPlaces = [
+        ...(cityData.attractions || []),
+        ...(cityData.restaurants || []),
+        ...(cityData.hotels || []),
+        ...(cityData.events || [])
+      ];
+    } else if (query.length > 0) {
+      // Search globally across ALL destinations!
+      Object.values(destinationsData).forEach(d => {
+        allPlaces.push(
+          ...(d.attractions || []),
+          ...(d.restaurants || []),
+          ...(d.hotels || []),
+          ...(d.events || [])
+        );
+      });
+    } else if (destinationData) {
+      // Standard search inside current selected destination
+      allPlaces = [
+        ...(destinationData.attractions || []),
+        ...(destinationData.restaurants || []),
+        ...(destinationData.hotels || []),
+        ...(destinationData.events || [])
+      ];
+    }
+
+    const filtered = allPlaces.filter(place => {
       // Category Filter
       if (selectedCategories.length > 0 && !selectedCategories.includes(place.category)) {
         return false;
@@ -88,13 +140,13 @@ const fetchDestination = async () => {
         return false;
       }
 
-      // Text Search
-      if (searchQuery.trim() !== '') {
-        const query = searchQuery.toLowerCase();
+      // Text Search Filter
+      if (query !== '' && !matchedCityKey) {
         const matchesName = place.name.toLowerCase().includes(query);
         const matchesDesc = place.description.toLowerCase().includes(query);
         const matchesSub = place.subCategory && place.subCategory.toLowerCase().includes(query);
-        if (!matchesName && !matchesDesc && !matchesSub) {
+        const matchesCategory = place.category.toLowerCase().includes(query);
+        if (!matchesName && !matchesDesc && !matchesSub && !matchesCategory) {
           return false;
         }
       }
@@ -103,13 +155,25 @@ const fetchDestination = async () => {
     });
 
     setFilteredPlaces(filtered);
-  }, [destinationData, selectedCategories, selectedPrice, selectedRating, searchQuery]);
+  }, [destinationData, selectedCategories, selectedPrice, selectedRating, searchQuery, destParam]);
 
   const handleResetFilters = () => {
     setSelectedCategories(['Attraction', 'Restaurant', 'Hotel', 'Event']);
     setSelectedPrice(['$', '$$', '$$$']);
     setSelectedRating(null);
     setSearchQuery('');
+  };
+
+  const handleChipClick = (chip) => {
+    if (chip === 'All Destinations') {
+      setSearchQuery('');
+      setSearchParams({ destination: 'kochi', days: daysParam, budget: budgetParam, date: dateParam });
+    } else if (Object.keys(destinationsData).includes(chip.toLowerCase())) {
+      setSearchQuery('');
+      setSearchParams({ destination: chip.toLowerCase(), days: daysParam, budget: budgetParam, date: dateParam });
+    } else {
+      setSearchQuery(chip.replace('Spas & Wellness', 'spa').replace('Tea Estates', 'tea').replace('Heritage Forts', 'fort'));
+    }
   };
 
   const handleAddToItinerary = (place) => {
@@ -137,6 +201,7 @@ const fetchDestination = async () => {
   };
 
   const formatBudget = (b) => {
+    if (typeof b === 'number') return `$${b}`;
     return b.charAt(0).toUpperCase() + b.slice(1);
   };
 
@@ -163,7 +228,7 @@ const fetchDestination = async () => {
         onClick={() => navigate('/')}
         className="flex items-center gap-1.5 text-xs font-bold text-slate-500 hover:text-sky-500 mb-6 transition-colors"
       >
-        <ChevronLeft size={16} /> Back to Search
+        <ChevronLeft size={16} /> Back to Home
       </button>
 
       {/* Search Summary Panel */}
@@ -174,7 +239,7 @@ const fetchDestination = async () => {
               <MapPin size={22} />
             </div>
             <div>
-              <p className="text-[10px] uppercase font-bold tracking-wider text-slate-400 dark:text-slate-500">Destination</p>
+              <p className="text-[10px] uppercase font-bold tracking-wider text-slate-400 dark:text-slate-500">Active Location</p>
               <h2 className="text-lg font-bold text-slate-800 dark:text-white leading-tight">{destinationName}</h2>
             </div>
           </div>
@@ -206,9 +271,9 @@ const fetchDestination = async () => {
 
         <button 
           onClick={() => navigate(`/itinerary?destination=${destParam}&days=${daysParam}&budget=${budgetParam}&date=${dateParam}`)}
-          className="px-6 py-3 bg-gradient-accent text-white font-bold rounded-2xl text-sm shadow-md shadow-sky-500/20 hover:scale-105 transition-all text-center"
+          className="px-6 py-3 bg-gradient-accent text-white font-bold rounded-2xl text-sm shadow-md shadow-sky-500/20 hover:scale-105 transition-all text-center flex items-center justify-center gap-2"
         >
-          View Generated Itinerary
+          <Sparkles size={16} /> View Generated Itinerary
         </button>
       </div>
 
@@ -230,30 +295,57 @@ const fetchDestination = async () => {
         <div className="lg:col-span-3 space-y-6">
           
           {/* Text Search Bar */}
-          <div className="relative">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-            <input 
-              type="text" 
-              placeholder="Search attractions, dishes, hotels or activities in Kochi..."
-              className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl py-3.5 pl-12 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-sky-500 shadow-sm"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
+          <div className="space-y-3">
+            <div className="relative">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+              <input 
+                type="text" 
+                placeholder="Search attractions, spas, hotels, food or cities (e.g. Goa, Munnar, Fort Kochi)..."
+                className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl py-3.5 pl-12 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-sky-500 shadow-sm text-slate-800 dark:text-white"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery('')}
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors"
+                  title="Clear search"
+                >
+                  <X size={16} />
+                </button>
+              )}
+            </div>
+
+            {/* Quick Search Suggestions Chips */}
+            <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none text-xs">
+              <span className="text-slate-400 font-medium whitespace-nowrap text-[11px]">Quick Search:</span>
+              {popularSearchChips.map((chip, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => handleChipClick(chip)}
+                  className="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800/80 hover:bg-sky-500 hover:text-white text-slate-600 dark:text-slate-300 text-xs transition-all whitespace-nowrap border border-slate-200/60 dark:border-slate-700/60"
+                >
+                  {chip}
+                </button>
+              ))}
+            </div>
           </div>
 
           <div className="flex justify-between items-center">
             <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">
               Showing <span className="text-slate-800 dark:text-white font-bold">{filteredPlaces.length}</span> recommendations
+              {searchQuery && <span> for "<span className="text-sky-500 font-bold">{searchQuery}</span>"</span>}
             </p>
           </div>
 
           {/* Cards Grid */}
           {filteredPlaces.length === 0 ? (
             <EmptyState 
-              title="No recommendations match filters"
-              message="Try broadening your categories, adjusting your price ranges, or resetting filters."
-              buttonText="Reset All Filters"
+              title="No recommendations match search"
+              message="Try searching for a city name (Goa, Munnar, Kochi) or broader terms like 'tea', 'beach', 'spa', 'fort'."
+              buttonText="Reset Search & Filters"
               buttonLink=""
+              onReset={handleResetFilters}
             />
           ) : (
             <motion.div 
