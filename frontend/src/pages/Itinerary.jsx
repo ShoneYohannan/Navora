@@ -5,7 +5,7 @@ import {
   CloudSun, Shield, Wallet, CheckSquare,
   Map as MapIcon, Download, Film, Share2, Edit3,
   ChevronDown, ChevronUp, MapPin, Clock, Info, Check,
-  Home, Star, Umbrella, Sun, ArrowRight
+  Home, Star, Umbrella, Sun, ArrowRight, ShieldCheck, AlertTriangle, CloudRain
 } from 'lucide-react';
 import MapComponent from '../components/MapComponent';
 import { LoadingSkeleton, ErrorState } from '../components/FeedbackStates';
@@ -208,10 +208,32 @@ const Itinerary = () => {
     }
   };
 
-  const handleShare = () => {
-    navigator.clipboard.writeText(window.location.href);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+  const handleShare = async () => {
+    const shareData = {
+      title: `Travel Itinerary for ${trip?.destination || 'Navora'}`,
+      text: `Check out this travel itinerary for ${trip?.destination || 'Navora'} created on Navora!`,
+      url: window.location.href,
+    };
+
+    try {
+      if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
+        await navigator.share(shareData);
+      } else {
+        await navigator.clipboard.writeText(window.location.href);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 3000);
+      }
+    } catch (err) {
+      if (err.name !== 'AbortError') {
+        try {
+          await navigator.clipboard.writeText(window.location.href);
+          setCopied(true);
+          setTimeout(() => setCopied(false), 3000);
+        } catch (clipErr) {
+          console.error("Copy failed:", clipErr);
+        }
+      }
+    }
   };
 
   const toggleDay = (idx) => {
@@ -462,8 +484,8 @@ const Itinerary = () => {
                                 {day.safety_risk_assessment && (
                                   <div className="flex items-start gap-2">
                                     <Shield size={14} className={day.safety_risk_assessment.toLowerCase().includes("low risk") ? "text-emerald-500 mt-0.5" : "text-amber-500 mt-0.5"} />
-                                    <p className="text-xs font-semibold text-slate-655 dark:text-slate-400">
-                                      <span className="font-extrabold text-slate-700 dark:text-slate-350">Safety Risk: </span>
+                                    <p className="text-xs font-semibold text-slate-700 dark:text-slate-200">
+                                      <span className="font-extrabold text-slate-900 dark:text-white">Safety Risk: </span>
                                       {day.safety_risk_assessment}
                                     </p>
                                   </div>
@@ -471,8 +493,8 @@ const Itinerary = () => {
                                 {day.dynamic_adjustments && (
                                   <div className="flex items-start gap-2">
                                     <Info size={14} className="text-rose-500 mt-0.5" />
-                                    <p className="text-xs font-bold text-rose-600 dark:text-rose-450">
-                                      <span className="font-extrabold">Dynamic Adjustment: </span>
+                                    <p className="text-xs font-bold text-rose-700 dark:text-rose-300">
+                                      <span className="font-extrabold text-rose-900 dark:text-rose-200">Dynamic Adjustment: </span>
                                       {day.dynamic_adjustments}
                                     </p>
                                   </div>
@@ -690,43 +712,82 @@ const Itinerary = () => {
           </div>
 
           {trip.risk_summary_table && trip.risk_summary_table.length > 0 && (
-            <div className="glass p-6 rounded-3xl border border-slate-200 dark:border-slate-800 space-y-4">
-              <h3 className="font-bold text-slate-800 dark:text-white flex items-center gap-2">
-                <CloudSun size={18} className="text-sky-500" /> Weather Risk & Backup Plans
-              </h3>
+            <div className="glass p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800 space-y-5 shadow-lg relative overflow-hidden">
+              {/* Subtle ambient glow behind header */}
+              <div className="absolute -top-12 -right-12 w-40 h-40 bg-sky-500/10 rounded-full blur-3xl pointer-events-none" />
 
-              <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <h3 className="font-bold text-slate-900 dark:text-white flex items-center gap-2.5 text-base sm:text-lg">
+                  <div className="p-2 rounded-xl bg-sky-500/10 text-sky-500 dark:text-sky-400 border border-sky-500/20 shadow-sm">
+                    <CloudSun size={20} />
+                  </div>
+                  <span>Weather Risk & Backup Plans</span>
+                </h3>
+                <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+                  {trip.risk_summary_table.length} Days
+                </span>
+              </div>
+
+              <div className="space-y-3.5">
                 {trip.risk_summary_table.map((row, idx) => {
-                  let badgeColor = "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-400/20";
-                  if (row.level === "Moderate") {
-                    badgeColor = "bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-400/20";
-                  } else if (["High", "Health", "Extreme"].includes(row.level)) {
-                    badgeColor = "bg-rose-500/10 text-rose-600 dark:text-rose-450 border border-rose-450/20";
+                  const isModerate = row.level === "Moderate";
+                  const isHigh = ["High", "Health", "Extreme"].includes(row.level);
+                  
+                  let badgeStyle = "bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border-emerald-500/30";
+                  let leftBorder = "border-l-emerald-500";
+                  let cardBg = "bg-slate-50/80 dark:bg-slate-900/60";
+
+                  if (isModerate) {
+                    badgeStyle = "bg-amber-500/15 text-amber-700 dark:text-amber-300 border-amber-500/30 shadow-[0_0_12px_rgba(245,158,11,0.12)]";
+                    leftBorder = "border-l-amber-500";
+                  } else if (isHigh) {
+                    badgeStyle = "bg-rose-500/15 text-rose-700 dark:text-rose-300 border-rose-500/30 shadow-[0_0_12px_rgba(244,63,94,0.12)]";
+                    leftBorder = "border-l-rose-500";
                   }
 
                   return (
-                    <div key={idx} className="p-3.5 bg-slate-50 dark:bg-slate-900/40 rounded-2xl border border-slate-200/60 dark:border-slate-800/80 space-y-2">
-                      <div className="flex justify-between items-center">
-                        <span className="text-[11px] font-extrabold text-slate-700 dark:text-slate-350">
-                          Day {row.day} ({row.date})
-                        </span>
-                        <span className={`text-[9px] font-extrabold px-2 py-0.5 rounded-full ${badgeColor}`}>
+                    <div 
+                      key={idx} 
+                      className={`p-4 ${cardBg} rounded-2xl border border-slate-200/80 dark:border-slate-800/90 border-l-4 ${leftBorder} hover:border-slate-300 dark:hover:border-slate-700 transition-all shadow-sm hover:shadow-md space-y-3`}
+                    >
+                      {/* Day Header & Risk Badge */}
+                      <div className="flex justify-between items-center gap-2">
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs sm:text-sm font-bold text-slate-900 dark:text-slate-100 tracking-tight">
+                            Day {row.day}
+                          </span>
+                          {row.date && (
+                            <span className="text-[11px] font-medium text-slate-500 dark:text-slate-400 px-2 py-0.5 rounded-md bg-slate-200/50 dark:bg-slate-800/60 border border-slate-300/40 dark:border-slate-700/50">
+                              {row.date}
+                            </span>
+                          )}
+                        </div>
+                        <span className={`text-xs font-bold px-2.5 py-0.5 rounded-full border ${badgeStyle} flex items-center gap-1`}>
+                          {isHigh ? <AlertTriangle size={12} /> : isModerate ? <CloudRain size={12} /> : <Sun size={12} />}
                           {row.level} Risk
                         </span>
                       </div>
 
-                      <div className="text-[10px] text-slate-500 dark:text-slate-400 space-y-1">
-                        <p>
-                          <span className="font-semibold text-slate-650 dark:text-slate-450">Primary Risk: </span>
-                          {row.primary_risk}
-                        </p>
-                        {row.backup_plan && row.backup_plan !== "None" && (
-                          <p>
-                            <span className="font-semibold text-slate-650 dark:text-slate-450">Backup Plan: </span>
-                            {row.backup_plan}
-                          </p>
-                        )}
+                      {/* Primary Risk */}
+                      <div className="flex items-start gap-2 text-xs sm:text-sm text-slate-700 dark:text-slate-200 font-medium">
+                        <span className="font-semibold text-slate-500 dark:text-slate-400 shrink-0">Primary Risk:</span>
+                        <span className="text-slate-900 dark:text-slate-100 font-semibold">{row.primary_risk}</span>
                       </div>
+
+                      {/* Backup Plan Box */}
+                      {row.backup_plan && row.backup_plan !== "None" && (
+                        <div className="p-3 rounded-xl bg-slate-100/90 dark:bg-slate-800/70 border border-slate-200/90 dark:border-slate-700/60 flex items-start gap-2.5">
+                          <ShieldCheck size={16} className="text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
+                          <div className="space-y-0.5">
+                            <span className="text-[10px] uppercase font-extrabold tracking-wider text-emerald-700 dark:text-emerald-400 block">
+                              Backup Plan
+                            </span>
+                            <p className="text-xs sm:text-sm text-slate-900 dark:text-slate-200 font-medium leading-relaxed">
+                              {row.backup_plan}
+                            </p>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   );
                 })}

@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Bot, Send, Sparkles, RefreshCw, Copy, CheckCircle2, User, Globe, ChevronRight } from 'lucide-react';
+import { Bot, Send, Sparkles, Copy, CheckCircle2, User, Globe, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { assistantAnswers } from '../services/mockData';
 
-// Dynamic destination image pool for left preview card
+// Dynamic destination tourist image gallery (No spa image, starts with iconic tourist places)
 const destinationGallery = [
   {
     title: 'KERALA SUNSET HOUSEBOAT',
@@ -14,11 +14,6 @@ const destinationGallery = [
     title: 'FORT KOCHI CHINESE NETS',
     url: 'https://images.unsplash.com/photo-1589308078059-be1415eab4c3?auto=format&fit=crop&w=800&q=80',
     prompt: 'What are the top heritage spots and seafood stalls near Chinese Fishing Nets?'
-  },
-  {
-    title: 'AYURVEDA & SPA RETREAT KOCHI',
-    url: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=800&q=80',
-    prompt: 'I want to go for a spa only in Kochi'
   },
   {
     title: 'MUNNAR TEA GARDENS MIST',
@@ -34,60 +29,62 @@ const destinationGallery = [
     title: 'PALOLEM BEACH GOA SUNSET',
     url: 'https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?auto=format&fit=crop&w=800&q=80',
     prompt: 'Which events and beaches are happening in Goa?'
+  },
+  {
+    title: 'GATEWAY OF INDIA MUMBAI',
+    url: 'https://images.unsplash.com/photo-1570168007204-dfb528c6958f?auto=format&fit=crop&w=800&q=80',
+    prompt: 'Tell me about historic coastal gateways and harbor boat tours.'
+  },
+  {
+    title: 'WAYANAD BAMBOO FORESTS',
+    url: 'https://images.unsplash.com/photo-1627894483216-2138af692e32?auto=format&fit=crop&w=800&q=80',
+    prompt: 'What is the best time of year to visit Wayanad wildlife and waterfalls?'
   }
 ];
 
-// Local Explorer Channels matching user design
+// Local Explorer Channels
 const explorerChannels = [
-  {
-    id: 'kochi-spa',
-    title: 'Kochi Spa & Ayurveda',
-    icon: '💆',
-    galleryIndex: 2,
-    prompt: 'I want to go for a spa only in Kochi'
-  },
   {
     id: 'kochi-2days',
     title: 'Kochi in 2 days',
     icon: '🛕',
-    galleryIndex: 1,
     prompt: 'What can I visit in Kochi in 2 days?'
   },
   {
     id: 'fort-kochi-food',
     title: 'Fort Kochi food',
     icon: '🍲',
-    galleryIndex: 1,
     prompt: 'Best food places near Fort Kochi?'
+  },
+  {
+    id: 'kochi-spa',
+    title: 'Kochi Spa & Ayurveda',
+    icon: '💆',
+    prompt: 'I want to go for a spa only in Kochi'
   },
   {
     id: 'fresh-market',
     title: 'Fresh market',
     icon: '🏛️',
-    galleryIndex: 5,
     prompt: 'Tell me about local fresh markets and spice bazaars in Kochi and Goa.'
   },
   {
     id: 'spice-market',
     title: 'Spice market',
     icon: '🏺',
-    galleryIndex: 2,
     prompt: 'What are the historic spice trading routes and spice markets in Kerala?'
   },
   {
     id: 'goa',
     title: 'Goa',
     icon: '🌴',
-    galleryIndex: 5,
     prompt: 'Which events and beaches are happening in Goa?'
   }
 ];
 
 const Assistant = () => {
-  // Randomize initial preview image on page open/load
-  const [currentImageIndex, setCurrentImageIndex] = useState(() =>
-    Math.floor(Math.random() * destinationGallery.length)
-  );
+  // Starts with tourist place (index 0)
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   const [messages, setMessages] = useState([
     {
@@ -110,6 +107,15 @@ const Assistant = () => {
   useEffect(() => {
     scrollToBottom();
   }, [messages, isTyping]);
+
+  // Automatic timer rotation every 4 minutes (240,000 ms)
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentImageIndex((prev) => (prev + 1) % destinationGallery.length);
+    }, 4 * 60 * 1000);
+
+    return () => clearInterval(timer);
+  }, []);
 
   // Intelligent Travel AI Intent Generator
   const generateAIResponse = (userQuery) => {
@@ -215,17 +221,7 @@ Regarding your request: **"${userQuery}"**
     }, 900);
   };
 
-  // Cycle / random image update
-  const handleNextImage = () => {
-    setCurrentImageIndex((prev) => (prev + 1) % destinationGallery.length);
-  };
-
   const handleChannelClick = (channel) => {
-    if (channel.galleryIndex !== undefined) {
-      setCurrentImageIndex(channel.galleryIndex);
-    } else {
-      handleNextImage();
-    }
     handleSendMessage(channel.prompt);
   };
 
@@ -291,40 +287,27 @@ Regarding your request: **"${userQuery}"**
               </div>
             </div>
 
-            {/* Featured Dynamic Destination Image Preview Card */}
-            <div className="space-y-2">
-              <div
-                onClick={handleNextImage}
-                className="relative rounded-2xl overflow-hidden border border-slate-600/50 shadow-lg group cursor-pointer h-44 bg-slate-900"
-                title="Click to cycle next destination preview"
-              >
+            {/* Featured Dynamic Destination Image Preview Card (No user manual click interaction) */}
+            <div className="space-y-2 select-none">
+              <div className="relative rounded-2xl overflow-hidden border border-slate-600/50 shadow-lg h-44 bg-slate-900">
                 <img
                   src={activePhoto.url}
                   alt={activePhoto.title}
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  className="w-full h-full object-cover transition-opacity duration-1000"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/20" />
-
-                {/* Refresh Overlay Tag */}
-                <div className="absolute top-2 right-2 bg-black/60 backdrop-blur-md px-2 py-1 rounded-full text-[10px] text-amber-200 border border-amber-500/30 flex items-center gap-1">
-                  <RefreshCw className="w-3 h-3 animate-spin-slow" />
-                  <span>Varies on open</span>
-                </div>
 
                 {/* Image Overlay Title */}
                 <div className="absolute bottom-3 left-3 right-3 text-white">
                   <p className="text-[10px] font-mono text-amber-300 font-bold uppercase tracking-wider">
-                    FEATURED PREVIEW
+                    FEATURED DESTINATION
                   </p>
                   <p className="text-xs font-bold truncate">{activePhoto.title}</p>
                 </div>
               </div>
 
-              <p
-                onClick={() => handleSendMessage(activePhoto.prompt)}
-                className="text-[10px] text-slate-400 text-center font-mono cursor-pointer hover:text-amber-300 transition-colors"
-              >
-                (Preview: {activePhoto.title} - Click to explore)
+              <p className="text-[10px] text-slate-400 text-center font-mono select-none">
+                (Preview: {activePhoto.title})
               </p>
             </div>
 
