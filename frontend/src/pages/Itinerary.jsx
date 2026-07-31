@@ -5,7 +5,7 @@ import {
   CloudSun, Shield, Wallet, CheckSquare,
   Map as MapIcon, Download, Film, Share2, Edit3,
   ChevronDown, ChevronUp, MapPin, Clock, Info, Check,
-  Home, Star, Umbrella, Sun, ArrowRight, ShieldCheck, AlertTriangle, CloudRain
+  Home, Star, Umbrella, Sun, ArrowRight, ShieldCheck, AlertTriangle, CloudRain, Sparkles
 } from 'lucide-react';
 import MapComponent from '../components/MapComponent';
 import { LoadingSkeleton, ErrorState } from '../components/FeedbackStates';
@@ -16,9 +16,9 @@ const getTransitDetails = (actIdx, dayIdx, mode) => {
   const hash = (actIdx * 17 + dayIdx * 31) % 10;
   let time = 15 + hash * 5; // 15 to 60 mins
   let cost = 0;
-  
+
   const activeMode = (mode || 'mixed').toLowerCase();
-  
+
   if (activeMode === 'walking') {
     time = 10 + hash * 3;
     cost = 0;
@@ -32,7 +32,7 @@ const getTransitDetails = (actIdx, dayIdx, mode) => {
     time = 20 + hash * 4;
     cost = 5 + hash * 2;
   }
-  
+
   return { time, cost };
 };
 
@@ -98,17 +98,43 @@ const Itinerary = () => {
     try {
       // 1. Load from MongoDB by ID
       if (tripId) {
-        const response = await API.get(`/trip/${tripId}`);
-        setTrip(response.data);
-        setEditForm({
-          destination: response.data.destination || 'kochi',
-          days: response.data.days || 3,
-          budget: response.data.budget || 1500,
-          currency: response.data.currency || 'USD'
-        });
-        sessionStorage.setItem('current_trip', JSON.stringify(response.data));
+        try {
+          const response = await API.get(`/trip/${tripId}`);
+          setTrip(response.data);
+          setEditForm({
+            destination: response.data.destination || 'kochi',
+            days: response.data.days || 3,
+            budget: response.data.budget || 1500,
+            currency: response.data.currency || 'USD'
+          });
+          sessionStorage.setItem('current_trip', JSON.stringify(response.data));
+        } catch (apiErr) {
+          console.warn(`Trip ID ${tripId} not found on backend. Checking session/local storage fallback...`, apiErr);
+          const stored = sessionStorage.getItem('current_trip') || localStorage.getItem('latest_trip');
+          if (stored) {
+            const data = JSON.parse(stored);
+            setTrip(data);
+            setEditForm({
+              destination: data.destination || 'kochi',
+              days: data.days || 3,
+              budget: data.budget || 1500,
+              currency: data.currency || 'USD'
+            });
+            // Try background save to retrieve fresh ID
+            try {
+              const saveResponse = await saveTrip(data);
+              if (saveResponse.data?.id) {
+                navigate(`/itinerary?id=${saveResponse.data.id}`, { replace: true });
+              }
+            } catch (saveErr) {
+              console.warn('Background save fallback failed:', saveErr);
+            }
+          } else {
+            setError(true);
+          }
+        }
 
-      // 2. Load from sessionStorage (when MongoDB save failed)
+        // 2. Load from sessionStorage (when MongoDB save failed)
       } else if (fromSession) {
         const stored = sessionStorage.getItem('current_trip');
         if (stored) {
@@ -124,7 +150,7 @@ const Itinerary = () => {
           setError(true);
         }
 
-      // 3. Generate a new trip on-the-fly (legacy results page flow)
+        // 3. Generate a new trip on-the-fly (legacy results page flow)
       } else {
         const parsedBudget = parseFloat(budgetQuery);
         let numericBudget = 10000;
@@ -305,37 +331,34 @@ const Itinerary = () => {
     <div className="max-w-7xl mx-auto px-6 py-8 space-y-10">
 
       <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 border-b border-slate-200 dark:border-slate-800 pb-8">
-        <div>
-          <span className="text-[10px] font-black uppercase tracking-wider text-sky-500 dark:text-sky-400">
-            Intelligence Report Generated
-          </span>
+        <div className="space-y-3">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-500/10 text-sky-600 dark:text-sky-300 border border-sky-500/20 shadow-sm">
+            <Sparkles size={13} className="text-sky-500 dark:text-sky-400 animate-pulse" />
+            <span className="text-[11px] font-black uppercase tracking-wider">
+              Intelligence Report Generated
+            </span>
+          </div>
 
-          <h1 className="text-3xl md:text-5xl font-black text-slate-800 dark:text-white mt-1">
+          <h1 className="text-3xl md:text-5xl font-black text-slate-800 dark:text-white capitalize leading-tight tracking-tight">
             Trip to {trip.destination}
           </h1>
 
-          <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 mt-2 flex items-center gap-4">
-            <span>
-              Duration:{' '}
-              <strong className="text-slate-700 dark:text-slate-300">
-                {trip.days} Days
-              </strong>
-            </span>
+          <div className="flex flex-wrap items-center gap-2.5 pt-1">
+            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800/90 border border-slate-200/80 dark:border-slate-700/80 text-xs font-semibold text-slate-700 dark:text-slate-200 shadow-sm">
+              <Clock size={14} className="text-sky-500 dark:text-sky-400 shrink-0" />
+              <span>Duration: <strong className="text-slate-900 dark:text-white font-bold">{trip.days} Days</strong></span>
+            </div>
 
-            <span>
-              Quality Rating:{' '}
-              <strong className="text-sky-500">
-                {trip.travel_quality_score}%
-              </strong>
-            </span>
+            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-sky-500/10 dark:bg-sky-500/15 border border-sky-500/20 dark:border-sky-500/30 text-xs font-semibold text-sky-700 dark:text-sky-300 shadow-sm">
+              <Star size={14} className="text-sky-500 dark:text-sky-400 shrink-0 fill-sky-500/20" />
+              <span>Quality Rating: <strong className="font-extrabold text-sky-600 dark:text-sky-200">{trip.travel_quality_score}%</strong></span>
+            </div>
 
-            <span>
-              Safety Status:{' '}
-              <strong className="text-emerald-500">
-                Verified Safe ({trip.safety_score}%)
-              </strong>
-            </span>
-          </p>
+            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-500/10 dark:bg-emerald-500/15 border border-emerald-500/20 dark:border-emerald-500/30 text-xs font-semibold text-emerald-700 dark:text-emerald-300 shadow-sm">
+              <Shield size={14} className="text-emerald-500 dark:text-emerald-400 shrink-0" />
+              <span>Safety Status: <strong className="font-extrabold text-emerald-600 dark:text-emerald-200">Verified Safe ({trip.safety_score}%)</strong></span>
+            </div>
+          </div>
         </div>
 
         <div className="flex flex-wrap items-center gap-3">
@@ -519,11 +542,10 @@ const Itinerary = () => {
                                           {actName}
                                         </p>
                                         {actCost !== null && actCost !== undefined && (
-                                          <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold flex-shrink-0 ${
-                                            actCost === 0
-                                              ? 'bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-400 border border-emerald-300/40'
-                                              : 'bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 border border-amber-300/40'
-                                          }`}>
+                                          <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold flex-shrink-0 ${actCost === 0
+                                            ? 'bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-400 border border-emerald-300/40'
+                                            : 'bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 border border-amber-300/40'
+                                            }`}>
                                             <Wallet size={9} />
                                             {actCost === 0 ? 'Free' : `${currSymbol}${actCost.toLocaleString()}`}
                                           </span>
@@ -544,37 +566,33 @@ const Itinerary = () => {
 
                             {/* Alternate Options Panel */}
                             {day.alternate_options && day.alternate_options.options && day.alternate_options.options.length > 0 && (
-                              <div className={`ml-14 mt-2 rounded-2xl border overflow-hidden relative z-10 group transition-all duration-300 cursor-pointer ${
-                                day.alternate_options.has_risk
-                                  ? 'bg-amber-50/60 dark:bg-amber-950/20 border-amber-300/40 dark:border-amber-700/30'
-                                  : 'bg-emerald-50/60 dark:bg-emerald-950/20 border-emerald-300/40 dark:border-emerald-700/30'
-                              }`}>
-                                {/* Header */}
-                                <div className={`flex items-center gap-2 px-4 py-2.5 ${
-                                  day.alternate_options.has_risk
-                                    ? 'bg-amber-100/70 dark:bg-amber-900/30'
-                                    : 'bg-emerald-100/70 dark:bg-emerald-900/30'
+                              <div className={`ml-14 mt-2 rounded-2xl border overflow-hidden relative z-10 group transition-all duration-300 cursor-pointer ${day.alternate_options.has_risk
+                                ? 'bg-amber-50/60 dark:bg-amber-950/20 border-amber-300/40 dark:border-amber-700/30'
+                                : 'bg-emerald-50/60 dark:bg-emerald-950/20 border-emerald-300/40 dark:border-emerald-700/30'
                                 }`}>
+                                {/* Header */}
+                                <div className={`flex items-center gap-2 px-4 py-2.5 ${day.alternate_options.has_risk
+                                  ? 'bg-amber-100/70 dark:bg-amber-900/30'
+                                  : 'bg-emerald-100/70 dark:bg-emerald-900/30'
+                                  }`}>
                                   {day.alternate_options.has_risk
                                     ? <Umbrella size={13} className="text-amber-600 dark:text-amber-400 flex-shrink-0" />
                                     : <Sun size={13} className="text-emerald-600 dark:text-emerald-400 flex-shrink-0" />
                                   }
-                                  <span className={`text-[10px] font-extrabold uppercase tracking-wider ${
-                                    day.alternate_options.has_risk
-                                      ? 'text-amber-700 dark:text-amber-400'
-                                      : 'text-emerald-700 dark:text-emerald-400'
-                                  }`}>
+                                  <span className={`text-[10px] font-extrabold uppercase tracking-wider ${day.alternate_options.has_risk
+                                    ? 'text-amber-700 dark:text-amber-400'
+                                    : 'text-emerald-700 dark:text-emerald-400'
+                                    }`}>
                                     {day.alternate_options.has_risk ? 'Rain Alert — Indoor Alternatives' : 'Best Picks for Today'}
                                   </span>
                                   <span className="text-[9px] font-medium text-slate-400 dark:text-slate-500 opacity-60 ml-1 transition-opacity duration-300 group-hover:opacity-0">
                                     (hover to expand)
                                   </span>
                                   <ChevronDown size={12} className="text-slate-400 dark:text-slate-500 group-hover:rotate-180 transition-transform duration-300 ml-1" />
-                                  <span className={`ml-auto text-[9px] font-bold px-2 py-0.5 rounded-full ${
-                                    day.alternate_options.has_risk
-                                      ? 'bg-amber-200 dark:bg-amber-800/50 text-amber-700 dark:text-amber-300'
-                                      : 'bg-emerald-200 dark:bg-emerald-800/50 text-emerald-700 dark:text-emerald-300'
-                                  }`}>
+                                  <span className={`ml-auto text-[9px] font-bold px-2 py-0.5 rounded-full ${day.alternate_options.has_risk
+                                    ? 'bg-amber-200 dark:bg-amber-800/50 text-amber-700 dark:text-amber-300'
+                                    : 'bg-emerald-200 dark:bg-emerald-800/50 text-emerald-700 dark:text-emerald-300'
+                                    }`}>
                                     {day.alternate_options.reason}
                                   </span>
                                 </div>
@@ -589,22 +607,20 @@ const Itinerary = () => {
                                         const url = opt.website || `https://www.google.com/search?q=${encodeURIComponent(opt.name + ' ' + (trip.destination || ''))}`;
                                         window.open(url, '_blank');
                                       }}
-                                      className={`flex items-start gap-3 px-4 py-3 transition-all cursor-pointer hover:bg-black/5 dark:hover:bg-white/5 active:scale-[0.99] ${
-                                        opt.is_best_pick
-                                          ? day.alternate_options.has_risk
-                                            ? 'bg-amber-100/50 dark:bg-amber-900/20'
-                                            : 'bg-emerald-100/50 dark:bg-emerald-900/20'
-                                          : 'hover:bg-white/40 dark:hover:bg-slate-800/20'
-                                      }`}
+                                      className={`flex items-start gap-3 px-4 py-3 transition-all cursor-pointer hover:bg-black/5 dark:hover:bg-white/5 active:scale-[0.99] ${opt.is_best_pick
+                                        ? day.alternate_options.has_risk
+                                          ? 'bg-amber-100/50 dark:bg-amber-900/20'
+                                          : 'bg-emerald-100/50 dark:bg-emerald-900/20'
+                                        : 'hover:bg-white/40 dark:hover:bg-slate-800/20'
+                                        }`}
                                     >
                                       {/* Icon */}
-                                      <div className={`p-1.5 rounded-lg flex-shrink-0 mt-0.5 ${
-                                        opt.is_best_pick
-                                          ? day.alternate_options.has_risk
-                                            ? 'bg-amber-200 dark:bg-amber-800/50 text-amber-700 dark:text-amber-300'
-                                            : 'bg-emerald-200 dark:bg-emerald-800/50 text-emerald-700 dark:text-emerald-300'
-                                          : 'bg-slate-100 dark:bg-slate-800 text-slate-500'
-                                      }`}>
+                                      <div className={`p-1.5 rounded-lg flex-shrink-0 mt-0.5 ${opt.is_best_pick
+                                        ? day.alternate_options.has_risk
+                                          ? 'bg-amber-200 dark:bg-amber-800/50 text-amber-700 dark:text-amber-300'
+                                          : 'bg-emerald-200 dark:bg-emerald-800/50 text-emerald-700 dark:text-emerald-300'
+                                        : 'bg-slate-100 dark:bg-slate-800 text-slate-500'
+                                        }`}>
                                         {opt.type === 'indoor'
                                           ? <Home size={10} />
                                           : <MapPin size={10} />
@@ -618,19 +634,17 @@ const Itinerary = () => {
                                             {opt.name}
                                           </span>
                                           {opt.is_best_pick && (
-                                            <span className={`inline-flex items-center gap-0.5 text-[8px] font-extrabold px-1.5 py-0.5 rounded-full uppercase tracking-wide ${
-                                              day.alternate_options.has_risk
-                                                ? 'bg-amber-400/20 text-amber-700 dark:text-amber-300'
-                                                : 'bg-emerald-400/20 text-emerald-700 dark:text-emerald-300'
-                                            }`}>
+                                            <span className={`inline-flex items-center gap-0.5 text-[8px] font-extrabold px-1.5 py-0.5 rounded-full uppercase tracking-wide ${day.alternate_options.has_risk
+                                              ? 'bg-amber-400/20 text-amber-700 dark:text-amber-300'
+                                              : 'bg-emerald-400/20 text-emerald-700 dark:text-emerald-300'
+                                              }`}>
                                               <Star size={7} className="fill-current" /> Best Pick
                                             </span>
                                           )}
-                                          <span className={`text-[8px] font-bold px-1.5 py-0.5 rounded-full uppercase ${
-                                            opt.type === 'indoor'
-                                              ? 'bg-sky-100 dark:bg-sky-900/40 text-sky-600 dark:text-sky-400'
-                                              : 'bg-violet-100 dark:bg-violet-900/40 text-violet-600 dark:text-violet-400'
-                                          }`}>
+                                          <span className={`text-[8px] font-bold px-1.5 py-0.5 rounded-full uppercase ${opt.type === 'indoor'
+                                            ? 'bg-sky-100 dark:bg-sky-900/40 text-sky-600 dark:text-sky-400'
+                                            : 'bg-violet-100 dark:bg-violet-900/40 text-violet-600 dark:text-violet-400'
+                                            }`}>
                                             {opt.type === 'indoor' ? '🏠 Indoor' : '🌿 Outdoor'}
                                           </span>
                                         </div>
@@ -732,7 +746,7 @@ const Itinerary = () => {
                 {trip.risk_summary_table.map((row, idx) => {
                   const isModerate = row.level === "Moderate";
                   const isHigh = ["High", "Health", "Extreme"].includes(row.level);
-                  
+
                   let badgeStyle = "bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border-emerald-500/30";
                   let leftBorder = "border-l-emerald-500";
                   let cardBg = "bg-slate-50/80 dark:bg-slate-900/60";
@@ -746,8 +760,8 @@ const Itinerary = () => {
                   }
 
                   return (
-                    <div 
-                      key={idx} 
+                    <div
+                      key={idx}
                       className={`p-4 ${cardBg} rounded-2xl border border-slate-200/80 dark:border-slate-800/90 border-l-4 ${leftBorder} hover:border-slate-300 dark:hover:border-slate-700 transition-all shadow-sm hover:shadow-md space-y-3`}
                     >
                       {/* Day Header & Risk Badge */}
@@ -828,7 +842,16 @@ const Itinerary = () => {
 
             <div className="space-y-4">
               {(trip.movie_recommendations || []).map((movie, idx) => (
-                <div key={idx} className="flex gap-3 items-start group">
+                <div
+                  key={idx}
+                  className="flex gap-3 items-start group cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg p-2 transition-colors"
+                  onClick={() => {
+                    const searchUrl = `https://in.bookmyshow.com/explore/movies?search=${encodeURIComponent(
+                      movie.title
+                    )}`;
+                    window.open(searchUrl, "_blank");
+                  }}
+                >
                   <div className="w-12 h-16 rounded-lg overflow-hidden bg-slate-100 dark:bg-slate-900 flex-shrink-0 border border-slate-200 dark:border-slate-800">
                     <img
                       src={

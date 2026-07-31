@@ -49,16 +49,16 @@ body {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Light mode — still nice if toggled */
+/* Light mode — pure white theme */
 html:not(.dark) body {
-  background-color: #F0F4FF;
-  color: #0f172a;
+  background-color: #ffffff !important;
+  color: #0f172a !important;
 }
 
 /* Dark mode — luxury dark */
 html.dark body {
-  background-color: var(--lux-bg);
-  color: var(--lux-text-primary);
+  background-color: var(--lux-bg) !important;
+  color: var(--lux-text-primary) !important;
 }
 
 #root {

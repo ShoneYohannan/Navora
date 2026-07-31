@@ -57,13 +57,23 @@ const Navbar = () => {
 
   return (
     <nav
-      className="sticky top-0 z-50 transition-colors"
-      style={{
-        background: 'rgba(9, 4, 6, 0.95)',
-        backdropFilter: 'blur(24px)',
-        WebkitBackdropFilter: 'blur(24px)',
-        borderBottom: '1px solid rgba(230, 57, 70, 0.12)',
-      }}
+      className="sticky top-0 z-50 transition-all duration-300"
+      style={
+        darkMode
+          ? {
+              background: 'rgba(9, 4, 6, 0.95)',
+              backdropFilter: 'blur(24px)',
+              WebkitBackdropFilter: 'blur(24px)',
+              borderBottom: '1px solid rgba(230, 57, 70, 0.12)',
+            }
+          : {
+              background: 'rgba(255, 255, 255, 0.95)',
+              backdropFilter: 'blur(24px)',
+              WebkitBackdropFilter: 'blur(24px)',
+              borderBottom: '1px solid rgba(0, 0, 0, 0.08)',
+              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.03)',
+            }
+      }
     >
       <div className="max-w-7xl mx-auto px-6 py-3.5 flex items-center justify-between gap-6">
 
@@ -74,7 +84,10 @@ const Navbar = () => {
             className="transition-all duration-300 group-hover:scale-110"
             style={{ color: '#E63946' }}
           />
-          <span className="text-lg font-bold tracking-tight" style={{ color: '#F8FAFC' }}>
+          <span
+            className="text-lg font-bold tracking-tight transition-colors"
+            style={{ color: darkMode ? '#F8FAFC' : '#0f172a' }}
+          >
             Navora
           </span>
         </Link>
@@ -94,22 +107,22 @@ const Navbar = () => {
                   style={
                     isActive
                       ? {
-                          color: 'var(--lux-gold-light)',
-                          background: 'var(--lux-gold-dim)',
+                          color: '#E63946',
+                          background: darkMode ? 'rgba(230, 57, 70, 0.12)' : 'rgba(230, 57, 70, 0.08)',
                         }
                       : {
-                          color: 'var(--lux-text-secondary)',
+                          color: darkMode ? '#7A6672' : '#475569',
                         }
                   }
                   onMouseEnter={e => {
                     if (!isActive) {
-                      e.currentTarget.style.color = 'var(--lux-gold-light)';
-                      e.currentTarget.style.background = 'var(--lux-gold-dim)';
+                      e.currentTarget.style.color = '#E63946';
+                      e.currentTarget.style.background = darkMode ? 'rgba(230, 57, 70, 0.12)' : 'rgba(230, 57, 70, 0.08)';
                     }
                   }}
                   onMouseLeave={e => {
                     if (!isActive) {
-                      e.currentTarget.style.color = 'var(--lux-text-secondary)';
+                      e.currentTarget.style.color = darkMode ? '#7A6672' : '#475569';
                       e.currentTarget.style.background = 'transparent';
                     }
                   }}
@@ -124,27 +137,33 @@ const Navbar = () => {
           {/* Divider */}
           <div
             className="w-px h-5 mx-3"
-            style={{ background: 'rgba(255,255,255,0.08)' }}
+            style={{ background: darkMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)' }}
           />
 
           {/* Theme Toggle */}
           <button
             onClick={() => setDarkMode(!darkMode)}
             className="p-2.5 rounded-xl transition-all duration-200"
-            style={{
-              background: 'rgba(255,255,255,0.05)',
-              color: 'var(--lux-text-secondary)',
-              border: '1px solid rgba(255,255,255,0.07)',
-            }}
+            style={
+              darkMode
+                ? {
+                    background: 'rgba(255,255,255,0.05)',
+                    color: '#FF6B74',
+                    border: '1px solid rgba(255,255,255,0.07)',
+                  }
+                : {
+                    background: 'rgba(0,0,0,0.05)',
+                    color: '#E63946',
+                    border: '1px solid rgba(0,0,0,0.08)',
+                  }
+            }
             onMouseEnter={e => {
-              e.currentTarget.style.background = 'var(--lux-gold-dim)';
-              e.currentTarget.style.color = 'var(--lux-gold-light)';
-              e.currentTarget.style.borderColor = 'rgba(201,168,76,0.3)';
+              e.currentTarget.style.background = 'rgba(230,57,70,0.15)';
+              e.currentTarget.style.color = '#E63946';
             }}
             onMouseLeave={e => {
-              e.currentTarget.style.background = 'rgba(255,255,255,0.05)';
-              e.currentTarget.style.color = 'var(--lux-text-secondary)';
-              e.currentTarget.style.borderColor = 'rgba(255,255,255,0.07)';
+              e.currentTarget.style.background = darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)';
+              e.currentTarget.style.color = darkMode ? '#FF6B74' : '#E63946';
             }}
             aria-label="Toggle theme"
           >
@@ -157,7 +176,11 @@ const Navbar = () => {
           <button
             onClick={() => setDarkMode(!darkMode)}
             className="p-2.5 rounded-xl transition-colors"
-            style={{ background: 'rgba(255,255,255,0.05)', color: 'var(--lux-text-secondary)', border: '1px solid rgba(255,255,255,0.07)' }}
+            style={
+              darkMode
+                ? { background: 'rgba(255,255,255,0.05)', color: '#FF6B74', border: '1px solid rgba(255,255,255,0.07)' }
+                : { background: 'rgba(0,0,0,0.05)', color: '#E63946', border: '1px solid rgba(0,0,0,0.08)' }
+            }
             aria-label="Toggle theme"
           >
             {darkMode ? <Sun size={17} /> : <Moon size={17} />}
@@ -165,7 +188,11 @@ const Navbar = () => {
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="p-2 rounded-xl transition-colors"
-            style={{ background: 'rgba(255,255,255,0.05)', color: 'var(--lux-text-secondary)', border: '1px solid rgba(255,255,255,0.07)' }}
+            style={
+              darkMode
+                ? { background: 'rgba(255,255,255,0.05)', color: 'var(--lux-text-secondary)', border: '1px solid rgba(255,255,255,0.07)' }
+                : { background: 'rgba(0,0,0,0.05)', color: '#475569', border: '1px solid rgba(0,0,0,0.08)' }
+            }
             aria-label="Toggle menu"
           >
             {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
