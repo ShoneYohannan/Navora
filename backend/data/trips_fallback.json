@@ -1525,5 +1525,327 @@
     "evaluator_feedback": "The itinerary has some issues with outdoor activities scheduled during heavy rain. However, the planner has suggested indoor alternatives, which is a good practice. The budget is within the cap, but the activities are not paced very realistically, with too many things to do in a day. The recommendations are of high quality and relevant to the destination. Some attractions are repeated across different days unnecessarily.\nCorrections suggested:\n- Reschedule outdoor activities to avoid heavy rain\n- Pace activities more realistically\n- Remove repeated attractions",
     "created_at": "2026-07-31T04:43:38.655347",
     "_id": "6430cac0-3b18-4824-9194-f8d3e9efc6bb"
+  },
+  "fcb7e562-bd5e-470a-b922-b79c98b42205": {
+    "destination": "kochi",
+    "days": 3,
+    "budget": 1500.0,
+    "currency": "USD",
+    "travelers": 1,
+    "interests": [
+      "Culture"
+    ],
+    "start_date": "2026-07-31",
+    "end_date": "2026-08-02",
+    "start_time": "08:00",
+    "end_time": "20:00",
+    "breakfast_time": "07:30",
+    "lunch_time": "13:00",
+    "dinner_time": "19:30",
+    "travel_mode": "mixed",
+    "weather_info": {
+      "temp": 26.1,
+      "description": "Heavy Rain",
+      "forecast": [
+        {
+          "date": "2026-07-31",
+          "temp_min": 25.5,
+          "temp_max": 26.2,
+          "condition": "Heavy Rain",
+          "precipitation_probability": 100,
+          "wind_speed": 24.5,
+          "uv_index": 8
+        },
+        {
+          "date": "2026-08-01",
+          "temp_min": 24.6,
+          "temp_max": 26.2,
+          "condition": "Heavy Rain",
+          "precipitation_probability": 100,
+          "wind_speed": 18.5,
+          "uv_index": 8
+        },
+        {
+          "date": "2026-08-02",
+          "temp_min": 24.4,
+          "temp_max": 26,
+          "condition": "Heavy Rain",
+          "precipitation_probability": 83,
+          "wind_speed": 9.2,
+          "uv_index": 8
+        }
+      ]
+    },
+    "nearby_attractions": [
+      {
+        "name": "Mattancherry Palace",
+        "address": "Kochi, Kerala, India",
+        "lat": 9.958278,
+        "lon": 76.25935,
+        "rating": 4.2,
+        "website": null,
+        "snippet": "Rating: 4.2 - Kochi, Kerala, India"
+      },
+      {
+        "name": "Vasco Da Gama Square",
+        "address": "Kochi, Kerala, India",
+        "lat": 9.967773,
+        "lon": 76.241875,
+        "rating": 4.3,
+        "website": null,
+        "snippet": "Rating: 4.3 - Kochi, Kerala, India"
+      },
+      {
+        "name": "Fort Kochi View Point",
+        "address": "Kochi, Kerala, India",
+        "lat": 9.965708,
+        "lon": 76.23799,
+        "rating": 4.5,
+        "website": null,
+        "snippet": "Rating: 4.5 - Kochi, Kerala, India"
+      },
+      {
+        "name": "Kochi water metro",
+        "address": "Kochi, Kerala, India",
+        "lat": 9.983779,
+        "lon": 76.27395,
+        "rating": 4.6,
+        "website": null,
+        "snippet": "Rating: 4.6 - Kochi, Kerala, India"
+      },
+      {
+        "name": "Dream Catcher Bridge",
+        "address": "Kochi, Kerala, India",
+        "lat": 9.931543,
+        "lon": 76.27782,
+        "rating": 4.3,
+        "website": null,
+        "snippet": "Rating: 4.3 - Kochi, Kerala, India"
+      }
+    ],
+    "malls": [
+      {
+        "name": "LuLu International Shopping Mall",
+        "address": "34/1000, Old NH 47",
+        "lat": 10.027156,
+        "lon": 76.30823,
+        "rating": 4.6,
+        "website": null,
+        "snippet": "Rating: 4.6 - 34/1000, Old NH 47"
+      },
+      {
+        "name": "Forum Kochi",
+        "address": "NH-66, Vyttila, Aroor Bypass, near to Kundanoor",
+        "lat": 9.944128,
+        "lon": 76.31775,
+        "rating": 4.3,
+        "website": null,
+        "snippet": "Rating: 4.3 - NH-66, Vyttila, Aroor Bypass, near to Kundanoor"
+      },
+      {
+        "name": "Centre Square Mall",
+        "address": "Mahatma Gandhi Road, Rajaji Rd",
+        "lat": 9.977963,
+        "lon": 76.28334,
+        "rating": 4.2,
+        "website": null,
+        "snippet": "Rating: 4.2 - Mahatma Gandhi Road, Rajaji Rd"
+      },
+      {
+        "name": "Oberon Mall",
+        "address": "Ernakulam, Kerala, India",
+        "lat": 10.0144005,
+        "lon": 76.312256,
+        "rating": 4.2,
+        "website": null,
+        "snippet": "Rating: 4.2 - Ernakulam, Kerala, India"
+      },
+      {
+        "name": "Grand Mall",
+        "address": null,
+        "lat": 10.024192,
+        "lon": 76.30875,
+        "rating": 4.1,
+        "website": null,
+        "snippet": "Rating: 4.1 - None"
+      }
+    ],
+    "restaurants": [
+      {
+        "name": "Fort House Restaurant",
+        "address": "2/6A, Calvathy Rd",
+        "lat": 9.9688015,
+        "lon": 76.24978,
+        "rating": 4.7,
+        "website": null,
+        "snippet": "Rating: 4.7 - 2/6A, Calvathy Rd"
+      },
+      {
+        "name": "French Toast Fort Kochi",
+        "address": null,
+        "lat": 9.967128,
+        "lon": 76.24053,
+        "rating": 4.4,
+        "website": null,
+        "snippet": "Rating: 4.4 - None"
+      },
+      {
+        "name": "Chef Pillai",
+        "address": null,
+        "lat": 9.933812,
+        "lon": 76.316315,
+        "rating": 4.7,
+        "website": null,
+        "snippet": "Rating: 4.7 - None"
+      },
+      {
+        "name": "Kochi Kitchen, Kochi Marriott Hotel",
+        "address": "Kochin, Kerala, India",
+        "lat": 10.029417,
+        "lon": 76.30757,
+        "rating": 4.3,
+        "website": null,
+        "snippet": "Rating: 4.3 - Kochin, Kerala, India"
+      },
+      {
+        "name": "Seagull",
+        "address": "2-18, Calvathy Rd",
+        "lat": 9.9692745,
+        "lon": 76.24997,
+        "rating": 4.3,
+        "website": null,
+        "snippet": "Rating: 4.3 - 2-18, Calvathy Rd"
+      }
+    ],
+    "movie_theatres": [
+      {
+        "name": "Vanitha Cineplex",
+        "address": null,
+        "lat": 10.030815,
+        "lon": 76.30965,
+        "rating": 4.4,
+        "website": null,
+        "snippet": "Rating: 4.4 - None"
+      },
+      {
+        "name": "PVR Cinemas",
+        "address": "NH 544",
+        "lat": 10.027898,
+        "lon": 76.30813,
+        "rating": 4.4,
+        "website": null,
+        "snippet": "Rating: 4.4 - NH 544"
+      },
+      {
+        "name": "PVR Cinemas Forum Mall Kochi",
+        "address": "Shop No 10, Forum Mall, 3rd floor, junction",
+        "lat": 9.944273,
+        "lon": 76.31722,
+        "rating": 4.2,
+        "website": null,
+        "snippet": "Rating: 4.2 - Shop No 10, Forum Mall, 3rd floor, junction"
+      },
+      {
+        "name": "Cinepolis Kochi",
+        "address": "66/6284-H, 6th Floor, Centre Square Mall, Mahatma Gandhi Rd",
+        "lat": 9.977872,
+        "lon": 76.283165,
+        "rating": 4,
+        "website": null,
+        "snippet": "Rating: 4 - 66/6284-H, 6th Floor, Centre Square Mall, Mahatma Gandhi Rd"
+      },
+      {
+        "name": "K Cinemas 4K 3D",
+        "address": null,
+        "lat": 10.126658,
+        "lon": 76.1991,
+        "rating": 4.5,
+        "website": null,
+        "snippet": "Rating: 4.5 - None"
+      }
+    ],
+    "local_events": [
+      {
+        "name": "Kochi Happenings (@kochi_happenings)",
+        "link": "https://www.instagram.com/kochi_happenings/?hl=en",
+        "snippet": "local happenings in Kochi\u201d From shopping and food to music, d\u00e9cor, fashion, kids activities and unforgettable experiences \u2026 17 \u2022 18 \u2022 19. The TYE Global Summit ..."
+      },
+      {
+        "name": "Any events or activities in Kochi?",
+        "link": "https://www.reddit.com/r/Kochi/comments/1tycwnz/any_events_or_activities_in_kochi/",
+        "snippet": "Are there any budget friendly activities or events happening in kochi today or over the next few days? Looking for stuff like exhibitions or just short ..."
+      },
+      {
+        "name": "Top Upcoming Events in Kochi | Best Live ...",
+        "link": "https://in.bookmyshow.com/explore/events-kochi",
+        "snippet": "Book tickets for best upcoming events in Kochi. Explore music, comedy, workshops, online events near you in Kochi on BookMyShow."
+      },
+      {
+        "name": "Happenings Around Me: Local Events in Kerala Today",
+        "link": "https://happeningsaroundme.in/",
+        "snippet": "All Events \u00b7 Bridge the Onam With Thaikkudam Bridge \u00b7 Nehru Trophy Boat Race 2026 \u00b7 Onam Ragam Nandagovindam Bhajans \u00b7 Kovalam Marathon 2026 \u00b7 Kovalam Marathon 2026."
+      },
+      {
+        "name": "Best Local Events in Kochi",
+        "link": "https://locality.in/kochi/events",
+        "snippet": "Experience the best local events, film screenings, music parties, workshops, concerts, dating events and cultural nights in Kochi for 2026 on Locality."
+      }
+    ],
+    "movie_recommendations": [
+      {
+        "title": "Spider-Man: Brand New Day",
+        "rating": 8,
+        "overview": "Fighting crime full-time as Spider-Man in a world that doesn't remember him\u2014and the pressure of seeing his old friends move on without him\u2014sparks a change in Peter Parker he may not have the power to control. But that transformation might also be the only thing that can stop a shocking new threat to the city and those he loves - a powerful villain no one can even see.",
+        "poster_path": "https://image.tmdb.org/t/p/w500/iPOn6DinuVyLY17YM9mKuPofV08.jpg",
+        "release_date": "2026-07-28"
+      },
+      {
+        "title": "The Odyssey",
+        "rating": 7.9,
+        "overview": "Odysseus, the legendary King of Ithaca, embarks on a long and perilous journey home following the Trojan War. Throughout his voyage, he is forced to confront the whims of gods, mythological monsters, and trials that stretch both his cunning and his humanity to the breaking point.",
+        "poster_path": "https://image.tmdb.org/t/p/w500/5rhTDKUhPYvpdQIijFIs5VoWsON.jpg",
+        "release_date": "2026-07-15"
+      },
+      {
+        "title": "Supergirl",
+        "rating": 6.7,
+        "overview": "When an unexpected and ruthless adversary strikes too close to home, Kara Zor-El, aka Supergirl, reluctantly joins forces with an unlikely companion on an epic, interstellar journey of vengeance and justice.",
+        "poster_path": "https://image.tmdb.org/t/p/w500/1QCWdqzTfh2x9UylVpspIU6QTuM.jpg",
+        "release_date": "2026-06-24"
+      },
+      {
+        "title": "Moana",
+        "rating": 5.9,
+        "overview": "Teenage Moana answers the Ocean's call and, for the first time, voyages beyond the reef of her island of Motunui with infamous demigod Maui on an unforgettable journey to restore prosperity to her people.",
+        "poster_path": "https://image.tmdb.org/t/p/w500/zKVgiv5qHCvCLT4A2ymJi5QeXDH.jpg",
+        "release_date": "2026-07-08"
+      },
+      {
+        "title": "Obsession",
+        "rating": 8.2,
+        "overview": "After breaking the mysterious \"One Wish Willow\" to win his crush's heart, a hopeless romantic finds himself getting exactly what he asked for but soon discovers that some desires come at a dark, sinister price.",
+        "poster_path": "https://image.tmdb.org/t/p/w500/bRwnj8WEKBCvmfeUNOukJPwB43K.jpg",
+        "release_date": "2026-05-13"
+      },
+      {
+        "title": "The Death of Robin Hood",
+        "rating": 6.6,
+        "overview": "Grappling with his past after a life of crime and murder, Robin Hood finds himself gravely injured after a battle he thought would be his last. In the hands of a mysterious woman, he is offered a chance at salvation.",
+        "poster_path": "https://image.tmdb.org/t/p/w500/13MmRwmG5NmaMfU8qNrtgGXisiD.jpg",
+        "release_date": "2026-06-18"
+      }
+    ],
+    "itinerary": {
+      "days": []
+    },
+    "risk_summary_table": [],
+    "budget_breakdown": {},
+    "packing_checklist": [],
+    "alternate_activities": [],
+    "safety_score": 0.0,
+    "travel_quality_score": 0.0,
+    "evaluator_feedback": "The itinerary is empty and does not include any activities. The budget breakdown is also empty. Given the heavy rain forecast, outdoor activities should be avoided. The budget cap is USD 1500, but without a budget breakdown, it's impossible to determine if it's realistic. The travel quality score is 0 due to the lack of activities and budget breakdown. The safety score is 0 because there are no activities to assess for safety.\nCorrections suggested:\n- Add a detailed itinerary with activities\n- Create a budget breakdown that is within the USD 1500 cap\n- Ensure activities are paced realistically and take into account the weather forecast",
+    "created_at": "2026-07-31T05:23:15.068503",
+    "_id": "fcb7e562-bd5e-470a-b922-b79c98b42205"
   }
 }
