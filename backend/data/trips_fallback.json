@@ -1847,5 +1847,514 @@
     "evaluator_feedback": "The itinerary is empty and does not include any activities. The budget breakdown is also empty. Given the heavy rain forecast, outdoor activities should be avoided. The budget cap is USD 1500, but without a budget breakdown, it's impossible to determine if it's realistic. The travel quality score is 0 due to the lack of activities and budget breakdown. The safety score is 0 because there are no activities to assess for safety.\nCorrections suggested:\n- Add a detailed itinerary with activities\n- Create a budget breakdown that is within the USD 1500 cap\n- Ensure activities are paced realistically and take into account the weather forecast",
     "created_at": "2026-07-31T05:23:15.068503",
     "_id": "fcb7e562-bd5e-470a-b922-b79c98b42205"
+  },
+  "a8ff3e78-98f1-4658-8387-59dd8ae7b2ae": {
+    "destination": "kochi",
+    "days": 3,
+    "budget": 1500.0,
+    "currency": "USD",
+    "travelers": 1,
+    "interests": [
+      "Culture"
+    ],
+    "start_date": "2026-08-06",
+    "end_date": "2026-08-08",
+    "start_time": "08:00",
+    "end_time": "20:00",
+    "breakfast_time": "07:30",
+    "lunch_time": "13:00",
+    "dinner_time": "19:30",
+    "travel_mode": "mixed",
+    "weather_info": {
+      "temp": 25.9,
+      "description": "Heavy Rain",
+      "forecast": [
+        {
+          "date": "2026-08-06",
+          "temp_min": 24.6,
+          "temp_max": 25,
+          "condition": "Heavy Rain",
+          "precipitation_probability": 100,
+          "wind_speed": 25.1,
+          "uv_index": 8
+        },
+        {
+          "date": "2026-08-07",
+          "temp_min": 24,
+          "temp_max": 25.6,
+          "condition": "Heavy Rain",
+          "precipitation_probability": 100,
+          "wind_speed": 18.5,
+          "uv_index": 8
+        },
+        {
+          "date": "2026-08-08",
+          "temp_min": 23.8,
+          "temp_max": 27.2,
+          "condition": "Heavy Rain",
+          "precipitation_probability": 84,
+          "wind_speed": 12.1,
+          "uv_index": 8
+        }
+      ]
+    },
+    "nearby_attractions": [
+      {
+        "name": "Mattancherry Palace",
+        "address": "Kochi, Kerala, India",
+        "lat": 9.958278,
+        "lon": 76.25935,
+        "rating": 4.2,
+        "website": null,
+        "snippet": "Rating: 4.2 - Kochi, Kerala, India"
+      },
+      {
+        "name": "Vasco Da Gama Square",
+        "address": "Kochi, Kerala, India",
+        "lat": 9.967773,
+        "lon": 76.241875,
+        "rating": 4.3,
+        "website": null,
+        "snippet": "Rating: 4.3 - Kochi, Kerala, India"
+      },
+      {
+        "name": "Fort Kochi View Point",
+        "address": "Kochi, Kerala, India",
+        "lat": 9.965708,
+        "lon": 76.23799,
+        "rating": 4.5,
+        "website": null,
+        "snippet": "Rating: 4.5 - Kochi, Kerala, India"
+      },
+      {
+        "name": "Kochi water metro",
+        "address": "Kochi, Kerala, India",
+        "lat": 9.983779,
+        "lon": 76.27395,
+        "rating": 4.6,
+        "website": null,
+        "snippet": "Rating: 4.6 - Kochi, Kerala, India"
+      },
+      {
+        "name": "Dream Catcher Bridge",
+        "address": "Kochi, Kerala, India",
+        "lat": 9.931543,
+        "lon": 76.27782,
+        "rating": 4.3,
+        "website": null,
+        "snippet": "Rating: 4.3 - Kochi, Kerala, India"
+      }
+    ],
+    "malls": [
+      {
+        "name": "LuLu International Shopping Mall",
+        "address": "34/1000, Old NH 47",
+        "lat": 10.027156,
+        "lon": 76.30823,
+        "rating": 4.6,
+        "website": null,
+        "snippet": "Rating: 4.6 - 34/1000, Old NH 47"
+      },
+      {
+        "name": "Forum Kochi",
+        "address": "NH-66, Vyttila, Aroor Bypass, near to Kundanoor",
+        "lat": 9.944128,
+        "lon": 76.31775,
+        "rating": 4.3,
+        "website": null,
+        "snippet": "Rating: 4.3 - NH-66, Vyttila, Aroor Bypass, near to Kundanoor"
+      },
+      {
+        "name": "Centre Square Mall",
+        "address": "Mahatma Gandhi Road, Rajaji Rd",
+        "lat": 9.977963,
+        "lon": 76.28334,
+        "rating": 4.2,
+        "website": null,
+        "snippet": "Rating: 4.2 - Mahatma Gandhi Road, Rajaji Rd"
+      },
+      {
+        "name": "Oberon Mall",
+        "address": "Ernakulam, Kerala, India",
+        "lat": 10.0144005,
+        "lon": 76.312256,
+        "rating": 4.2,
+        "website": null,
+        "snippet": "Rating: 4.2 - Ernakulam, Kerala, India"
+      },
+      {
+        "name": "Grand Mall",
+        "address": null,
+        "lat": 10.024192,
+        "lon": 76.30875,
+        "rating": 4.1,
+        "website": null,
+        "snippet": "Rating: 4.1 - None"
+      }
+    ],
+    "restaurants": [
+      {
+        "name": "Chef Pillai",
+        "address": null,
+        "lat": 9.933812,
+        "lon": 76.316315,
+        "rating": 4.7,
+        "website": null,
+        "snippet": "Rating: 4.7 - None"
+      },
+      {
+        "name": "Kochi Kitchen, Kochi Marriott Hotel",
+        "address": "Kochin, Kerala, India",
+        "lat": 10.029417,
+        "lon": 76.30757,
+        "rating": 4.3,
+        "website": null,
+        "snippet": "Rating: 4.3 - Kochin, Kerala, India"
+      },
+      {
+        "name": "Brindhavan Bypass",
+        "address": "43/3075, 43/3075, NH 66, near Hotel Rock Rose",
+        "lat": 9.995535,
+        "lon": 76.31431,
+        "rating": 4.4,
+        "website": null,
+        "snippet": "Rating: 4.4 - 43/3075, 43/3075, NH 66, near Hotel Rock Rose"
+      },
+      {
+        "name": "Seagull",
+        "address": "2-18, Calvathy Rd",
+        "lat": 9.9692745,
+        "lon": 76.24997,
+        "rating": 4.3,
+        "website": null,
+        "snippet": "Rating: 4.3 - 2-18, Calvathy Rd"
+      },
+      {
+        "name": "Rasoi Fort Kochi",
+        "address": "1, 341, Rose St, next to St. Francis Church",
+        "lat": 9.966153,
+        "lon": 76.241554,
+        "rating": 4.4,
+        "website": null,
+        "snippet": "Rating: 4.4 - 1, 341, Rose St, next to St. Francis Church"
+      }
+    ],
+    "movie_theatres": [
+      {
+        "name": "Vanitha Cineplex",
+        "address": null,
+        "lat": 10.030815,
+        "lon": 76.30965,
+        "rating": 4.4,
+        "website": null,
+        "snippet": "Rating: 4.4 - None"
+      },
+      {
+        "name": "PVR Cinemas",
+        "address": "NH 544",
+        "lat": 10.027898,
+        "lon": 76.30813,
+        "rating": 4.4,
+        "website": null,
+        "snippet": "Rating: 4.4 - NH 544"
+      },
+      {
+        "name": "PVR Cinemas Forum Mall Kochi",
+        "address": "Shop No 10, Forum Mall, 3rd floor, junction",
+        "lat": 9.944273,
+        "lon": 76.31722,
+        "rating": 4.2,
+        "website": null,
+        "snippet": "Rating: 4.2 - Shop No 10, Forum Mall, 3rd floor, junction"
+      },
+      {
+        "name": "Cinepolis Kochi",
+        "address": "66/6284-H, 6th Floor, Centre Square Mall, Mahatma Gandhi Rd",
+        "lat": 9.977872,
+        "lon": 76.283165,
+        "rating": 4,
+        "website": null,
+        "snippet": "Rating: 4 - 66/6284-H, 6th Floor, Centre Square Mall, Mahatma Gandhi Rd"
+      },
+      {
+        "name": "Padma Cinema 4K 3D",
+        "address": "Level 1, Shenoy Cinemax, Mahatma Gandhi Rd",
+        "lat": 9.981755,
+        "lon": 76.2826,
+        "rating": 4.1,
+        "website": null,
+        "snippet": "Rating: 4.1 - Level 1, Shenoy Cinemax, Mahatma Gandhi Rd"
+      }
+    ],
+    "local_events": [
+      {
+        "name": "Any events or activities in Kochi?",
+        "link": "https://www.reddit.com/r/Kochi/comments/1tycwnz/any_events_or_activities_in_kochi/",
+        "snippet": "Are there any budget friendly activities or events happening in kochi today or over the next few days? Looking for stuff like exhibitions or just short ..."
+      },
+      {
+        "name": "Kochi Happenings (@kochi_happenings)",
+        "link": "https://www.instagram.com/kochi_happenings/?hl=en",
+        "snippet": "From shopping and food to music, d\u00e9cor, fashion, kids activities and unforgettable experiences All Things Bright is where Kochi comes together to celebrate ..."
+      },
+      {
+        "name": "Top Upcoming Events in Kochi | Best Live ...",
+        "link": "https://in.bookmyshow.com/explore/events-kochi",
+        "snippet": "Book tickets for best upcoming events in Kochi. Explore music, comedy, workshops, online events near you in Kochi on BookMyShow."
+      },
+      {
+        "name": "Events in Kochi",
+        "link": "https://www.meetup.com/find/in--kochi/",
+        "snippet": "Find events in Kochi to connect with people who share your interests. Whatever your interest, Meetup helps you connect with like-minded people."
+      },
+      {
+        "name": "Events in Kochi - Guide to Festivals and Things to Do",
+        "link": "https://en.japantravel.com/events/kochi",
+        "snippet": "Upcoming events \u00b7 Yosakoi Festival 2026 \u00b7 Okumonobe Lake Water Festival 2026 \u00b7 Local Character Festival in Susaki 2026 \u00b7 Cape Muroto Lighthouse Festival 2026."
+      }
+    ],
+    "movie_recommendations": [
+      {
+        "title": "Spider-Man: Brand New Day",
+        "rating": 7.9,
+        "overview": "Fighting crime full-time as Spider-Man in a world that doesn't remember him\u2014and the pressure of seeing his old friends move on without him\u2014sparks a change in Peter Parker he may not have the power to control. But that transformation might also be the only thing that can stop a shocking new threat to the city and those he loves - a powerful villain no one can even see.",
+        "poster_path": "https://image.tmdb.org/t/p/w500/iPOn6DinuVyLY17YM9mKuPofV08.jpg",
+        "release_date": "2026-07-29"
+      },
+      {
+        "title": "The Odyssey",
+        "rating": 8,
+        "overview": "Odysseus, the legendary King of Ithaca, embarks on a long and perilous journey home following the Trojan War. Throughout his voyage, he is forced to confront the whims of gods, mythological monsters, and trials that stretch both his cunning and his humanity to the breaking point.",
+        "poster_path": "https://image.tmdb.org/t/p/w500/5rhTDKUhPYvpdQIijFIs5VoWsON.jpg",
+        "release_date": "2026-07-15"
+      },
+      {
+        "title": "Spider-Man: No Way Home",
+        "rating": 7.9,
+        "overview": "Peter Parker is unmasked and no longer able to separate his normal life from the high-stakes of being a super-hero. When he asks for help from Doctor Strange the stakes become even more dangerous, forcing him to discover what it truly means to be Spider-Man.",
+        "poster_path": "https://image.tmdb.org/t/p/w500/1g0dhYtq4irTY1GPXvft6k4YLjm.jpg",
+        "release_date": "2021-12-15"
+      },
+      {
+        "title": "Supergirl",
+        "rating": 6.7,
+        "overview": "When an unexpected and ruthless adversary strikes too close to home, Kara Zor-El, aka Supergirl, reluctantly joins forces with an unlikely companion on an epic, interstellar journey of vengeance and justice.",
+        "poster_path": "https://image.tmdb.org/t/p/w500/1QCWdqzTfh2x9UylVpspIU6QTuM.jpg",
+        "release_date": "2026-06-24"
+      },
+      {
+        "title": "Obsession",
+        "rating": 8.2,
+        "overview": "After breaking the mysterious \"One Wish Willow\" to win his crush's heart, a hopeless romantic finds himself getting exactly what he asked for but soon discovers that some desires come at a dark, sinister price.",
+        "poster_path": "https://image.tmdb.org/t/p/w500/bRwnj8WEKBCvmfeUNOukJPwB43K.jpg",
+        "release_date": "2026-05-13"
+      },
+      {
+        "title": "The Death of Robin Hood",
+        "rating": 6.5,
+        "overview": "Grappling with his past after a life of crime and murder, Robin Hood finds himself gravely injured after a battle he thought would be his last. In the hands of a mysterious woman, he is offered a chance at salvation.",
+        "poster_path": "https://image.tmdb.org/t/p/w500/92Tsfx7SFafOqWsotvrlJbHyehd.jpg",
+        "release_date": "2026-06-18"
+      }
+    ],
+    "itinerary": {
+      "days": [
+        {
+          "day": 1,
+          "date": "2026-08-06",
+          "theme": "Culture and History",
+          "weather_forecast": "High: 25.0\u00b0C, Low: 24.6\u00b0C, Condition: Heavy Rain, Precipitation: 100%",
+          "safety_risk_assessment": "Moderate Risk: Outdoor activities may be impacted by rainfall. Suggesting indoor alternatives.",
+          "dynamic_adjustments": "Risk Alert: Activity may be impacted. Suggesting indoor alternatives.",
+          "activities": [
+            {
+              "name": "09:00 \u2013 Visit Mattancherry Palace",
+              "estimated_cost": 10
+            },
+            {
+              "name": "12:00 \u2013 Lunch at Chef Pillai",
+              "estimated_cost": 15
+            },
+            {
+              "name": "15:00 \u2013 Explore LuLu International Shopping Mall",
+              "estimated_cost": 20
+            }
+          ],
+          "alternate_options": {
+            "has_risk": true,
+            "reason": "Rain predicted (100% precipitation)",
+            "options": [
+              {
+                "name": "LuLu International Shopping Mall",
+                "type": "indoor",
+                "description": "One of the largest malls in India",
+                "is_best_pick": true,
+                "website": null
+              },
+              {
+                "name": "Forum Kochi",
+                "type": "indoor",
+                "description": "A popular shopping destination",
+                "is_best_pick": false,
+                "website": null
+              },
+              {
+                "name": "Centre Square Mall",
+                "type": "indoor",
+                "description": "A modern shopping mall",
+                "is_best_pick": false,
+                "website": null
+              }
+            ]
+          }
+        },
+        {
+          "day": 2,
+          "date": "2026-08-07",
+          "theme": "Local Events and Culture",
+          "weather_forecast": "High: 25.6\u00b0C, Low: 24.0\u00b0C, Condition: Heavy Rain, Precipitation: 100%",
+          "safety_risk_assessment": "Moderate Risk: Outdoor activities may be impacted by rainfall. Suggesting indoor alternatives.",
+          "dynamic_adjustments": "Risk Alert: Activity may be impacted. Suggesting indoor alternatives.",
+          "activities": [
+            {
+              "name": "09:00 \u2013 Attend a local event at Kochi Happenings",
+              "estimated_cost": 0
+            },
+            {
+              "name": "12:00 \u2013 Lunch at Brindhavan Bypass",
+              "estimated_cost": 15
+            },
+            {
+              "name": "15:00 \u2013 Visit the Vanitha Cineplex",
+              "estimated_cost": 10
+            }
+          ],
+          "alternate_options": {
+            "has_risk": true,
+            "reason": "Rain predicted (100% precipitation)",
+            "options": [
+              {
+                "name": "PVR Cinemas",
+                "type": "indoor",
+                "description": "A popular movie theatre",
+                "is_best_pick": true,
+                "website": null
+              },
+              {
+                "name": "Cinepolis Kochi",
+                "type": "indoor",
+                "description": "A modern movie theatre",
+                "is_best_pick": false,
+                "website": null
+              },
+              {
+                "name": "Padma Cinema 4K 3D",
+                "type": "indoor",
+                "description": "A 4K 3D movie theatre",
+                "is_best_pick": false,
+                "website": null
+              }
+            ]
+          }
+        },
+        {
+          "day": 3,
+          "date": "2026-08-08",
+          "theme": "Shopping and Leisure",
+          "weather_forecast": "High: 27.2\u00b0C, Low: 23.8\u00b0C, Condition: Heavy Rain, Precipitation: 84%",
+          "safety_risk_assessment": "Moderate Risk: Outdoor activities may be impacted by rainfall. Suggesting indoor alternatives.",
+          "dynamic_adjustments": "Risk Alert: Activity may be impacted. Suggesting indoor alternatives.",
+          "activities": [
+            {
+              "name": "09:00 \u2013 Visit the Oberon Mall",
+              "estimated_cost": 20
+            },
+            {
+              "name": "12:00 \u2013 Lunch at Seagull",
+              "estimated_cost": 15
+            },
+            {
+              "name": "15:00 \u2013 Explore the Grand Mall",
+              "estimated_cost": 20
+            }
+          ],
+          "alternate_options": {
+            "has_risk": true,
+            "reason": "Rain predicted (84% precipitation)",
+            "options": [
+              {
+                "name": "LuLu International Shopping Mall",
+                "type": "indoor",
+                "description": "One of the largest malls in India",
+                "is_best_pick": true,
+                "website": null
+              },
+              {
+                "name": "Forum Kochi",
+                "type": "indoor",
+                "description": "A popular shopping destination",
+                "is_best_pick": false,
+                "website": null
+              },
+              {
+                "name": "Centre Square Mall",
+                "type": "indoor",
+                "description": "A modern shopping mall",
+                "is_best_pick": false,
+                "website": null
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "risk_summary_table": [
+      {
+        "day": 1,
+        "date": "2026-08-06",
+        "primary_risk": "Rain",
+        "level": "Moderate",
+        "backup_plan": "Visit LuLu International Shopping Mall"
+      },
+      {
+        "day": 2,
+        "date": "2026-08-07",
+        "primary_risk": "Rain",
+        "level": "Moderate",
+        "backup_plan": "Watch a movie at PVR Cinemas"
+      },
+      {
+        "day": 3,
+        "date": "2026-08-08",
+        "primary_risk": "Rain",
+        "level": "Moderate",
+        "backup_plan": "Explore the Grand Mall"
+      }
+    ],
+    "budget_breakdown": {
+      "accommodation": 300,
+      "transport": 100,
+      "food": 200,
+      "activities": 250,
+      "miscellaneous": 150,
+      "total_estimated": 1000
+    },
+    "packing_checklist": [
+      "Umbrella",
+      "Raincoat",
+      "Sunhat",
+      "Sunglasses",
+      "Sunscreen"
+    ],
+    "alternate_activities": [
+      "Visit the Kochi Museum",
+      "Take a cooking class",
+      "Go on a bike tour"
+    ],
+    "safety_score": 80.0,
+    "travel_quality_score": 90.0,
+    "evaluator_feedback": "The itinerary is mostly well-planned, but there are some concerns. The budget is within the cap, but some activities are scheduled during heavy rain, which may impact their feasibility. The day is not overly packed, but some attractions could be replaced with more relevant ones. The recommendations are of high quality, but some are repeated across different days. To improve, consider replacing outdoor activities with indoor alternatives during heavy rain and pacing the activities more realistically.\nCorrections suggested:\n- Replace outdoor activities with indoor alternatives during heavy rain\n- Pace activities more realistically to avoid overpacking the day",
+    "created_at": "2026-08-06T17:46:43.137511",
+    "_id": "a8ff3e78-98f1-4658-8387-59dd8ae7b2ae"
   }
 }
