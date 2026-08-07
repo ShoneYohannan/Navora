@@ -119,6 +119,26 @@ docker-compose up -d --build
 
 ---
 
+### Step 3b: Option for Native Uvicorn + Systemd (`navora.service`)
+If running without Docker using a native Uvicorn service:
+
+1. Create `/home/ubuntu/Navora/backend/.env` with your API keys (`TMDB_API_KEY`, `GROQ_API_KEY`, etc.).
+2. Copy the sample systemd unit file:
+   ```bash
+   sudo cp navora.service.example /etc/systemd/system/navora.service
+   ```
+3. Enable and start the service:
+   ```bash
+   sudo systemctl daemon-reload
+   sudo systemctl enable --now navora.service
+   ```
+4. Verify backend logs:
+   ```bash
+   sudo journalctl -u navora.service -f
+   ```
+
+---
+
 ### Step 4: Configure SSL with Let's Encrypt (Certbot)
 ```bash
 sudo apt install -y certbot python3-certbot-nginx
