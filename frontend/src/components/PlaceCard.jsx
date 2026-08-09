@@ -4,6 +4,21 @@ import { Star, MapPin, Plus, Check, Clock, DollarSign, Calendar } from 'lucide-r
 import { motion } from 'framer-motion';
 
 const PlaceCard = ({ place, isAdded, onAddToItinerary }) => {
+  const cardVariants = {
+    initial: { opacity: 0, y: 20 },
+    animate: { opacity: 1, y: 0, transition: { duration: 0.4, ease: 'easeOut' } },
+    exit: { opacity: 0, scale: 0.95, transition: { duration: 0.3 } },
+    hover: { 
+      y: -8, 
+      scale: 1.02,
+      transition: { duration: 0.3, ease: 'easeOut' } 
+    }
+  };
+
+  const buttonVariants = {
+    tap: { scale: 0.95 },
+    hover: { scale: 1.02 }
+  };
   const getCategoryColor = (category) => {
     switch (category) {
       case 'Attraction': return 'bg-sky-500/10 text-sky-600 dark:text-sky-400 border-sky-500/20';
@@ -17,18 +32,21 @@ const PlaceCard = ({ place, isAdded, onAddToItinerary }) => {
   return (
     <motion.div 
       layout
-      initial={{ opacity: 0, y: 15 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, scale: 0.95 }}
-      transition={{ duration: 0.3 }}
+      variants={cardVariants}
+      initial="initial"
+      animate="animate"
+      exit="exit"
+      whileHover="hover"
       className="glass rounded-3xl overflow-hidden flex flex-col group hover:shadow-xl hover:border-sky-500/30 transition-all border border-slate-200 dark:border-slate-800"
     >
       {/* Card Image */}
       <div className="relative h-48 w-full overflow-hidden bg-slate-100 dark:bg-slate-900">
-        <img 
+        <motion.img 
           src={place.image || 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=600&q=80'} 
           alt={place.name}
-          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+          className="w-full h-full object-cover"
+          whileHover={{ scale: 1.15 }}
+          transition={{ duration: 0.5, ease: 'easeOut' }}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 to-transparent" />
         
@@ -94,31 +112,45 @@ const PlaceCard = ({ place, isAdded, onAddToItinerary }) => {
 
         {/* CTAs */}
         <div className="grid grid-cols-2 gap-3 pt-2">
-          <Link 
-            to={`/place/${place.id}`}
-            className="w-full py-2.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-center text-xs font-bold rounded-2xl transition-colors flex items-center justify-center gap-1 border border-slate-200/50 dark:border-slate-700/50"
-          >
-            Details
-          </Link>
+          <motion.div variants={buttonVariants} whileHover="hover" whileTap="tap">
+            <Link 
+              to={`/place/${place.id}`}
+              className="w-full py-2.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-center text-xs font-bold rounded-2xl transition-colors flex items-center justify-center gap-1 border border-slate-200/50 dark:border-slate-700/50"
+            >
+              Details
+            </Link>
+          </motion.div>
           
-          <button
+          <motion.button
             onClick={() => onAddToItinerary && onAddToItinerary(place)}
             className={`w-full py-2.5 text-xs font-bold rounded-2xl transition-all flex items-center justify-center gap-1 ${
               isAdded
                 ? 'bg-emerald-500 hover:bg-emerald-600 text-white shadow-md shadow-emerald-500/25'
                 : 'bg-sky-500 hover:bg-sky-600 text-white shadow-md shadow-sky-500/25'
             }`}
+            variants={buttonVariants}
+            whileHover="hover"
+            whileTap="tap"
+            animate={isAdded ? { scale: [1, 1.05, 1] } : { scale: 1 }}
+            transition={{ duration: 0.3 }}
           >
             {isAdded ? (
               <>
-                <Check size={14} /> Added
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ type: 'spring', stiffness: 500, damping: 15 }}
+                >
+                  <Check size={14} />
+                </motion.div>
+                Added
               </>
             ) : (
               <>
                 <Plus size={14} /> Add to Trip
               </>
             )}
-          </button>
+          </motion.button>
         </div>
       </div>
     </motion.div>

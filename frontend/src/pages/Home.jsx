@@ -5,7 +5,7 @@ import {
   MapPin, Calendar, Heart, Wallet, Coffee, Hotel, Utensils, Award, Waypoints,
   Clock, Car, Bike, Train, Plane, PersonStanding, Bus
 } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { generateTrip, saveTrip } from '../services/api';
 
 /* ─── Time options (4 AM → 1 AM next day, 30-min steps) ─── */
@@ -58,11 +58,49 @@ const TRAVEL_MODES = [
   { id: 'mixed',            label: 'Mixed (Auto)',     icon: Sparkles },
 ];
 
+/* ─── Animation Variants ─── */
+const fadeInUp = {
+  hidden: { opacity: 0, y: 40 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: 'easeOut' } }
+};
+
+const staggerContainer = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.15,
+      delayChildren: 0.3
+    }
+  }
+};
+
+const cardHover = {
+  hover: { 
+    y: -12, 
+    scale: 1.02,
+    transition: { duration: 0.4, ease: 'easeOut' } 
+  }
+};
+
+const iconBounce = {
+  hover: { 
+    scale: 1.2, 
+    rotate: 10,
+    transition: { duration: 0.3, ease: 'easeOut' } 
+  }
+};
+
+const buttonPress = {
+  tap: { scale: 0.92 },
+  hover: { scale: 1.05 }
+};
+
 const Home = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
-    destination: 'kochi',
+    destination: 'Kochi',
     startDate: new Date().toISOString().split('T')[0],
     duration: 3,
     budget: 1500,
@@ -172,30 +210,40 @@ const Home = () => {
       {/* Hero Section with form panel */}
       <section className="relative pt-12 md:pt-20 px-6 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
         {/* Left column hero typography */}
-        <div className="lg:col-span-6 space-y-6">
+        <motion.div 
+          className="lg:col-span-6 space-y-6"
+          initial="hidden"
+          animate="visible"
+          variants={staggerContainer}
+        >
           <motion.div 
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
+            variants={fadeInUp}
             className="badge-gold"
           >
             <Sparkles size={14} className="animate-pulse" />
             <span>AI-Powered Local Discovery</span>
           </motion.div>
           
-          <h1
+          <motion.h1
+            variants={fadeInUp}
             className="text-4xl md:text-6xl font-black tracking-tight leading-tight"
             style={{ color: '#F8FAFC' }}
           >
             Plan smarter trips with{' '}
             <span className="text-gradient">AI Local Insights</span>.
-          </h1>
+          </motion.h1>
           
-          <p className="text-base md:text-lg text-slate-500 dark:text-slate-400 leading-relaxed max-w-lg">
+          <motion.p
+            variants={fadeInUp}
+            className="text-base md:text-lg text-slate-500 dark:text-slate-400 leading-relaxed max-w-lg"
+          >
             Experience the next generation of travel planning. Our intelligent engine drafts optimized schedules, selects quality hotels, and checks local events.
-          </p>
+          </motion.p>
 
-          <div className="flex items-center gap-6 pt-2">
+          <motion.div 
+            variants={fadeInUp}
+            className="flex items-center gap-6 pt-2"
+          >
             <div className="flex -space-x-3">
               {[
                 "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80",
@@ -216,15 +264,25 @@ const Home = () => {
             <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">
               Joined by <span className="text-slate-800 dark:text-white font-bold">12,000+</span> globetrotters this month
             </p>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
 
         {/* Right column planner form */}
-        <div className="lg:col-span-6 w-full">
+        <motion.div 
+          className="lg:col-span-6 w-full"
+          initial={{ opacity: 0, x: 60, scale: 0.95 }}
+          animate={{ opacity: 1, x: 0, scale: 1 }}
+          transition={{ duration: 0.8, delay: 0.4, ease: 'easeOut' }}
+        >
           <div className="bg-white text-slate-900 p-8 rounded-[2rem] shadow-2xl border border-slate-100 relative">
-            <h3 className="text-xl font-bold mb-6 text-slate-900 flex items-center gap-2">
+            <motion.h3 
+              className="text-xl font-bold mb-6 text-slate-900 flex items-center gap-2"
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.4 }}
+            >
               <Compass size={22} className="text-sky-500" /> Start Planning
-            </h3>
+            </motion.h3>
             
             <form onSubmit={handleGenerateItinerary} className="space-y-6">
 
@@ -390,10 +448,10 @@ const Home = () => {
                   <Car size={12} /> TRAVEL MODE
                 </label>
                 <div className="flex flex-wrap gap-2">
-                  {TRAVEL_MODES.map((mode) => {
+                  {TRAVEL_MODES.map((mode, index) => {
                     const isSelected = formData.travelMode === mode.id;
                     return (
-                      <button
+                      <motion.button
                         key={mode.id}
                         type="button"
                         onClick={() => set('travelMode', mode.id)}
@@ -402,10 +460,23 @@ const Home = () => {
                             ? 'bg-gradient-to-r from-pink-500 to-rose-500 text-white font-bold shadow-lg shadow-pink-500/30 border-transparent'
                             : 'bg-white border-slate-200 text-slate-700 hover:border-slate-300 hover:bg-slate-50'
                         }`}
+                        initial={{ opacity: 0, scale: 0.8, y: 10 }}
+                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                        transition={{ duration: 0.4, delay: index * 0.08, ease: 'easeOut' }}
+                        whileHover={{ scale: 1.08, y: -2 }}
+                        whileTap={{ scale: 0.92 }}
                       >
-                        <mode.icon size={13} className={isSelected ? 'text-white' : 'text-slate-500'} />
+                        <motion.div
+                          animate={isSelected ? { rotate: 360, scale: 1.1 } : { rotate: 0, scale: 1 }}
+                          transition={{ duration: 0.6, ease: 'easeOut' }}
+                        >
+                          <mode.icon 
+                            size={13} 
+                            className={isSelected ? 'text-white' : 'text-slate-500'}
+                          />
+                        </motion.div>
                         <span>{mode.label}</span>
-                      </button>
+                      </motion.button>
                     );
                   })}
                 </div>
@@ -415,10 +486,10 @@ const Home = () => {
               <div>
                 <label className="block text-xs font-bold text-slate-400 mb-3 uppercase tracking-wider">TRAVEL PREFERENCE</label>
                 <div className="flex flex-wrap gap-2">
-                  {travelPreferences.map((pref) => {
+                  {travelPreferences.map((pref, index) => {
                     const isSelected = formData.interest === pref.id;
                     return (
-                      <button
+                      <motion.button
                         key={pref.id}
                         type="button"
                         onClick={() => set('interest', pref.id)}
@@ -427,10 +498,23 @@ const Home = () => {
                             ? 'bg-cyan-400 text-slate-900 font-bold shadow-md border-transparent'
                             : 'bg-white border-slate-200 text-slate-700 hover:border-slate-300 hover:bg-slate-50'
                         }`}
+                        initial={{ opacity: 0, scale: 0.8, y: 10 }}
+                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                        transition={{ duration: 0.4, delay: index * 0.08, ease: 'easeOut' }}
+                        whileHover={{ scale: 1.08, y: -2 }}
+                        whileTap={{ scale: 0.92 }}
                       >
-                        <pref.icon size={13} className={isSelected ? 'text-slate-900' : 'text-slate-500'} />
+                        <motion.div
+                          animate={isSelected ? { scale: 1.3, rotate: 5 } : { scale: 1, rotate: 0 }}
+                          transition={{ duration: 0.3, ease: 'easeOut' }}
+                        >
+                          <pref.icon 
+                            size={13} 
+                            className={isSelected ? 'text-slate-900' : 'text-slate-500'}
+                          />
+                        </motion.div>
                         <span>{pref.label}</span>
-                      </button>
+                      </motion.button>
                     );
                   })}
                 </div>
@@ -438,25 +522,31 @@ const Home = () => {
 
               {/* ── CTAs Row ── */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
-                <button
+                <motion.button
                   type="submit"
                   disabled={loading}
-                  className="w-full py-4 bg-gradient-to-r from-[#C9184A] to-[#800020] hover:from-[#A01A3E] hover:to-[#590016] text-white font-bold rounded-2xl text-xs flex justify-center items-center gap-1.5 shadow-lg shadow-red-600/30 hover:scale-[1.02] transition-transform"
+                  className="w-full py-4 bg-gradient-to-r from-[#C9184A] to-[#800020] hover:from-[#A01A3E] hover:to-[#590016] text-white font-bold rounded-2xl text-xs flex justify-center items-center gap-1.5 shadow-lg shadow-red-600/30 transition-transform"
+                  variants={buttonPress}
+                  whileHover="hover"
+                  whileTap="tap"
                 >
                   {loading ? 'Analyzing Destination...' : 'Generate Itinerary'}
-                </button>
+                </motion.button>
                 
-                <button
+                <motion.button
                   type="button"
                   onClick={handleExploreDestinations}
                   className="w-full py-4 bg-red-50 hover:bg-red-100 text-red-500 font-bold rounded-2xl text-xs flex justify-center items-center border border-red-100 transition-colors"
+                  variants={buttonPress}
+                  whileHover="hover"
+                  whileTap="tap"
                 >
                   Explore Destinations
-                </button>
+                </motion.button>
               </div>
             </form>
           </div>
-        </div>
+        </motion.div>
       </section>
 
       {/* Features Grid Section */}
@@ -480,9 +570,15 @@ const Home = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <motion.div 
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            variants={staggerContainer}
+          >
             {features.map((feat, i) => (
-              <div
+              <motion.div
                 key={i}
                 className="p-6 rounded-3xl flex gap-4 transition-all group"
                 style={{
@@ -490,12 +586,24 @@ const Home = () => {
                   border: '1px solid rgba(230, 57, 70, 0.12)',
                   backdropFilter: 'blur(12px)',
                 }}
-                onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(230,57,70,0.35)'; }}
-                onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(230,57,70,0.12)'; }}
+                variants={fadeInUp}
+                whileHover={{ 
+                  y: -15, 
+                  scale: 1.03,
+                  borderColor: 'rgba(230, 57, 70, 0.4)',
+                  transition: { duration: 0.4, ease: 'easeOut' } 
+                }}
               >
-                <div className={`p-3 rounded-2xl h-fit flex-shrink-0 ${feat.color}`}>
-                  <feat.icon size={22} className="group-hover:scale-110 transition-transform" />
-                </div>
+                <motion.div 
+                  className={`p-3 rounded-2xl h-fit flex-shrink-0 ${feat.color}`}
+                  whileHover={{ 
+                    scale: 1.25, 
+                    rotate: 15,
+                    transition: { duration: 0.3, ease: 'easeOut' } 
+                  }}
+                >
+                  <feat.icon size={22} />
+                </motion.div>
                 <div className="space-y-2">
                   <h3
                     className="font-bold leading-tight"
@@ -510,9 +618,9 @@ const Home = () => {
                     {feat.desc}
                   </p>
                 </div>
-              </div>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         </div>
       </section>
 
@@ -531,11 +639,23 @@ const Home = () => {
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <motion.div 
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          variants={staggerContainer}
+        >
           {popularCities.map((city) => (
-            <div 
+            <motion.div 
               key={city.key}
               className="glass rounded-3xl overflow-hidden border border-slate-200 dark:border-slate-800 group hover:shadow-xl hover:border-sky-500/30 transition-all flex flex-col justify-between"
+              variants={fadeInUp}
+              whileHover={{ 
+                y: -15, 
+                scale: 1.03,
+                transition: { duration: 0.4, ease: 'easeOut' } 
+              }}
             >
               <div>
                 {/* Photo container */}
@@ -563,16 +683,19 @@ const Home = () => {
               </div>
 
               <div className="px-6 pb-6">
-                <button
+                <motion.button
                   onClick={() => navigate(`/results?destination=${city.key}&days=${formData.duration}&budget=${formData.budget}&date=${formData.startDate}`)}
                   className="w-full py-2.5 bg-slate-100 hover:bg-sky-500 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-white dark:hover:bg-sky-500 font-bold rounded-2xl text-xs transition-colors flex items-center justify-center gap-1"
+                  variants={buttonPress}
+                  whileHover="hover"
+                  whileTap="tap"
                 >
                   Explore
-                </button>
+                </motion.button>
               </div>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </section>
 
     </div>

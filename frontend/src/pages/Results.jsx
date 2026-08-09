@@ -21,6 +21,30 @@ const popularSearchChips = [
   'Heritage Forts'
 ];
 
+/* ─── Animation Variants ─── */
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.2
+    }
+  }
+};
+
+const chipVariants = {
+  hidden: { opacity: 0, scale: 0.8 },
+  visible: { opacity: 1, scale: 1, transition: { duration: 0.3, ease: 'easeOut' } },
+  tap: { scale: 0.95 },
+  hover: { scale: 1.05 }
+};
+
+const panelVariants = {
+  hidden: { opacity: 0, y: -20 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: 'easeOut' } }
+};
+
 const Results = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -232,7 +256,12 @@ const Results = () => {
       </button>
 
       {/* Search Summary Panel */}
-      <div className="glass p-6 rounded-3xl border border-slate-200 dark:border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8 shadow-sm">
+      <motion.div 
+        className="glass p-6 rounded-3xl border border-slate-200 dark:border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8 shadow-sm"
+        variants={panelVariants}
+        initial="hidden"
+        animate="visible"
+      >
         <div className="flex flex-wrap items-center gap-6">
           <div className="flex items-center gap-3">
             <div className="p-3 bg-sky-500/10 text-sky-600 dark:text-sky-400 rounded-2xl">
@@ -269,13 +298,15 @@ const Results = () => {
           </div>
         </div>
 
-        <button 
+        <motion.button 
           onClick={() => navigate(`/itinerary?destination=${destParam}&days=${daysParam}&budget=${budgetParam}&date=${dateParam}`)}
           className="px-6 py-3 bg-gradient-accent text-white font-bold rounded-2xl text-sm shadow-md shadow-sky-500/20 hover:scale-105 transition-all text-center flex items-center justify-center gap-2"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
         >
           <Sparkles size={16} /> View Generated Itinerary
-        </button>
-      </div>
+        </motion.button>
+      </motion.div>
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 items-start">
         {/* Filters Sidebar */}
@@ -317,18 +348,26 @@ const Results = () => {
             </div>
 
             {/* Quick Search Suggestions Chips */}
-            <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none text-xs">
+            <motion.div 
+              className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none text-xs"
+              initial="hidden"
+              animate="visible"
+              variants={containerVariants}
+            >
               <span className="text-slate-400 font-medium whitespace-nowrap text-[11px]">Quick Search:</span>
               {popularSearchChips.map((chip, idx) => (
-                <button
+                <motion.button
                   key={idx}
                   onClick={() => handleChipClick(chip)}
                   className="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800/80 hover:bg-sky-500 hover:text-white text-slate-600 dark:text-slate-300 text-xs transition-all whitespace-nowrap border border-slate-200/60 dark:border-slate-700/60"
+                  variants={chipVariants}
+                  whileHover="hover"
+                  whileTap="tap"
                 >
                   {chip}
-                </button>
+                </motion.button>
               ))}
-            </div>
+            </motion.div>
           </div>
 
           <div className="flex justify-between items-center">
@@ -340,18 +379,27 @@ const Results = () => {
 
           {/* Cards Grid */}
           {filteredPlaces.length === 0 ? (
-            <EmptyState 
-              title="No recommendations match search"
-              message="Try searching for a city name (Goa, Munnar, Kochi) or broader terms like 'tea', 'beach', 'spa', 'fort'."
-              buttonText="Reset Search & Filters"
-              buttonLink=""
-              onReset={handleResetFilters}
-            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.4 }}
+            >
+              <EmptyState 
+                title="No recommendations match search"
+                message="Try searching for a city name (Goa, Munnar, Kochi) or broader terms like 'tea', 'beach', 'spa', 'fort'."
+                buttonText="Reset Search & Filters"
+                buttonLink=""
+                onReset={handleResetFilters}
+              />
+            </motion.div>
           ) : (
             <motion.div 
               className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"
             >
-              <AnimatePresence>
+              <AnimatePresence mode="popLayout">
                 {filteredPlaces.map((place) => (
                   <PlaceCard 
                     key={place.id} 

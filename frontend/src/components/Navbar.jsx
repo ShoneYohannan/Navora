@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Compass, Sun, Moon, Menu, X, Home, Sparkles, FolderHeart, MessageSquare } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 /* ── All top-level nav destinations ── */
 const NAV_ITEMS = [
@@ -26,6 +27,38 @@ const Separator = () => (
     </svg>
   </li>
 );
+
+/* ─── Animation Variants ─── */
+const navItemVariants = {
+  hidden: { opacity: 0, y: -15 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: 'easeOut' } }
+};
+
+const mobileMenuVariants = {
+  hidden: { 
+    opacity: 0, 
+    x: '100%',
+    scale: 0.95,
+    transition: { duration: 0.4, ease: 'easeInOut' }
+  },
+  visible: { 
+    opacity: 1, 
+    x: 0,
+    scale: 1,
+    transition: { duration: 0.4, ease: 'easeInOut' }
+  },
+  exit: {
+    opacity: 0,
+    x: '100%',
+    scale: 0.95,
+    transition: { duration: 0.3, ease: 'easeIn' }
+  }
+};
+
+const themeToggleVariants = {
+  tap: { scale: 0.85, rotate: 15 },
+  hover: { rotate: 360, scale: 1.1 }
+};
 
 const Navbar = () => {
   /* Default to DARK (luxury theme) */
@@ -79,17 +112,24 @@ const Navbar = () => {
 
         {/* ── Brand Logo ── */}
         <Link to="/" className="flex items-center gap-2 flex-shrink-0 group">
-          <Compass
-            size={26}
-            className="transition-all duration-300 group-hover:scale-110"
-            style={{ color: '#E63946' }}
-          />
-          <span
-            className="text-lg font-bold tracking-tight transition-colors"
+          <motion.div
+            whileHover={{ rotate: 360, scale: 1.2 }}
+            transition={{ duration: 0.8, ease: 'easeInOut' }}
+            whileTap={{ scale: 0.9 }}
+          >
+            <Compass
+              size={26}
+              style={{ color: '#E63946' }}
+            />
+          </motion.div>
+          <motion.span
+            className="text-lg font-bold tracking-tight"
             style={{ color: darkMode ? '#F8FAFC' : '#0f172a' }}
+            whileHover={{ scale: 1.08, letterSpacing: '0.05em' }}
+            transition={{ duration: 0.3 }}
           >
             Navora
-          </span>
+          </motion.span>
         </Link>
 
         {/* ── Desktop Nav Items (right-aligned) ── */}
@@ -100,36 +140,39 @@ const Navbar = () => {
             return (
               <React.Fragment key={item.to}>
                 {index > 0 && <Separator />}
-                <Link
-                  to={item.to}
-                  aria-current={isActive ? 'page' : undefined}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold transition-all duration-200"
-                  style={
-                    isActive
-                      ? {
-                          color: '#E63946',
-                          background: darkMode ? 'rgba(230, 57, 70, 0.12)' : 'rgba(230, 57, 70, 0.08)',
-                        }
-                      : {
-                          color: darkMode ? '#7A6672' : '#475569',
-                        }
-                  }
-                  onMouseEnter={e => {
-                    if (!isActive) {
-                      e.currentTarget.style.color = '#E63946';
-                      e.currentTarget.style.background = darkMode ? 'rgba(230, 57, 70, 0.12)' : 'rgba(230, 57, 70, 0.08)';
-                    }
-                  }}
-                  onMouseLeave={e => {
-                    if (!isActive) {
-                      e.currentTarget.style.color = darkMode ? '#7A6672' : '#475569';
-                      e.currentTarget.style.background = 'transparent';
-                    }
-                  }}
+                <motion.div
+                  initial="hidden"
+                  animate="visible"
+                  variants={navItemVariants}
+                  transition={{ delay: index * 0.08 }}
                 >
-                  <Icon size={14} />
-                  <span>{item.label}</span>
-                </Link>
+                  <Link
+                    to={item.to}
+                    aria-current={isActive ? 'page' : undefined}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold transition-all duration-200 relative"
+                    style={
+                      isActive
+                        ? {
+                            color: '#E63946',
+                            background: darkMode ? 'rgba(230, 57, 70, 0.12)' : 'rgba(230, 57, 70, 0.08)',
+                          }
+                        : {
+                            color: darkMode ? '#7A6672' : '#475569',
+                          }
+                    }
+                  >
+                    <Icon size={14} />
+                    <span>{item.label}</span>
+                    {!isActive && (
+                      <motion.div
+                        className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-[#E63946] to-[#800020] origin-center rounded-full"
+                        initial={{ scaleX: 0 }}
+                        whileHover={{ scaleX: 1 }}
+                        transition={{ duration: 0.4, ease: 'easeOut' }}
+                      />
+                    )}
+                  </Link>
+                </motion.div>
               </React.Fragment>
             );
           })}
@@ -141,7 +184,7 @@ const Navbar = () => {
           />
 
           {/* Theme Toggle */}
-          <button
+          <motion.button
             onClick={() => setDarkMode(!darkMode)}
             className="p-2.5 rounded-xl transition-all duration-200"
             style={
@@ -157,23 +200,28 @@ const Navbar = () => {
                     border: '1px solid rgba(0,0,0,0.08)',
                   }
             }
-            onMouseEnter={e => {
-              e.currentTarget.style.background = 'rgba(230,57,70,0.15)';
-              e.currentTarget.style.color = '#E63946';
-            }}
-            onMouseLeave={e => {
-              e.currentTarget.style.background = darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)';
-              e.currentTarget.style.color = darkMode ? '#FF6B74' : '#E63946';
-            }}
+            variants={themeToggleVariants}
+            whileTap="tap"
+            whileHover="hover"
             aria-label="Toggle theme"
           >
-            {darkMode ? <Sun size={17} /> : <Moon size={17} />}
-          </button>
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={darkMode ? 'sun' : 'moon'}
+                initial={{ rotate: -90, opacity: 0 }}
+                animate={{ rotate: 0, opacity: 1 }}
+                exit={{ rotate: 90, opacity: 0 }}
+                transition={{ duration: 0.2 }}
+              >
+                {darkMode ? <Sun size={17} /> : <Moon size={17} />}
+              </motion.div>
+            </AnimatePresence>
+          </motion.button>
         </div>
 
         {/* ── Mobile Controls ── */}
         <div className="flex md:hidden items-center gap-2">
-          <button
+          <motion.button
             onClick={() => setDarkMode(!darkMode)}
             className="p-2.5 rounded-xl transition-colors"
             style={
@@ -181,11 +229,24 @@ const Navbar = () => {
                 ? { background: 'rgba(255,255,255,0.05)', color: '#FF6B74', border: '1px solid rgba(255,255,255,0.07)' }
                 : { background: 'rgba(0,0,0,0.05)', color: '#E63946', border: '1px solid rgba(0,0,0,0.08)' }
             }
+            variants={themeToggleVariants}
+            whileTap="tap"
+            whileHover="hover"
             aria-label="Toggle theme"
           >
-            {darkMode ? <Sun size={17} /> : <Moon size={17} />}
-          </button>
-          <button
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={darkMode ? 'sun' : 'moon'}
+                initial={{ rotate: -90, opacity: 0 }}
+                animate={{ rotate: 0, opacity: 1 }}
+                exit={{ rotate: 90, opacity: 0 }}
+                transition={{ duration: 0.2 }}
+              >
+                {darkMode ? <Sun size={17} /> : <Moon size={17} />}
+              </motion.div>
+            </AnimatePresence>
+          </motion.button>
+          <motion.button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="p-2 rounded-xl transition-colors"
             style={
@@ -193,45 +254,80 @@ const Navbar = () => {
                 ? { background: 'rgba(255,255,255,0.05)', color: 'var(--lux-text-secondary)', border: '1px solid rgba(255,255,255,0.07)' }
                 : { background: 'rgba(0,0,0,0.05)', color: '#475569', border: '1px solid rgba(0,0,0,0.08)' }
             }
+            whileTap={{ scale: 0.9 }}
             aria-label="Toggle menu"
           >
-            {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
-          </button>
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={mobileMenuOpen ? 'close' : 'menu'}
+                initial={{ rotate: -90, opacity: 0 }}
+                animate={{ rotate: 0, opacity: 1 }}
+                exit={{ rotate: 90, opacity: 0 }}
+                transition={{ duration: 0.2 }}
+              >
+                {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+              </motion.div>
+            </AnimatePresence>
+          </motion.button>
         </div>
       </div>
 
       {/* ── Mobile Drawer ── */}
-      {mobileMenuOpen && (
-        <div
-          className="md:hidden absolute top-full left-0 right-0 p-4 flex flex-col gap-1 z-40"
-          style={{
-            background: 'rgba(17, 24, 39, 0.98)',
-            borderTop: '1px solid rgba(201, 168, 76, 0.1)',
-            backdropFilter: 'blur(24px)',
-          }}
-        >
-          {NAV_ITEMS.map((item) => {
-            const isActive = getIsActive(item.to);
-            const Icon = item.icon;
-            return (
-              <Link
-                key={item.to}
-                to={item.to}
-                onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all"
-                style={
-                  isActive
-                    ? { color: 'var(--lux-gold-light)', background: 'var(--lux-gold-dim)' }
-                    : { color: 'var(--lux-text-secondary)' }
-                }
-              >
-                <Icon size={16} />
-                <span>{item.label}</span>
-              </Link>
-            );
-          })}
-        </div>
-      )}
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              className="md:hidden fixed inset-0 bg-black/50 z-30"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              onClick={() => setMobileMenuOpen(false)}
+            />
+            {/* Menu */}
+            <motion.div
+              className="md:hidden absolute top-full left-0 right-0 p-4 flex flex-col gap-1 z-40"
+              style={{
+                background: 'rgba(17, 24, 39, 0.98)',
+                borderTop: '1px solid rgba(201, 168, 76, 0.1)',
+                backdropFilter: 'blur(24px)',
+              }}
+              variants={mobileMenuVariants}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+            >
+              {NAV_ITEMS.map((item, index) => {
+                const isActive = getIsActive(item.to);
+                const Icon = item.icon;
+                return (
+                  <motion.div
+                    key={item.to}
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.05, duration: 0.2 }}
+                  >
+                    <Link
+                      to={item.to}
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all"
+                      style={
+                        isActive
+                          ? { color: 'var(--lux-gold-light)', background: 'var(--lux-gold-dim)' }
+                          : { color: 'var(--lux-text-secondary)' }
+                      }
+                    >
+                      <Icon size={16} />
+                      <span>{item.label}</span>
+                    </Link>
+                  </motion.div>
+                );
+              })}
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </nav>
   );
 };

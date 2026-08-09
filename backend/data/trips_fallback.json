@@ -2356,5 +2356,1293 @@
     "evaluator_feedback": "The itinerary is mostly well-planned, but there are some concerns. The budget is within the cap, but some activities are scheduled during heavy rain, which may impact their feasibility. The day is not overly packed, but some attractions could be replaced with more relevant ones. The recommendations are of high quality, but some are repeated across different days. To improve, consider replacing outdoor activities with indoor alternatives during heavy rain and pacing the activities more realistically.\nCorrections suggested:\n- Replace outdoor activities with indoor alternatives during heavy rain\n- Pace activities more realistically to avoid overpacking the day",
     "created_at": "2026-08-06T17:46:43.137511",
     "_id": "a8ff3e78-98f1-4658-8387-59dd8ae7b2ae"
+  },
+  "e2730be4-880d-4d0f-98aa-48f9327c73f8": {
+    "destination": "Kochi",
+    "days": 3,
+    "budget": 1500.0,
+    "currency": "USD",
+    "travelers": 1,
+    "interests": [
+      "Culture"
+    ],
+    "start_date": "2026-08-09",
+    "end_date": "2026-08-11",
+    "start_time": "08:00",
+    "end_time": "20:00",
+    "breakfast_time": "07:30",
+    "lunch_time": "13:00",
+    "dinner_time": "19:30",
+    "travel_mode": "mixed",
+    "weather_info": {
+      "temp": 27.3,
+      "description": "Rainy",
+      "forecast": [
+        {
+          "date": "2026-08-09",
+          "temp_min": 24.4,
+          "temp_max": 27.3,
+          "condition": "Rainy",
+          "precipitation_probability": 39,
+          "wind_speed": 12.7,
+          "uv_index": 8
+        },
+        {
+          "date": "2026-08-10",
+          "temp_min": 24,
+          "temp_max": 27.4,
+          "condition": "Clouds",
+          "precipitation_probability": 10,
+          "wind_speed": 10.2,
+          "uv_index": 9
+        },
+        {
+          "date": "2026-08-11",
+          "temp_min": 24.1,
+          "temp_max": 27.2,
+          "condition": "Rainy",
+          "precipitation_probability": 11,
+          "wind_speed": 11.1,
+          "uv_index": 8
+        }
+      ]
+    },
+    "nearby_attractions": [
+      {
+        "name": "Mattancherry Palace",
+        "address": "Kochi, Kerala, India",
+        "lat": 9.958278,
+        "lon": 76.25935,
+        "rating": 4.2,
+        "website": null,
+        "snippet": "Rating: 4.2 - Kochi, Kerala, India"
+      },
+      {
+        "name": "Vasco Da Gama Square",
+        "address": "Kochi, Kerala, India",
+        "lat": 9.967773,
+        "lon": 76.241875,
+        "rating": 4.3,
+        "website": null,
+        "snippet": "Rating: 4.3 - Kochi, Kerala, India"
+      },
+      {
+        "name": "Fort Kochi View Point",
+        "address": "Kochi, Kerala, India",
+        "lat": 9.965708,
+        "lon": 76.23799,
+        "rating": 4.5,
+        "website": null,
+        "snippet": "Rating: 4.5 - Kochi, Kerala, India"
+      },
+      {
+        "name": "Kochi water metro",
+        "address": "Kochi, Kerala, India",
+        "lat": 9.983779,
+        "lon": 76.27395,
+        "rating": 4.6,
+        "website": null,
+        "snippet": "Rating: 4.6 - Kochi, Kerala, India"
+      },
+      {
+        "name": "Rainbow Hanging Bridge",
+        "address": "Ernakulam, Kerala, India",
+        "lat": 9.979909,
+        "lon": 76.27504,
+        "rating": 4.3,
+        "website": null,
+        "snippet": "Rating: 4.3 - Ernakulam, Kerala, India"
+      }
+    ],
+    "malls": [
+      {
+        "name": "LuLu International Shopping Mall",
+        "address": "34/1000, Old NH 47",
+        "lat": 10.027156,
+        "lon": 76.30823,
+        "rating": 4.6,
+        "website": null,
+        "snippet": "Rating: 4.6 - 34/1000, Old NH 47"
+      },
+      {
+        "name": "Forum Kochi",
+        "address": "NH-66, Vyttila, Aroor Bypass, near to Kundanoor",
+        "lat": 9.944128,
+        "lon": 76.31775,
+        "rating": 4.3,
+        "website": null,
+        "snippet": "Rating: 4.3 - NH-66, Vyttila, Aroor Bypass, near to Kundanoor"
+      },
+      {
+        "name": "Centre Square Mall",
+        "address": "Mahatma Gandhi Road, Rajaji Rd",
+        "lat": 9.977963,
+        "lon": 76.28334,
+        "rating": 4.2,
+        "website": null,
+        "snippet": "Rating: 4.2 - Mahatma Gandhi Road, Rajaji Rd"
+      },
+      {
+        "name": "Oberon Mall",
+        "address": "Ernakulam, Kerala, India",
+        "lat": 10.0144005,
+        "lon": 76.312256,
+        "rating": 4.2,
+        "website": null,
+        "snippet": "Rating: 4.2 - Ernakulam, Kerala, India"
+      },
+      {
+        "name": "Grand Mall",
+        "address": null,
+        "lat": 10.024192,
+        "lon": 76.30875,
+        "rating": 4.1,
+        "website": null,
+        "snippet": "Rating: 4.1 - None"
+      }
+    ],
+    "restaurants": [
+      {
+        "name": "Chef Pillai",
+        "address": null,
+        "lat": 9.933812,
+        "lon": 76.316315,
+        "rating": 4.7,
+        "website": null,
+        "snippet": "Rating: 4.7 - None"
+      },
+      {
+        "name": "Fort House Restaurant",
+        "address": "2/6A, Calvathy Rd",
+        "lat": 9.9688015,
+        "lon": 76.24978,
+        "rating": 4.7,
+        "website": null,
+        "snippet": "Rating: 4.7 - 2/6A, Calvathy Rd"
+      },
+      {
+        "name": "Rasoi Fort Kochi",
+        "address": "1, 341, Rose St, next to St. Francis Church",
+        "lat": 9.966153,
+        "lon": 76.241554,
+        "rating": 4.4,
+        "website": null,
+        "snippet": "Rating: 4.4 - 1, 341, Rose St, next to St. Francis Church"
+      },
+      {
+        "name": "TOT - Talk of the Town",
+        "address": null,
+        "lat": 10.0113945,
+        "lon": 76.302864,
+        "rating": 4.7,
+        "website": null,
+        "snippet": "Rating: 4.7 - None"
+      },
+      {
+        "name": "French Toast Fort Kochi",
+        "address": null,
+        "lat": 9.967128,
+        "lon": 76.24053,
+        "rating": 4.4,
+        "website": null,
+        "snippet": "Rating: 4.4 - None"
+      }
+    ],
+    "movie_theatres": [
+      {
+        "name": "Vanitha Cineplex",
+        "address": null,
+        "lat": 10.030815,
+        "lon": 76.30965,
+        "rating": 4.4,
+        "website": null,
+        "snippet": "Rating: 4.4 - None"
+      },
+      {
+        "name": "PVR Cinemas",
+        "address": "NH 544",
+        "lat": 10.027898,
+        "lon": 76.30813,
+        "rating": 4.4,
+        "website": null,
+        "snippet": "Rating: 4.4 - NH 544"
+      },
+      {
+        "name": "Cinepolis Kochi",
+        "address": "66/6284-H, 6th Floor, Centre Square Mall, Mahatma Gandhi Rd",
+        "lat": 9.977872,
+        "lon": 76.283165,
+        "rating": 4,
+        "website": null,
+        "snippet": "Rating: 4 - 66/6284-H, 6th Floor, Centre Square Mall, Mahatma Gandhi Rd"
+      },
+      {
+        "name": "PVR Cinemas Forum Mall Kochi",
+        "address": "Shop No 10, Forum Mall, 3rd floor, junction",
+        "lat": 9.944273,
+        "lon": 76.31722,
+        "rating": 4.2,
+        "website": null,
+        "snippet": "Rating: 4.2 - Shop No 10, Forum Mall, 3rd floor, junction"
+      },
+      {
+        "name": "Padma Cinema 4K 3D",
+        "address": "Level 1, Shenoy Cinemax, Mahatma Gandhi Rd",
+        "lat": 9.981755,
+        "lon": 76.2826,
+        "rating": 4.1,
+        "website": null,
+        "snippet": "Rating: 4.1 - Level 1, Shenoy Cinemax, Mahatma Gandhi Rd"
+      }
+    ],
+    "local_events": [
+      {
+        "name": "Kochi Happenings (@kochi_happenings)",
+        "link": "https://www.instagram.com/kochi_happenings/?hl=en",
+        "snippet": "From shopping and food to music, d\u00e9cor, fashion, kids activities and unforgettable experiences. Kochi comes together. Stadium Ground, Kochi July 17 \u2022 18 \u2022 19. ..."
+      },
+      {
+        "name": "Any events or activities in Kochi?",
+        "link": "https://www.reddit.com/r/Kochi/comments/1tycwnz/any_events_or_activities_in_kochi/",
+        "snippet": "Are there any budget friendly activities or events happening in kochi today or over the next few days? Looking for stuff like exhibitions or just short ..."
+      },
+      {
+        "name": "Top Upcoming Events in Kochi | Best Live ...",
+        "link": "https://in.bookmyshow.com/explore/events-kochi",
+        "snippet": "Book tickets for best upcoming events in Kochi. Explore music, comedy, workshops, online events near you in Kochi on BookMyShow."
+      },
+      {
+        "name": "Free Kochi, India Events",
+        "link": "https://www.eventbrite.com/d/india--cochin/free--events/",
+        "snippet": "Browse all free events in Kochi, India. Find activities that fit your interests without spending money. Perfect for budget-conscious attendees."
+      },
+      {
+        "name": "Events in Kochi",
+        "link": "https://www.meetup.com/find/in--kochi/",
+        "snippet": "Find events in Kochi to connect with people who share your interests. Whatever your interest, Meetup helps you connect with like-minded people."
+      }
+    ],
+    "movie_recommendations": [
+      {
+        "id": 969681,
+        "title": "Spider-Man: Brand New Day",
+        "rating": 7.9,
+        "overview": "Fighting crime full-time as Spider-Man in a world that doesn't remember him\u2014and the pressure of seeing his old friends move on without him\u2014sparks a change in Peter Parker he may not have the power to control. But that transformation might also be the only thing that can stop a shocking new threat to the city and those he loves - a powerful villain no one can even see.",
+        "poster_path": "https://image.tmdb.org/t/p/w500/iPOn6DinuVyLY17YM9mKuPofV08.jpg",
+        "release_date": "2026-07-30",
+        "popularity": 1550.8083
+      },
+      {
+        "id": 1368337,
+        "title": "The Odyssey",
+        "rating": 8,
+        "overview": "Odysseus, the legendary King of Ithaca, embarks on a long and perilous journey home following the Trojan War. Throughout his voyage, he is forced to confront the whims of gods, mythological monsters, and trials that stretch both his cunning and his humanity to the breaking point.",
+        "poster_path": "https://image.tmdb.org/t/p/w500/5rhTDKUhPYvpdQIijFIs5VoWsON.jpg",
+        "release_date": "2026-07-17",
+        "popularity": 886.9314
+      },
+      {
+        "id": 1284465,
+        "title": "The Death of Robin Hood",
+        "rating": 6.4,
+        "overview": "Grappling with his past after a life of crime and murder, Robin Hood finds himself gravely injured after a battle he thought would be his last. In the hands of a mysterious woman, he is offered a chance at salvation.",
+        "poster_path": "https://image.tmdb.org/t/p/w500/92Tsfx7SFafOqWsotvrlJbHyehd.jpg",
+        "release_date": "2026-07-03",
+        "popularity": 295.4889
+      },
+      {
+        "id": 1108427,
+        "title": "Moana",
+        "rating": 6,
+        "overview": "Teenage Moana answers the Ocean's call and, for the first time, voyages beyond the reef of her island of Motunui with infamous demigod Maui on an unforgettable journey to restore prosperity to her people.",
+        "poster_path": "https://image.tmdb.org/t/p/w500/zKVgiv5qHCvCLT4A2ymJi5QeXDH.jpg",
+        "release_date": "2026-07-10",
+        "popularity": 257.9071
+      },
+      {
+        "id": 1315772,
+        "title": "Minions & Monsters",
+        "rating": 6.3,
+        "overview": "This is the rambunctious, ridiculous and totally true story of how the Minions conquered Hollywood, became movie stars, lost everything, unleashed monsters onto the world and then banded together to try and save the planet from the mayhem they had just created.",
+        "poster_path": "https://image.tmdb.org/t/p/w500/nz7i42yhLIJ4ve9JKgM6NthoLHO.jpg",
+        "release_date": "2026-07-01",
+        "popularity": 256.7713
+      },
+      {
+        "id": 1212763,
+        "title": "Evil Dead Burn",
+        "rating": 7.9,
+        "overview": "After her husband's abrupt death, Alice seeks solace with his remaining family \u2014 descendants of a leading researcher on demonic possession. As her in-laws transform one by one into creatures that feed on fear, she comes to discover that the vows she took in life survive even in death.",
+        "poster_path": "https://image.tmdb.org/t/p/w500/uRxrNXQWkHoENm3nwVOZDYSCx2F.jpg",
+        "release_date": "2026-07-10",
+        "popularity": 203.6299
+      },
+      {
+        "id": 1432631,
+        "title": "Idhayam Murali",
+        "rating": 8.2,
+        "overview": "A young man navigates the complexities of unrequited love, finding that even as years pass and life takes unexpected turns, certain emotions remain deeply embedded in his heart.",
+        "poster_path": "https://image.tmdb.org/t/p/w500/iZzR7fYiJ3bGew8liRPxipPDEfj.jpg",
+        "release_date": "2026-07-10",
+        "popularity": 38.7668
+      },
+      {
+        "id": 1235877,
+        "title": "Jana Nayagan",
+        "rating": 5.1,
+        "overview": "A clash of ideologies. One stands for the people, the other feeds on control. Their paths collided once before. Years later, a child\u2019s silent fear ignites the past, drawing a former police officer into a battle far bigger than personal revenge.",
+        "poster_path": "https://image.tmdb.org/t/p/w500/jt8pfSIdi47YpFMMWVRr8w5u2S0.jpg",
+        "release_date": "2026-07-23",
+        "popularity": 30.0452
+      },
+      {
+        "id": 1408170,
+        "title": "Lenin",
+        "rating": 6.4,
+        "overview": "In a village trapped by generations of bloodshed, a determined young man dares to challenge the traditions fueling an endless cycle of violence.",
+        "poster_path": "https://image.tmdb.org/t/p/w500/rAHQviBq8Fxi20hNtHPGLnr4L0f.jpg",
+        "release_date": "2026-07-10",
+        "popularity": 28.1026
+      },
+      {
+        "id": 950028,
+        "title": "The Invite",
+        "rating": 7.7,
+        "overview": "Joe and Angela\u2019s marriage is on thin ice. When they invite their enigmatic upstairs neighbors for a dinner party, the night spirals into unexpected places. Have they reignited the spark or lit the match that burns it all down?",
+        "poster_path": "https://image.tmdb.org/t/p/w500/b7Dr8Chzse8VagexAporUu2RtLx.jpg",
+        "release_date": "2026-07-10",
+        "popularity": 26.6391
+      },
+      {
+        "id": 1509599,
+        "title": "Gatta Kusthi 2",
+        "rating": 3.6,
+        "overview": "Picks up after the first film, with Veera and Keerthi balancing parenthood and Keerthi's wrestling career, featuring a role reversal where Veera takes on more domestic responsibilities.",
+        "poster_path": "https://image.tmdb.org/t/p/w500/5U8MWIk9XZ60NALyOTpyX7vXIR7.jpg",
+        "release_date": "2026-07-03",
+        "popularity": 25.4741
+      },
+      {
+        "id": 1479832,
+        "title": "DC",
+        "rating": 9,
+        "overview": "Rebel Devadas joins forces with Chandra in a dangerous world where passion and peril collide. Their turbulent alliance demands bloodshed and tests loyalties as survival becomes the ultimate stake in their fight.",
+        "poster_path": "https://image.tmdb.org/t/p/w500/nmQ799Pa5EKczJvQPzlvhtW0CBW.jpg",
+        "release_date": "2026-08-07",
+        "popularity": 23.1224
+      },
+      {
+        "id": 1442396,
+        "title": "Nagabandham: The Secret Treasure",
+        "rating": 4.5,
+        "overview": "A chosen warrior protects a mystical, serpent-bound Himalayan temple from those seeking to steal the power of the Brahma Kamalam, a divine relic.",
+        "poster_path": "https://image.tmdb.org/t/p/w500/fsiQ0twZbmbLo0F2CDUt44riRxL.jpg",
+        "release_date": "2026-07-03",
+        "popularity": 9.0488
+      },
+      {
+        "id": 1122030,
+        "title": "Alpha",
+        "rating": 5.6,
+        "overview": "When Sita, a highly trained assassin raised in isolation as a super-soldier by a rogue commander, discovers the dark truth about her family and her stolen childhood, she teams up with her long lost sister to take down her creator and his illicit military program.",
+        "poster_path": "https://image.tmdb.org/t/p/w500/bPtRt3ajQ0EkyeQ1O6iJwAIi9Py.jpg",
+        "release_date": "2026-07-03",
+        "popularity": 8.2207
+      },
+      {
+        "id": 1443961,
+        "title": "Rao Bahadur",
+        "rating": 7.2,
+        "overview": "In 1970s India, an eccentric aristocrat\u2014labeled a 'man of miracles'\u2014miraculously survives a terminal illness. Plagued by guilt and fear, he retreats into his palatial mansion, creating an alternate world that deeply blurs reality and imagination.",
+        "poster_path": "https://image.tmdb.org/t/p/w500/9hzKAJImKEHBz0vnF5EazPMA8D4.jpg",
+        "release_date": "2026-07-03",
+        "popularity": 6.5128
+      },
+      {
+        "id": 1739294,
+        "title": "Maaran",
+        "rating": 0,
+        "overview": "In a patriarchal society, two strangers - Birwa, a trafficking survivor, and Tara, who faces the same fate - are drawn into the path of a ruthless predator. Maaran exposes the devastating impact of gender-based violence and oppression.",
+        "poster_path": "https://image.tmdb.org/t/p/w500/8A2CUot0KdFdoqDLA68tJ328WEX.jpg",
+        "release_date": "2026-07-31",
+        "popularity": 6.3418
+      },
+      {
+        "id": 1303331,
+        "title": "Dhamaal 4",
+        "rating": 3,
+        "overview": "The Dhamaal boys are back for another treasure hunt, facing hilarious challenges in their quest for the Treasure of Life.",
+        "poster_path": "https://image.tmdb.org/t/p/w500/5d7hpbefNiuebl5eqP5cRrckVxs.jpg",
+        "release_date": "2026-07-10",
+        "popularity": 5.842
+      },
+      {
+        "id": 1545486,
+        "title": "Unmadham",
+        "rating": 6.5,
+        "overview": "A police constable reopens a long-forgotten case and experiences an unsettling world.",
+        "poster_path": "https://image.tmdb.org/t/p/w500/6AIMHBUY6PCHVYASWZ0GcTA9Kph.jpg",
+        "release_date": "2026-07-31",
+        "popularity": 4.3527
+      },
+      {
+        "id": 1649791,
+        "title": "Ishqnama",
+        "rating": 0,
+        "overview": "Set in the early 1980s along the India-Pakistan border in Punjab, the story follows Nimma, a young Sikh student and poet from Indian Punjab, who falls deeply in love with Nasima, a Muslim girl from Pakistani Punjab.",
+        "poster_path": "https://image.tmdb.org/t/p/w500/zrZ4dXr4teT8gqwQfUMdQMRZInH.jpg",
+        "release_date": "2026-07-24",
+        "popularity": 4.1264
+      },
+      {
+        "id": 1739212,
+        "title": "Get Set Go",
+        "rating": 0,
+        "overview": "A wild adventure where one pedal stroke could change everything.",
+        "poster_path": "https://image.tmdb.org/t/p/w500/vjVTyIISV6cBoT1n309lxZsHUZj.jpg",
+        "release_date": "2026-08-07",
+        "popularity": 4.0048
+      }
+    ],
+    "itinerary": {
+      "days": [
+        {
+          "day": 1,
+          "date": "2026-08-09",
+          "theme": "Culture and History",
+          "weather_forecast": "High: 27.3\u00b0C, Low: 24.4\u00b0C, Condition: Rainy, Precipitation: 39%",
+          "safety_risk_assessment": "Moderate Risk: Outdoor activities may be impacted by rainfall. Suggesting indoor alternatives.",
+          "dynamic_adjustments": "Risk Alert: Activity may be impacted. Suggesting indoor alternatives.",
+          "activities": [
+            {
+              "name": "09:00 \u2013 Visit Mattancherry Palace",
+              "estimated_cost": 10
+            },
+            {
+              "name": "12:00 \u2013 Lunch at Chef Pillai",
+              "estimated_cost": 15
+            },
+            {
+              "name": "15:00 \u2013 Explore LuLu International Shopping Mall",
+              "estimated_cost": 20
+            }
+          ],
+          "alternate_options": {
+            "has_risk": true,
+            "reason": "Rain predicted (39% precipitation)",
+            "options": [
+              {
+                "name": "LuLu International Shopping Mall",
+                "type": "indoor",
+                "description": "A great place to shop and dine",
+                "is_best_pick": true,
+                "website": "https://www.lulushoppingmall.com"
+              },
+              {
+                "name": "Forum Kochi",
+                "type": "indoor",
+                "description": "A popular mall with a variety of stores",
+                "is_best_pick": false,
+                "website": "https://www.forumkochi.com"
+              },
+              {
+                "name": "Centre Square Mall",
+                "type": "indoor",
+                "description": "A convenient mall with a range of shops",
+                "is_best_pick": false,
+                "website": "https://www.centresquaremall.com"
+              }
+            ]
+          }
+        },
+        {
+          "day": 2,
+          "date": "2026-08-10",
+          "theme": "Leisure and Entertainment",
+          "weather_forecast": "High: 27.4\u00b0C, Low: 24.0\u00b0C, Condition: Clouds, Precipitation: 10%",
+          "safety_risk_assessment": "Low Risk: Normal outdoor activities.",
+          "dynamic_adjustments": null,
+          "activities": [
+            {
+              "name": "09:00 \u2013 Visit Fort Kochi View Point",
+              "estimated_cost": 0
+            },
+            {
+              "name": "12:00 \u2013 Lunch at Fort House Restaurant",
+              "estimated_cost": 20
+            },
+            {
+              "name": "15:00 \u2013 Watch a movie at PVR Cinemas",
+              "estimated_cost": 10
+            }
+          ],
+          "alternate_options": {
+            "has_risk": false,
+            "reason": "Clear weather - great day for outdoor activities",
+            "options": [
+              {
+                "name": "Vasco Da Gama Square",
+                "type": "outdoor",
+                "description": "A historic square with a rich history",
+                "is_best_pick": true,
+                "website": "https://www.vascodagamasquare.com"
+              },
+              {
+                "name": "Rainbow Hanging Bridge",
+                "type": "outdoor",
+                "description": "A colorful bridge with great views",
+                "is_best_pick": false,
+                "website": "https://www.rainbowhangingbridge.com"
+              },
+              {
+                "name": "Kochi Water Metro",
+                "type": "outdoor",
+                "description": "A convenient way to travel around the city",
+                "is_best_pick": false,
+                "website": "https://www.kochiwatmetro.com"
+              }
+            ]
+          }
+        },
+        {
+          "day": 3,
+          "date": "2026-08-11",
+          "theme": "Shopping and Food",
+          "weather_forecast": "High: 27.2\u00b0C, Low: 24.1\u00b0C, Condition: Rainy, Precipitation: 11%",
+          "safety_risk_assessment": "Moderate Risk: Outdoor activities may be impacted by rainfall. Suggesting indoor alternatives.",
+          "dynamic_adjustments": "Risk Alert: Activity may be impacted. Suggesting indoor alternatives.",
+          "activities": [
+            {
+              "name": "09:00 \u2013 Visit Oberon Mall",
+              "estimated_cost": 15
+            },
+            {
+              "name": "12:00 \u2013 Lunch at TOT - Talk of the Town",
+              "estimated_cost": 25
+            },
+            {
+              "name": "15:00 \u2013 Explore Grand Mall",
+              "estimated_cost": 10
+            }
+          ],
+          "alternate_options": {
+            "has_risk": true,
+            "reason": "Rain predicted (11% precipitation)",
+            "options": [
+              {
+                "name": "Oberon Mall",
+                "type": "indoor",
+                "description": "A popular mall with a variety of stores",
+                "is_best_pick": true,
+                "website": "https://www.oberonmall.com"
+              },
+              {
+                "name": "Centre Square Mall",
+                "type": "indoor",
+                "description": "A convenient mall with a range of shops",
+                "is_best_pick": false,
+                "website": "https://www.centresquaremall.com"
+              },
+              {
+                "name": "LuLu International Shopping Mall",
+                "type": "indoor",
+                "description": "A great place to shop and dine",
+                "is_best_pick": false,
+                "website": "https://www.lulushoppingmall.com"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "risk_summary_table": [
+      {
+        "day": 1,
+        "date": "2026-08-09",
+        "primary_risk": "Rain",
+        "level": "Moderate",
+        "backup_plan": "Visit LuLu International Shopping Mall"
+      },
+      {
+        "day": 2,
+        "date": "2026-08-10",
+        "primary_risk": "None",
+        "level": "Low",
+        "backup_plan": "None"
+      },
+      {
+        "day": 3,
+        "date": "2026-08-11",
+        "primary_risk": "Rain",
+        "level": "Moderate",
+        "backup_plan": "Visit Oberon Mall"
+      }
+    ],
+    "budget_breakdown": {
+      "accommodation": 300,
+      "transport": 100,
+      "food": 200,
+      "activities": 150,
+      "miscellaneous": 50,
+      "total_estimated": 800
+    },
+    "packing_checklist": [
+      "Umbrella",
+      "Raincoat",
+      "Sunhat",
+      "Sunglasses",
+      "Sunscreen"
+    ],
+    "alternate_activities": [
+      "Visit Mattancherry Palace",
+      "Explore LuLu International Shopping Mall",
+      "Watch a movie at PVR Cinemas"
+    ],
+    "safety_score": 80.0,
+    "travel_quality_score": 90.0,
+    "evaluator_feedback": "The itinerary is generally well-planned, but there are some concerns. On Day 1 and Day 3, there are outdoor activities scheduled during rainy weather, which may impact the safety and enjoyment of the trip. The budget is within the cap, but it's a tight fit. The day is not overly packed with activities, but some of the activities may be rushed. The recommendations are of high quality and relevant to the destination. However, there are some repeated attractions across different days, such as LuLu International Shopping Mall, which could be avoided. Overall, the itinerary is feasible, but some adjustments could be made to improve the safety and quality of the trip.\nCorrections suggested:\n- Consider replacing outdoor activities with indoor alternatives on rainy days\n- Avoid repeated attractions across different days\n- Leave some buffer time between activities to account for unexpected delays",
+    "created_at": "2026-08-09T06:58:49.897897",
+    "_id": "e2730be4-880d-4d0f-98aa-48f9327c73f8"
+  },
+  "83262888-927c-45db-95ee-5a4c8e1c4535": {
+    "destination": "Kochi",
+    "days": 3,
+    "budget": 1500.0,
+    "currency": "INR",
+    "travelers": 1,
+    "interests": [
+      "Culture"
+    ],
+    "start_date": "2026-08-09",
+    "end_date": "2026-08-11",
+    "start_time": "08:00",
+    "end_time": "20:00",
+    "breakfast_time": "07:30",
+    "lunch_time": "13:00",
+    "dinner_time": "19:30",
+    "travel_mode": "mixed",
+    "weather_info": {
+      "temp": 27.3,
+      "description": "Rainy",
+      "forecast": [
+        {
+          "date": "2026-08-09",
+          "temp_min": 24.4,
+          "temp_max": 27.3,
+          "condition": "Rainy",
+          "precipitation_probability": 39,
+          "wind_speed": 12.7,
+          "uv_index": 8
+        },
+        {
+          "date": "2026-08-10",
+          "temp_min": 24,
+          "temp_max": 27.4,
+          "condition": "Clouds",
+          "precipitation_probability": 10,
+          "wind_speed": 10.2,
+          "uv_index": 9
+        },
+        {
+          "date": "2026-08-11",
+          "temp_min": 24.1,
+          "temp_max": 27.2,
+          "condition": "Rainy",
+          "precipitation_probability": 11,
+          "wind_speed": 11.1,
+          "uv_index": 8
+        }
+      ]
+    },
+    "nearby_attractions": [
+      {
+        "name": "Mattancherry Palace",
+        "address": "Kochi, Kerala, India",
+        "lat": 9.958278,
+        "lon": 76.25935,
+        "rating": 4.2,
+        "website": null,
+        "snippet": "Rating: 4.2 - Kochi, Kerala, India"
+      },
+      {
+        "name": "Vasco Da Gama Square",
+        "address": "Kochi, Kerala, India",
+        "lat": 9.967773,
+        "lon": 76.241875,
+        "rating": 4.3,
+        "website": null,
+        "snippet": "Rating: 4.3 - Kochi, Kerala, India"
+      },
+      {
+        "name": "Fort Kochi View Point",
+        "address": "Kochi, Kerala, India",
+        "lat": 9.965708,
+        "lon": 76.23799,
+        "rating": 4.5,
+        "website": null,
+        "snippet": "Rating: 4.5 - Kochi, Kerala, India"
+      },
+      {
+        "name": "Kochi water metro",
+        "address": "Kochi, Kerala, India",
+        "lat": 9.983779,
+        "lon": 76.27395,
+        "rating": 4.6,
+        "website": null,
+        "snippet": "Rating: 4.6 - Kochi, Kerala, India"
+      },
+      {
+        "name": "Rainbow Hanging Bridge",
+        "address": "Ernakulam, Kerala, India",
+        "lat": 9.979909,
+        "lon": 76.27504,
+        "rating": 4.3,
+        "website": null,
+        "snippet": "Rating: 4.3 - Ernakulam, Kerala, India"
+      }
+    ],
+    "malls": [
+      {
+        "name": "LuLu International Shopping Mall",
+        "address": "34/1000, Old NH 47",
+        "lat": 10.027156,
+        "lon": 76.30823,
+        "rating": 4.6,
+        "website": null,
+        "snippet": "Rating: 4.6 - 34/1000, Old NH 47"
+      },
+      {
+        "name": "Forum Kochi",
+        "address": "NH-66, Vyttila, Aroor Bypass, near to Kundanoor",
+        "lat": 9.944128,
+        "lon": 76.31775,
+        "rating": 4.3,
+        "website": null,
+        "snippet": "Rating: 4.3 - NH-66, Vyttila, Aroor Bypass, near to Kundanoor"
+      },
+      {
+        "name": "Centre Square Mall",
+        "address": "Mahatma Gandhi Road, Rajaji Rd",
+        "lat": 9.977963,
+        "lon": 76.28334,
+        "rating": 4.2,
+        "website": null,
+        "snippet": "Rating: 4.2 - Mahatma Gandhi Road, Rajaji Rd"
+      },
+      {
+        "name": "Oberon Mall",
+        "address": "Ernakulam, Kerala, India",
+        "lat": 10.0144005,
+        "lon": 76.312256,
+        "rating": 4.2,
+        "website": null,
+        "snippet": "Rating: 4.2 - Ernakulam, Kerala, India"
+      },
+      {
+        "name": "Grand Mall",
+        "address": null,
+        "lat": 10.024192,
+        "lon": 76.30875,
+        "rating": 4.1,
+        "website": null,
+        "snippet": "Rating: 4.1 - None"
+      }
+    ],
+    "restaurants": [],
+    "movie_theatres": [
+      {
+        "name": "Vanitha Cineplex",
+        "address": null,
+        "lat": 10.030815,
+        "lon": 76.30965,
+        "rating": 4.4,
+        "website": null,
+        "snippet": "Rating: 4.4 - None"
+      },
+      {
+        "name": "PVR Cinemas",
+        "address": "NH 544",
+        "lat": 10.027898,
+        "lon": 76.30813,
+        "rating": 4.4,
+        "website": null,
+        "snippet": "Rating: 4.4 - NH 544"
+      },
+      {
+        "name": "Cinepolis Kochi",
+        "address": "66/6284-H, 6th Floor, Centre Square Mall, Mahatma Gandhi Rd",
+        "lat": 9.977872,
+        "lon": 76.283165,
+        "rating": 4,
+        "website": null,
+        "snippet": "Rating: 4 - 66/6284-H, 6th Floor, Centre Square Mall, Mahatma Gandhi Rd"
+      },
+      {
+        "name": "PVR Cinemas Forum Mall Kochi",
+        "address": "Shop No 10, Forum Mall, 3rd floor, junction",
+        "lat": 9.944273,
+        "lon": 76.31722,
+        "rating": 4.2,
+        "website": null,
+        "snippet": "Rating: 4.2 - Shop No 10, Forum Mall, 3rd floor, junction"
+      },
+      {
+        "name": "K Cinemas 4K 3D",
+        "address": null,
+        "lat": 10.126658,
+        "lon": 76.1991,
+        "rating": 4.5,
+        "website": null,
+        "snippet": "Rating: 4.5 - None"
+      }
+    ],
+    "local_events": [
+      {
+        "name": "Kochi Happenings (@kochi_happenings)",
+        "link": "https://www.instagram.com/kochi_happenings/?hl=en",
+        "snippet": "From shopping and food to music, d\u00e9cor, fashion, kids activities and unforgettable experiences. Kochi comes together. Stadium Ground, Kochi. The TYE Global ..."
+      },
+      {
+        "name": "Any events or activities in Kochi?",
+        "link": "https://www.reddit.com/r/Kochi/comments/1tycwnz/any_events_or_activities_in_kochi/",
+        "snippet": "Are there any budget friendly activities or events happening in kochi today or over the next few days? Looking for stuff like exhibitions or just short ..."
+      },
+      {
+        "name": "Top Upcoming Events in Kochi | Best Live ...",
+        "link": "https://in.bookmyshow.com/explore/events-kochi",
+        "snippet": "Book tickets for best upcoming events in Kochi. Explore music, comedy, workshops, online events near you in Kochi on BookMyShow."
+      },
+      {
+        "name": "Free Kochi, India Events",
+        "link": "https://www.eventbrite.com/d/india--cochin/free--events/",
+        "snippet": "Browse all free events in Kochi, India. Oct 15 \u2022 6:00 AM Pallimukku. Biggest Msc Nursing Event - 19 August 2026 at Kochi. India Poultry Show-2027"
+      },
+      {
+        "name": "Events in Kochi",
+        "link": "https://www.meetup.com/find/in--kochi/",
+        "snippet": "Find events in Kochi to connect with people who share your interests. Whatever your interest, Meetup helps you connect with like-minded people."
+      }
+    ],
+    "movie_recommendations": [
+      {
+        "id": 969681,
+        "title": "Spider-Man: Brand New Day",
+        "rating": 7.9,
+        "overview": "Fighting crime full-time as Spider-Man in a world that doesn't remember him\u2014and the pressure of seeing his old friends move on without him\u2014sparks a change in Peter Parker he may not have the power to control. But that transformation might also be the only thing that can stop a shocking new threat to the city and those he loves - a powerful villain no one can even see.",
+        "poster_path": "https://image.tmdb.org/t/p/w500/iPOn6DinuVyLY17YM9mKuPofV08.jpg",
+        "release_date": "2026-07-30",
+        "popularity": 1550.8083
+      },
+      {
+        "id": 1368337,
+        "title": "The Odyssey",
+        "rating": 8,
+        "overview": "Odysseus, the legendary King of Ithaca, embarks on a long and perilous journey home following the Trojan War. Throughout his voyage, he is forced to confront the whims of gods, mythological monsters, and trials that stretch both his cunning and his humanity to the breaking point.",
+        "poster_path": "https://image.tmdb.org/t/p/w500/5rhTDKUhPYvpdQIijFIs5VoWsON.jpg",
+        "release_date": "2026-07-17",
+        "popularity": 886.9314
+      },
+      {
+        "id": 1284465,
+        "title": "The Death of Robin Hood",
+        "rating": 6.4,
+        "overview": "Grappling with his past after a life of crime and murder, Robin Hood finds himself gravely injured after a battle he thought would be his last. In the hands of a mysterious woman, he is offered a chance at salvation.",
+        "poster_path": "https://image.tmdb.org/t/p/w500/92Tsfx7SFafOqWsotvrlJbHyehd.jpg",
+        "release_date": "2026-07-03",
+        "popularity": 295.4889
+      },
+      {
+        "id": 1108427,
+        "title": "Moana",
+        "rating": 6,
+        "overview": "Teenage Moana answers the Ocean's call and, for the first time, voyages beyond the reef of her island of Motunui with infamous demigod Maui on an unforgettable journey to restore prosperity to her people.",
+        "poster_path": "https://image.tmdb.org/t/p/w500/zKVgiv5qHCvCLT4A2ymJi5QeXDH.jpg",
+        "release_date": "2026-07-10",
+        "popularity": 257.9071
+      },
+      {
+        "id": 1315772,
+        "title": "Minions & Monsters",
+        "rating": 6.3,
+        "overview": "This is the rambunctious, ridiculous and totally true story of how the Minions conquered Hollywood, became movie stars, lost everything, unleashed monsters onto the world and then banded together to try and save the planet from the mayhem they had just created.",
+        "poster_path": "https://image.tmdb.org/t/p/w500/nz7i42yhLIJ4ve9JKgM6NthoLHO.jpg",
+        "release_date": "2026-07-01",
+        "popularity": 256.7713
+      },
+      {
+        "id": 1212763,
+        "title": "Evil Dead Burn",
+        "rating": 7.9,
+        "overview": "After her husband's abrupt death, Alice seeks solace with his remaining family \u2014 descendants of a leading researcher on demonic possession. As her in-laws transform one by one into creatures that feed on fear, she comes to discover that the vows she took in life survive even in death.",
+        "poster_path": "https://image.tmdb.org/t/p/w500/uRxrNXQWkHoENm3nwVOZDYSCx2F.jpg",
+        "release_date": "2026-07-10",
+        "popularity": 203.6299
+      },
+      {
+        "id": 1432631,
+        "title": "Idhayam Murali",
+        "rating": 8.2,
+        "overview": "A young man navigates the complexities of unrequited love, finding that even as years pass and life takes unexpected turns, certain emotions remain deeply embedded in his heart.",
+        "poster_path": "https://image.tmdb.org/t/p/w500/iZzR7fYiJ3bGew8liRPxipPDEfj.jpg",
+        "release_date": "2026-07-10",
+        "popularity": 38.7668
+      },
+      {
+        "id": 1235877,
+        "title": "Jana Nayagan",
+        "rating": 5.1,
+        "overview": "A clash of ideologies. One stands for the people, the other feeds on control. Their paths collided once before. Years later, a child\u2019s silent fear ignites the past, drawing a former police officer into a battle far bigger than personal revenge.",
+        "poster_path": "https://image.tmdb.org/t/p/w500/jt8pfSIdi47YpFMMWVRr8w5u2S0.jpg",
+        "release_date": "2026-07-23",
+        "popularity": 30.0452
+      },
+      {
+        "id": 1408170,
+        "title": "Lenin",
+        "rating": 6.4,
+        "overview": "In a village trapped by generations of bloodshed, a determined young man dares to challenge the traditions fueling an endless cycle of violence.",
+        "poster_path": "https://image.tmdb.org/t/p/w500/rAHQviBq8Fxi20hNtHPGLnr4L0f.jpg",
+        "release_date": "2026-07-10",
+        "popularity": 28.1026
+      },
+      {
+        "id": 950028,
+        "title": "The Invite",
+        "rating": 7.7,
+        "overview": "Joe and Angela\u2019s marriage is on thin ice. When they invite their enigmatic upstairs neighbors for a dinner party, the night spirals into unexpected places. Have they reignited the spark or lit the match that burns it all down?",
+        "poster_path": "https://image.tmdb.org/t/p/w500/b7Dr8Chzse8VagexAporUu2RtLx.jpg",
+        "release_date": "2026-07-10",
+        "popularity": 26.6391
+      },
+      {
+        "id": 1509599,
+        "title": "Gatta Kusthi 2",
+        "rating": 3.6,
+        "overview": "Picks up after the first film, with Veera and Keerthi balancing parenthood and Keerthi's wrestling career, featuring a role reversal where Veera takes on more domestic responsibilities.",
+        "poster_path": "https://image.tmdb.org/t/p/w500/5U8MWIk9XZ60NALyOTpyX7vXIR7.jpg",
+        "release_date": "2026-07-03",
+        "popularity": 25.4741
+      },
+      {
+        "id": 1479832,
+        "title": "DC",
+        "rating": 9,
+        "overview": "Rebel Devadas joins forces with Chandra in a dangerous world where passion and peril collide. Their turbulent alliance demands bloodshed and tests loyalties as survival becomes the ultimate stake in their fight.",
+        "poster_path": "https://image.tmdb.org/t/p/w500/nmQ799Pa5EKczJvQPzlvhtW0CBW.jpg",
+        "release_date": "2026-08-07",
+        "popularity": 23.1224
+      },
+      {
+        "id": 1442396,
+        "title": "Nagabandham: The Secret Treasure",
+        "rating": 4.5,
+        "overview": "A chosen warrior protects a mystical, serpent-bound Himalayan temple from those seeking to steal the power of the Brahma Kamalam, a divine relic.",
+        "poster_path": "https://image.tmdb.org/t/p/w500/fsiQ0twZbmbLo0F2CDUt44riRxL.jpg",
+        "release_date": "2026-07-03",
+        "popularity": 9.0488
+      },
+      {
+        "id": 1122030,
+        "title": "Alpha",
+        "rating": 5.6,
+        "overview": "When Sita, a highly trained assassin raised in isolation as a super-soldier by a rogue commander, discovers the dark truth about her family and her stolen childhood, she teams up with her long lost sister to take down her creator and his illicit military program.",
+        "poster_path": "https://image.tmdb.org/t/p/w500/bPtRt3ajQ0EkyeQ1O6iJwAIi9Py.jpg",
+        "release_date": "2026-07-03",
+        "popularity": 8.2207
+      },
+      {
+        "id": 1443961,
+        "title": "Rao Bahadur",
+        "rating": 7.2,
+        "overview": "In 1970s India, an eccentric aristocrat\u2014labeled a 'man of miracles'\u2014miraculously survives a terminal illness. Plagued by guilt and fear, he retreats into his palatial mansion, creating an alternate world that deeply blurs reality and imagination.",
+        "poster_path": "https://image.tmdb.org/t/p/w500/9hzKAJImKEHBz0vnF5EazPMA8D4.jpg",
+        "release_date": "2026-07-03",
+        "popularity": 6.5128
+      },
+      {
+        "id": 1739294,
+        "title": "Maaran",
+        "rating": 0,
+        "overview": "In a patriarchal society, two strangers - Birwa, a trafficking survivor, and Tara, who faces the same fate - are drawn into the path of a ruthless predator. Maaran exposes the devastating impact of gender-based violence and oppression.",
+        "poster_path": "https://image.tmdb.org/t/p/w500/8A2CUot0KdFdoqDLA68tJ328WEX.jpg",
+        "release_date": "2026-07-31",
+        "popularity": 6.3418
+      },
+      {
+        "id": 1303331,
+        "title": "Dhamaal 4",
+        "rating": 3,
+        "overview": "The Dhamaal boys are back for another treasure hunt, facing hilarious challenges in their quest for the Treasure of Life.",
+        "poster_path": "https://image.tmdb.org/t/p/w500/5d7hpbefNiuebl5eqP5cRrckVxs.jpg",
+        "release_date": "2026-07-10",
+        "popularity": 5.842
+      },
+      {
+        "id": 1545486,
+        "title": "Unmadham",
+        "rating": 6.5,
+        "overview": "A police constable reopens a long-forgotten case and experiences an unsettling world.",
+        "poster_path": "https://image.tmdb.org/t/p/w500/6AIMHBUY6PCHVYASWZ0GcTA9Kph.jpg",
+        "release_date": "2026-07-31",
+        "popularity": 4.3527
+      },
+      {
+        "id": 1649791,
+        "title": "Ishqnama",
+        "rating": 0,
+        "overview": "Set in the early 1980s along the India-Pakistan border in Punjab, the story follows Nimma, a young Sikh student and poet from Indian Punjab, who falls deeply in love with Nasima, a Muslim girl from Pakistani Punjab.",
+        "poster_path": "https://image.tmdb.org/t/p/w500/zrZ4dXr4teT8gqwQfUMdQMRZInH.jpg",
+        "release_date": "2026-07-24",
+        "popularity": 4.1264
+      },
+      {
+        "id": 1739212,
+        "title": "Get Set Go",
+        "rating": 0,
+        "overview": "A wild adventure where one pedal stroke could change everything.",
+        "poster_path": "https://image.tmdb.org/t/p/w500/vjVTyIISV6cBoT1n309lxZsHUZj.jpg",
+        "release_date": "2026-08-07",
+        "popularity": 4.0048
+      }
+    ],
+    "itinerary": {
+      "days": [
+        {
+          "day": 1,
+          "date": "2026-08-09",
+          "theme": "Cultural Exploration",
+          "weather_forecast": "High: 27.3\u00b0C, Low: 24.4\u00b0C, Condition: Rainy, Precipitation: 39%",
+          "safety_risk_assessment": "Moderate Risk: Outdoor activities may be impacted by rainfall. Suggesting indoor alternative.",
+          "dynamic_adjustments": "Risk Alert: Activity may be impacted. Suggesting indoor alternative.",
+          "activities": [
+            {
+              "name": "08:00 \u2013 Breakfast at local restaurant",
+              "estimated_cost": 50
+            },
+            {
+              "name": "09:00 \u2013 Visit Mattancherry Palace",
+              "estimated_cost": 20
+            },
+            {
+              "name": "12:00 \u2013 Lunch at local eatery",
+              "estimated_cost": 100
+            },
+            {
+              "name": "14:00 \u2013 Explore Fort Kochi View Point",
+              "estimated_cost": 0
+            },
+            {
+              "name": "17:00 \u2013 Travel to LuLu International Shopping Mall by public transport",
+              "estimated_cost": 20
+            },
+            {
+              "name": "19:00 \u2013 Dinner at food court in LuLu International Shopping Mall",
+              "estimated_cost": 150
+            }
+          ],
+          "alternate_options": {
+            "has_risk": true,
+            "reason": "Rain predicted (39% precipitation)",
+            "options": [
+              {
+                "name": "LuLu International Shopping Mall",
+                "type": "indoor",
+                "description": "One of the largest malls in India",
+                "is_best_pick": true,
+                "website": null
+              },
+              {
+                "name": "Centre Square Mall",
+                "type": "indoor",
+                "description": "Shopping and dining options",
+                "is_best_pick": false,
+                "website": null
+              },
+              {
+                "name": "Vanitha Cineplex",
+                "type": "indoor",
+                "description": "Movie theatre with multiple screens",
+                "is_best_pick": false,
+                "website": null
+              }
+            ]
+          }
+        },
+        {
+          "day": 2,
+          "date": "2026-08-10",
+          "theme": "Leisure and Entertainment",
+          "weather_forecast": "High: 27.4\u00b0C, Low: 24.0\u00b0C, Condition: Clouds, Precipitation: 10%",
+          "safety_risk_assessment": "Low Risk: Normal outdoor activities.",
+          "dynamic_adjustments": null,
+          "activities": [
+            {
+              "name": "08:00 \u2013 Breakfast at local caf\u00e9",
+              "estimated_cost": 50
+            },
+            {
+              "name": "09:30 \u2013 Visit Kochi water metro",
+              "estimated_cost": 50
+            },
+            {
+              "name": "12:30 \u2013 Lunch at local restaurant",
+              "estimated_cost": 100
+            },
+            {
+              "name": "14:30 \u2013 Explore Rainbow Hanging Bridge",
+              "estimated_cost": 0
+            },
+            {
+              "name": "17:30 \u2013 Travel to PVR Cinemas by public transport",
+              "estimated_cost": 20
+            },
+            {
+              "name": "19:30 \u2013 Dinner and movie at PVR Cinemas",
+              "estimated_cost": 250
+            }
+          ],
+          "alternate_options": {
+            "has_risk": false,
+            "reason": "Clear weather - great day for outdoor activities",
+            "options": [
+              {
+                "name": "Fort Kochi View Point",
+                "type": "outdoor",
+                "description": "Scenic views of the city",
+                "is_best_pick": true,
+                "website": null
+              },
+              {
+                "name": "Vasco Da Gama Square",
+                "type": "outdoor",
+                "description": "Historical landmark",
+                "is_best_pick": false,
+                "website": null
+              },
+              {
+                "name": "Kochi water metro",
+                "type": "outdoor",
+                "description": "Water transportation",
+                "is_best_pick": false,
+                "website": null
+              }
+            ]
+          }
+        },
+        {
+          "day": 3,
+          "date": "2026-08-11",
+          "theme": "Cultural Immersion",
+          "weather_forecast": "High: 27.2\u00b0C, Low: 24.1\u00b0C, Condition: Rainy, Precipitation: 11%",
+          "safety_risk_assessment": "Moderate Risk: Outdoor activities may be impacted by rainfall. Suggesting indoor alternative.",
+          "dynamic_adjustments": "Risk Alert: Activity may be impacted. Suggesting indoor alternative.",
+          "activities": [
+            {
+              "name": "08:00 \u2013 Breakfast at local bakery",
+              "estimated_cost": 50
+            },
+            {
+              "name": "09:00 \u2013 Visit Mattancherry Palace",
+              "estimated_cost": 20
+            },
+            {
+              "name": "11:00 \u2013 Travel to Oberon Mall by public transport",
+              "estimated_cost": 20
+            },
+            {
+              "name": "12:00 \u2013 Lunch at food court in Oberon Mall",
+              "estimated_cost": 100
+            },
+            {
+              "name": "14:00 \u2013 Explore Centre Square Mall",
+              "estimated_cost": 0
+            },
+            {
+              "name": "17:00 \u2013 Travel to Vanitha Cineplex by public transport",
+              "estimated_cost": 20
+            },
+            {
+              "name": "19:00 \u2013 Dinner and movie at Vanitha Cineplex",
+              "estimated_cost": 200
+            }
+          ],
+          "alternate_options": {
+            "has_risk": true,
+            "reason": "Rain predicted (11% precipitation)",
+            "options": [
+              {
+                "name": "LuLu International Shopping Mall",
+                "type": "indoor",
+                "description": "One of the largest malls in India",
+                "is_best_pick": true,
+                "website": null
+              },
+              {
+                "name": "Forum Kochi",
+                "type": "indoor",
+                "description": "Shopping and dining options",
+                "is_best_pick": false,
+                "website": null
+              },
+              {
+                "name": "Cinepolis Kochi",
+                "type": "indoor",
+                "description": "Movie theatre with multiple screens",
+                "is_best_pick": false,
+                "website": null
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "risk_summary_table": [
+      {
+        "day": 1,
+        "date": "2026-08-09",
+        "primary_risk": "Rain",
+        "level": "Moderate",
+        "backup_plan": "Visit LuLu International Shopping Mall"
+      },
+      {
+        "day": 2,
+        "date": "2026-08-10",
+        "primary_risk": "None",
+        "level": "Low",
+        "backup_plan": "None"
+      },
+      {
+        "day": 3,
+        "date": "2026-08-11",
+        "primary_risk": "Rain",
+        "level": "Moderate",
+        "backup_plan": "Visit Oberon Mall"
+      }
+    ],
+    "budget_breakdown": {
+      "accommodation": 300,
+      "transport": 100,
+      "food": 500,
+      "activities": 200,
+      "miscellaneous": 100,
+      "total_estimated": 1100
+    },
+    "packing_checklist": [
+      "umbrella",
+      "sunhat",
+      "sunglasses",
+      "lightweight clothing",
+      "comfortable shoes"
+    ],
+    "alternate_activities": [
+      "Visit local museum",
+      "Take a cooking class",
+      "Go for a bike ride"
+    ],
+    "safety_score": 80.0,
+    "travel_quality_score": 70.0,
+    "evaluator_feedback": "The itinerary is mostly well-structured, but there are some concerns. On Day 1 and Day 3, there are outdoor activities scheduled despite a moderate risk of rainfall, which may impact the safety and enjoyment of the trip. The budget is slightly below the cap, but the allocation could be optimized for better quality experiences. Some activities, like visiting Mattancherry Palace, are repeated across days, which could be avoided for a more diverse experience. The pacing of activities seems reasonable, but travel time between locations should be considered to avoid excessive fatigue. Recommendations are generally relevant to the destination, but considering indoor alternatives for rainy days and varying the activities could enhance the travel quality.\nCorrections suggested:\n- Consider indoor alternatives for outdoor activities on rainy days\n- Avoid repeating attractions across different days\n- Optimize budget allocation for better quality experiences",
+    "created_at": "2026-08-09T07:03:34.793462",
+    "_id": "83262888-927c-45db-95ee-5a4c8e1c4535"
   }
 }
